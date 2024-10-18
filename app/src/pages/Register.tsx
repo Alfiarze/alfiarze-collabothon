@@ -2,9 +2,9 @@
 
 const Register = () => {
 
-    const handleRegister = () => {
-        navigate('/login')
-    }
+    // const handleRegister = () => {
+    //     navigate('/login')
+    // }
 
     return (
         <div>
