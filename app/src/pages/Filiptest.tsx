@@ -9,6 +9,7 @@ import Contracts from '../components/widgets/Contracts';
 import CustomerService from '../components/widgets/CustomerService';
 import ContractsEnding from '../components/widgets/ContractsEnding';
 import OtherAccounts from '../components/widgets/OtherAccounts';
+import Credit from '../components/widgets/Credit';
 
 const Filiptest = () => {
   return (
@@ -22,6 +23,7 @@ const Filiptest = () => {
         <CustomerService/>
         <ContractsEnding/>
         <OtherAccounts/>
+        <Credit/>
       </div>
     </Router>
   );
