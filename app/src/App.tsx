@@ -1,8 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Actions from './pages/Actions';
 import Contracts from './pages/Contracts';
-import withSize from './pages/Dashboard';
-import Exchange from './components/Exchange';
 import Filiptest from './pages/Filiptest';
 import Logging from './pages/Logging';
 import Login from './pages/Login';
@@ -19,11 +17,11 @@ import { useUser } from './context/UserContext';
 import { useEffect } from 'react';
 import Dashboard from './pages/Dashboard';
 
-
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material/styles';
 import axiosPrivate from './ctx/axiosPrivate';
 
+import Exchange from './pages/Exchange';
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
@@ -48,7 +46,7 @@ const theme = createTheme({
 });
 
 function App() {
-  const { user, checkUser } = useUser();
+  const { user } = useUser();
 
   useEffect(() => {
     axiosPrivate.get('/api/userLayout/').then((res) => {
