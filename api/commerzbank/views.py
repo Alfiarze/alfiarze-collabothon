@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import Contract, CreditCard, UpcomingPayment, UserLayer, Transaction
+from .models import Contract, CreditCard, Reservation, UpcomingPayment, UserLayer, Transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
@@ -296,6 +296,24 @@ class TransactionView(APIView):
         transaction.delete()
         return Response({'success': 'Transaction deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
+class ReservationView(APIView):
+    def get(self, request):
+        reservations = Reservation.objects.all()
+        if reservations.exists():
+            reservations_json = []
+            for reservation in reservations:
+                reservation_data = {
+                    "id": reservation.id,
+                    "user": reservation.user.username,
+                    "name": reservation.name,
+                    "time": reservation.time,
+                    "date": reservation.date,
+                    "status": reservation.status
+                }
+                reservations_json.append(reservation_data)
+            return Response(reservations_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No reservations exist"}, status=status.HTTP_404_NOT_FOUND)
 
 
 

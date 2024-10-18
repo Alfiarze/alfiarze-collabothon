@@ -56,6 +56,7 @@ class CreditCard(models.Model):
         return f"{self.card_name} - {self.card_number}"
     
 class Transaction(models.Model):
+    id = models.AutoField(primary_key=True)
     account_id = models.IntegerField()
     transaction_name = models.CharField(max_length=250)
     from_account = models.IntegerField()
@@ -64,3 +65,16 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"Transaction {self.id}: {self.transaction_name}"
+    
+    
+class Reservation(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    time = models.TimeField()
+    date = models.DateField()
+    status = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"Reservation {self.id}: {self.name}"
+    
