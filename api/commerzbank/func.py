@@ -27,10 +27,13 @@ def refresh_oauth_token(user, grant_type):
     
     if response.status_code == 200:
         user_layer = UserLayer.objects.get(user=user)
-        user_layer.access_token = response.json().get('access_token')
-        user_layer.refresh_token = response.json().get('refresh_token')
-        user_layer.expires_in = response.json().get('expires_in')
-        user_layer.save()
+        try:
+            user_layer.access_token = response.json().get('access_token')
+            user_layer.refresh_token = response.json().get('refresh_token')
+            user_layer.expires_in = response.json().get('expires_in')
+            user_layer.save()
+        except Exception as e:
+            print(e)
         return response.json()
     else:
         return None
