@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, List, ListItem, ListItemText, Paper, Chip } from '@mui/material';
+import axiosPrivate from '../../ctx/axiosPrivate';
 
 interface Contract {
   id: string;
@@ -10,14 +11,28 @@ interface Contract {
   status: 'active' | 'pending' | 'expired';
 }
 
-const ContractsEnding: React.FC = () => {
-  // Mock data - replace this with actual data fetching logic
-  const contracts: Contract[] = [
-    { id: '1', name: 'Electricity Plan', category: 'energy', end_date: '2023-12-31', amount: 120.50, status: 'active' },
-    { id: '2', name: 'Apartment Lease', category: 'housing', end_date: '2023-11-15', amount: 1500.00, status: 'pending' },
-    { id: '3', name: 'Internet Service', category: 'other', end_date: '2024-01-10', amount: 59.99, status: 'active' },
-    { id: '4', name: 'Gas Plan', category: 'energy', end_date: '2023-10-31', amount: 80.00, status: 'expired' },
-  ];
+const ContractsEnding = () => {
+  const [contracts, setContracts] = useState<Contract[]>([]);
+
+  useEffect(() => {
+    axiosPrivate.get('api/contracts/').then((res) => {
+      const allContracts = res.data.map((contract: any) => ({
+        id: contract.contract_id,
+        name: contract.contract_type,
+        category: contract.contract_type.toLowerCase(),
+        end_date: contract.end_date,
+        amount: contract.amount,
+        status: contract.status
+      }));
+
+      const contractsEndingSoon = allContracts.filter((contract: Contract) => {
+        const daysRemaining = calculateDaysRemaining(contract.end_date);
+        return daysRemaining <= 2 && daysRemaining >= 0;
+      });
+
+      setContracts(contractsEndingSoon);
+    });
+  }, []);
 
   const calculateDaysRemaining = (endDate: string): number => {
     const today = new Date();
