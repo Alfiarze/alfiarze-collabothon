@@ -1,10 +1,12 @@
+from api import settings
+import requests
 from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import UserLayer
+from .models import Contract, UserLayer
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -81,7 +83,7 @@ class ContractView(APIView):
     permission_classes = []
 
     def get(self, request):
-        contracts = ContractView.objects.all()
+        contracts = Contract.objects.all()
         if contracts.exists():
             contracts_json = []
             for contract in contracts:
@@ -103,7 +105,7 @@ class ContractView(APIView):
 
     def post(self, request):
         data = request.data
-        contract = ContractView.objects.create(
+        contract = Contract.objects.create(
             user_id=data['user_id'],
             contract_id=data['contract_id'],
             contract_type=data['contract_type'],
@@ -113,3 +115,27 @@ class ContractView(APIView):
             status=data['status']
         )
         return Response({'success': 'Contract created successfully'})
+
+class AccountView(APIView):
+    def get(self, request):
+        url = "https://api-sandbox.commerzbank.com/accounts/v1/accounts"
+        headers = {
+            "Accept": "application/json",
+            "X-Api-Key": settings.COMMERZBANK_API_KEY,
+            "X-Secret-Key": settings.COMMERZBANK_SECRET_KEY
+        }
+
+        try:
+            response = requests.get(url, headers=headers)
+            if response.status_code == 200:
+                return Response(response.json(), status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"error": "Request to Commerzbank API failed", "status_code": response.status_code},
+                    status=response.status_code
+                )
+        except requests.RequestException as e:
+            return Response(
+                {"error": f"Request to Commerzbank API failed: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

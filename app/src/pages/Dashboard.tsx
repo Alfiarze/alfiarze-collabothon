@@ -5,7 +5,7 @@ import Widget from "./Widget";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const originalItems = ["a", "b", "c", "d"];
+const originalItems = ["a", "b", "c", "d", "e"];
 
 const initialLayouts = {
   lg: [
@@ -13,6 +13,7 @@ const initialLayouts = {
     { i: "b", x: 1, y: 0, w: 3, h: 4 },
     { i: "c", x: 4, y: 0, w: 1, h: 4 },
     { i: "d", x: 0, y: 4, w: 2, h: 4 },
+    { i: "e", x: 2, y: 4, w: 2, h: 4 }
   ],
 };
 
