@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import React, { useState } from 'react';
 
 function Survey() {
@@ -66,9 +67,8 @@ function Survey() {
                     </div>
                 ))}
             </form>
-            <button onClick={handleNextQuestion} disabled={!answers[questionIndex]}>
-                {questionIndex === questions.length - 1 ? "Finish" : "Next question"}
-            </button>
+
+            <Button variant="contained" onClick={handleNextQuestion} disabled={!answers[questionIndex]}>{questionIndex === questions.length - 1 ? "Finish" : "Next question"}</Button>
         </div>
     );
 }

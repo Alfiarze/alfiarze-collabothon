@@ -1,55 +1,93 @@
 import React, { useState } from 'react';
-import { FlagIcon } from 'react-flag-kit'; // You may need to install this package
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+
+const currencies = ['EUR', 'PLN', 'USD'];
 
 function Exchange() {
-    const [fromCurrency, setFromCurrency] = useState('USD');
-    const [toCurrency, setToCurrency] = useState('EUR');
-    const [amount, setAmount] = useState('');
+  const [firstCurrency, setFirstCurrency] = useState('');
+  const [secondCurrency, setSecondCurrency] = useState('');
+  const [amount, setAmount] = useState('');
+  const [result, setResult] = useState('');
 
-    const handleExchange = () => {
-        // Implement exchange logic here
-        console.log(`Exchange ${amount} ${fromCurrency} to ${toCurrency}`);
-    };
+  const handleFirstCurrencyChange = (event: SelectChangeEvent) => {
+    setFirstCurrency(event.target.value);
+  };
 
-    return (
-        <div className="exchange-container">
-            <h1>Currency Exchange</h1>
-            <div className="exchange-form">
-                <div className="currency-input">
-                    <FlagIcon code={fromCurrency.slice(0, 2)} size={48} />
-                    <input
-                        type="number"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        placeholder="Enter amount"
-                    />
-                    <select
-                        value={fromCurrency}
-                        onChange={(e) => setFromCurrency(e.target.value)}
-                    >
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                        <option value="GBP">GBP</option>
-                        {/* Add more currency options as needed */}
-                    </select>
-                </div>
-                <div className="exchange-arrow">→</div>
-                <div className="currency-input">
-                    <FlagIcon code={toCurrency.slice(0, 2)} size={48} />
-                    <select
-                        value={toCurrency}
-                        onChange={(e) => setToCurrency(e.target.value)}
-                    >
-                        <option value="EUR">EUR</option>
-                        <option value="USD">USD</option>
-                        <option value="GBP">GBP</option>
-                        {/* Add more currency options as needed */}
-                    </select>
-                </div>
-            </div>
-            <button onClick={handleExchange}>Exchange</button>
-        </div>
-    );
+  const handleSecondCurrencyChange = (event: SelectChangeEvent) => {
+    setSecondCurrency(event.target.value);
+  };
+
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(event.target.value);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Here you would typically call an API to get the exchange rate and calculate the result
+    // For now, we'll just set a placeholder result
+    setResult(`${amount} ${firstCurrency} = X ${secondCurrency}`);
+  };
+
+  return (
+    <div>
+      <h1>Currency Exchange</h1>
+      <form onSubmit={handleSubmit}>
+        <FormControl sx={{ m: 1, width: 300 }}>
+          <InputLabel id="first-currency-label">From Currency</InputLabel>
+          <Select
+            labelId="first-currency-label"
+            id="first-currency"
+            value={firstCurrency}
+            onChange={handleFirstCurrencyChange}
+            input={<OutlinedInput label="From Currency" />}
+          >
+            {currencies.map((currency) => (
+              <MenuItem key={currency} value={currency}>
+                {currency}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ m: 1, width: 300 }}>
+          <InputLabel id="second-currency-label">To Currency</InputLabel>
+          <Select
+            labelId="second-currency-label"
+            id="second-currency"
+            value={secondCurrency}
+            onChange={handleSecondCurrencyChange}
+            input={<OutlinedInput label="To Currency" />}
+          >
+            {currencies.map((currency) => (
+              <MenuItem key={currency} value={currency}>
+                {currency}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <TextField
+          sx={{ m: 1, width: 300 }}
+          label="Amount"
+          type="number"
+          value={amount}
+          onChange={handleAmountChange}
+        />
+
+        <Button sx={{ m: 1 }} type="submit" variant="contained">
+          Convert
+        </Button>
+      </form>
+
+      {result && <p>{result}</p>}
+    </div>
+  );
 }
 
 export default Exchange;
