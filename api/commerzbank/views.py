@@ -7,8 +7,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import Contract, CreditCard, UpcomingPayment, UserLayer
+from .models import Contract, CreditCard, UpcomingPayment, UserLayer, Transaction
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import get_object_or_404
 
 
 
@@ -234,5 +235,68 @@ class OAuthView(APIView):
             print(f"Exception occurred: {str(e)}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-                   
-                   
+
+class TransactionView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        transactions = Transaction.objects.all()
+        if transactions.exists():
+            transactions_json = []
+            for transaction in transactions:
+                transaction_data = {
+                    "id": transaction.id,
+                    "account_id": transaction.account_id,
+                    "transaction_name": transaction.transaction_name,
+                    "from_account": transaction.from_account,
+                    "to_account": transaction.to_account,
+                    "amount": transaction.amount
+                }
+                transactions_json.append(transaction_data)
+            return Response(transactions_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No transactions exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request):
+        data = request.data
+        try:
+            transaction = Transaction.objects.create(
+                account_id=data['account_id'],
+                transaction_name=data['transaction_name'],
+                from_account=data['from_account'],
+                to_account=data['to_account'],
+                amount=data['amount']
+            )
+            return Response({
+                'success': 'Transaction created successfully',
+                'transaction_id': transaction.id
+            }, status=status.HTTP_201_CREATED)
+        except KeyError as e:
+            return Response({'error': f'Missing required field: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def put(self, request, transaction_id):
+        transaction = get_object_or_404(Transaction, id=transaction_id)
+        data = request.data
+        try:
+            transaction.account_id = data.get('account_id', transaction.account_id)
+            transaction.transaction_name = data.get('transaction_name', transaction.transaction_name)
+            transaction.from_account = data.get('from_account', transaction.from_account)
+            transaction.to_account = data.get('to_account', transaction.to_account)
+            transaction.amount = data.get('amount', transaction.amount)
+            transaction.save()
+            return Response({'success': 'Transaction updated successfully'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, transaction_id):
+        transaction = get_object_or_404(Transaction, id=transaction_id)
+        transaction.delete()
+        return Response({'success': 'Transaction deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+

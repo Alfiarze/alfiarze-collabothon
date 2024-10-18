@@ -54,4 +54,13 @@ class CreditCard(models.Model):
 
     def __str__(self):
         return f"{self.card_name} - {self.card_number}"
+    
+class Transaction(models.Model):
+    account_id = models.IntegerField()
+    transaction_name = models.CharField(max_length=250)
+    from_account = models.IntegerField()
+    to_account = models.IntegerField()
+    amount = models.IntegerField()
 
+    def __str__(self):
+        return f"Transaction {self.id}: {self.transaction_name}"
