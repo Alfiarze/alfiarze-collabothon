@@ -5,6 +5,7 @@ import Contracts from './pages/Contracts';
 import Dashboard from './pages/Dashboard';
 import Exchange from './components/Exchange';
 import Filiptest from './pages/Filiptest';
+import MatiTest from './pages/MatiTest';
 import Home from './pages/Home';
 import Logging from './pages/Logging';
 import Login from './pages/Login';
@@ -90,6 +91,7 @@ function App() {
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/exchange" component={Exchange} />
           <Route path="/filiptest" component={Filiptest} />
+          <Route path="/matitest" component={MatiTest} />
           <Route path="/logging" component={Logging} />
           <Route path="/login" component={Login} />
           <Route path="/offer" component={Offer} />
