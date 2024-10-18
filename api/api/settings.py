@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'commerzbank',
     'rest_framework',
-    'rest_framework_simplejwt',
     'corsheaders',
 ]
 
