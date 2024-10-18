@@ -4,3 +4,7 @@ sqlalchemy
 asyncpg
 databases
 psycopg2-binary
+fastapi[all]
+sqlalchemy
+passlib[bcrypt]
+python-jose[cryptography]
