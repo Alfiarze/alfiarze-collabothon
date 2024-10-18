@@ -10,7 +10,8 @@ import CustomerService from '../components/widgets/CustomerService';
 import ContractsEnding from '../components/widgets/ContractsEnding';
 import OtherAccounts from '../components/widgets/OtherAccounts';
 import Credit from '../components/widgets/Credit';
-
+import LoyaltyPrograms from '../components/widgets/LoyaltyPrograms';
+import VisitReservation from '../components/widgets/VisitReservation';
 const Filiptest = () => {
   return (
     <Router>
@@ -24,6 +25,8 @@ const Filiptest = () => {
         <ContractsEnding/>
         <OtherAccounts/>
         <Credit/>
+        <LoyaltyPrograms/>
+        <VisitReservation/>
       </div>
     </Router>
   );
