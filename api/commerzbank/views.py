@@ -75,3 +75,40 @@ class UserLayoutProvider(APIView):
 #         return Response({'success': 'User created successfully'})
 #
 #         pass
+class ContractView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request):
+        contracts = Contract.objects.all()
+        if contracts.exists():
+            contracts_json = []
+            for contract in contracts:
+                contract_data = {
+                    "id": contract.id,
+                    "user_id": contract.user_id,
+                    "contract_id": contract.contract_id,
+                    "contract_type": contract.contract_type,
+                    "amount": contract.amount,
+                    "start_date": contract.start_date,
+                    "end_date": contract.end_date,
+                    "status": contract.status
+                }
+                contracts_json.append(contract_data)
+            return Response(contracts_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No contracts exist"}, status=status.HTTP_404_NOT_FOUND)
+                
+
+    def post(self, request):
+        data = request.data
+        contract = Contract.objects.create(
+            user_id=data['user_id'],
+            contract_id=data['contract_id'],
+            contract_type=data['contract_type'],
+            amount=data['amount'],
+            start_date=data['start_date'],
+            end_date=data['end_date'],
+            status=data['status']
+        )
+        return Response({'success': 'Contract created successfully'})
