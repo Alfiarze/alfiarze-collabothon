@@ -16,5 +16,5 @@ COPY . .
 # Expose the port that FastAPI will run on
 EXPOSE 8000
 
-# Remove the CMD instruction
-# The command will be specified in docker-compose.yml
+# Set the command to run the FastAPI application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
