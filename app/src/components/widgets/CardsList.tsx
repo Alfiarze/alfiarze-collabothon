@@ -6,6 +6,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 const CardsList = () => {
     const [cards, setCards] = useState([
@@ -23,7 +24,7 @@ const CardsList = () => {
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar>
                                 <Avatar>
-                                    {card.cardType[0]}
+                                    <CreditCardIcon />
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText
