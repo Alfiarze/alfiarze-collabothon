@@ -1,12 +1,12 @@
 import { StrictMode } from 'react'
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
-
-const rootElement = document.getElementById("root");
-ReactDOM.render(
+import { UserProvider } from './context/UserContext';
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <UserProvider>
+      <App />
+    </UserProvider>
   </StrictMode>,
-  rootElement
-);
+)

@@ -7,15 +7,32 @@ import {
   Container, 
   CssBaseline 
 } from '@mui/material';
+import axiosPublic from '../ctx/axiosPublic';
+import { useUser } from '../context/UserContext';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  });
+
+  const { setUser } = useUser();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Login attempt with:', { email, password });
-    // Here you would typically call your login API
+    
+
+    axiosPublic.post('token/', formData)
+      .then((response: { data: any; }) => {
+        console.log('Login successful:', response.data);
+        localStorage.setItem('token', response.data.access);
+        localStorage.setItem('refresh', response.data.refresh);
+
+        setUser(response.data);
+      })
+      .catch((error: any) => {
+        console.error('Login failed:', error);
+      });
   };
 
   return (
@@ -37,13 +54,13 @@ const Login = () => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
             autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.username}
+            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
           />
           <TextField
             margin="normal"
@@ -54,8 +71,8 @@ const Login = () => {
             type="password"
             id="password"
             autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           />
           <Button
             type="submit"

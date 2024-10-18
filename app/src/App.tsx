@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Actions from './pages/Actions';
 import Contracts from './pages/Contracts';
 import Dashboard from './pages/Dashboard';
@@ -14,76 +13,35 @@ import Schelude from './pages/Schelude';
 import Support from './pages/Support';
 import Survey from './components/Survey';
 import Transfers from './pages/Transfers';
-import { AppBar, Button, IconButton, Toolbar, Typography, Menu, MenuItem } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Button, IconButton, Typography, Menu, MenuItem, Container, Box, Box } from '@mui/material';
 import MatiTest from './pages/MatiTest';
+import Nav from './components/Nav';
+import { useUser } from './context/UserContext';
 
 function App() {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { user } = useUser();
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const menuItems = [
-    { to: '/', label: 'Home' },
-    { to: '/offer', label: 'Offer' },
-    { to: '/Filiptest', label: 'Filip test' },
-    { to: '/MatiTest', label: 'Mati test' },
-    { to: '/Actions', label: 'Actions' },
-    { to: '/Contracts', label: 'Contracts' },
-    { to: '/Dashboard', label: 'Dashboard' },
-    { to: '/Logging', label: 'Logging' },
-    { to: '/Exchange', label: 'Exchange' },
-    { to: '/Login', label: 'Login' },
-    { to: '/Register', label: 'Register' },
-    { to: '/Schelude', label: 'Schedule' },
-    { to: '/Support', label: 'Support' },
-    { to: '/Survey', label: 'Survey' },
-    { to: '/Transfers', label: 'Transfers' },
-  ];
+  if(!user){
+    return (
+      <Router>
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Switch>
+              <Route path="/register" component={Register} />
+              <Route path="/login" component={Login} />
+              <Route path="/" component={Login} />
+              </Switch>
+      </div>
+      </Router>
+    )
+  }
 
   return (
     <Router>
-      <div>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Commerzbank
-            </Typography>
-            {menuItems.slice(0, 5).map((item) => (
-              <Button key={item.to} color="inherit" component={Link} to={item.to}>
-                {item.label}
-              </Button>
-            ))}
-            <IconButton
-              size="large"
-              edge="end"
-              color="inherit"
-              aria-label="menu"
-              onClick={handleMenuOpen}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-            >
-              {menuItems.slice(5).map((item) => (
-                <MenuItem key={item.to} onClick={handleMenuClose} component={Link} to={item.to}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Toolbar>
-        </AppBar>
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Nav />
 
-        <div>
+      <Container maxWidth="lg" sx={{ width: '100%', maxWidth: '1340px !important', flexGrow: 1 }}>
+      <Box>
           {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
           <Switch>
@@ -103,11 +61,13 @@ function App() {
             <Route path="/transfers" component={Transfers} />
             <Route path="/" component={Home} />
           </Switch>
-        </div>
-
-        <footer>
-          <p>© 2024 My Website. All rights reserved.</p>
-        </footer>
+        </Box>
+        </Container>
+        <Box component="footer" sx={{ py: 3, px: 2, mt: 'auto', backgroundColor: 'primary.main' }}>
+          <Typography variant="body2" color="white" align="center">
+            © {new Date().getFullYear()} Commerzbank. All rights reserved.
+          </Typography>
+        </Box>
       </div>
     </Router>
   );
