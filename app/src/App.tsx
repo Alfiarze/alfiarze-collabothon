@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Offer from './pages/Offer';
+import Filiptest from './pages/Filiptest';
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
             <li>
               <Link to="/users">Users</Link>
             </li>
+            <li>
+              <Link to="/Filiptest">filip test</Link>
+            </li>
           </ul>
         </nav>
 
@@ -27,6 +31,7 @@ function App() {
         <Switch>
           <Route path="/offer" component={Offer} />
           <Route path="/dashboard" component={Dashboard} />
+          <Route path="/filiptest" component={Filiptest} />
           <Route path="/">
             <Home />
           </Route>
