@@ -1,6 +1,6 @@
 from api import settings
 import requests
-from api.commerzbank.func import refresh_oauth_token
+from .func import refresh_oauth_token
 from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
