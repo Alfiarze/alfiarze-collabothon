@@ -26,10 +26,6 @@ const CustomerService = () => {
         }
     };
 
-    const generateRandomPhoneNumber = () => {
-        return `+1 (${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`;
-    };
-
     const handleOptionClick = (option: string) => {
         setSelectedOption(option);
     };
@@ -47,7 +43,7 @@ const CustomerService = () => {
             case 'Chat':
                 return "What's your question?";
             case 'Call Support':
-                return `Call us at: ${generateRandomPhoneNumber()}`;
+                return `Call us at: +48 857 191 091`;
             default:
                 return null;
         }

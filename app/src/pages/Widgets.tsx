@@ -1,5 +1,6 @@
 import CardsList from "../components/widgets/CardsList";
 import Contracts from "../components/widgets/Contracts";
+import ContractsEnding from "../components/widgets/ContractsEnding";
 import CustomerService from "../components/widgets/CustomerService";
 import RecentTransfersList from "../components/widgets/RecentTransfersList";
 import StockMarket from "../components/widgets/StockMarket";
@@ -13,6 +14,7 @@ const Widgets = () => {
             <StockMarket/>
             <Contracts/>
             <CustomerService/>
+            <ContractsEnding/>
         </div>
     )
 }

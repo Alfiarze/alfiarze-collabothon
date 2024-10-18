@@ -7,6 +7,7 @@ import RecentTransfersList from '../components/widgets/RecentTransfersList';
 import StockMarket from '../components/widgets/StockMarket';
 import Contracts from '../components/widgets/Contracts';
 import CustomerService from '../components/widgets/CustomerService';
+import ContractsEnding from '../components/widgets/ContractsEnding';
 const Filiptest = () => {
   return (
     <Router>
@@ -17,6 +18,7 @@ const Filiptest = () => {
         <RecentTransfersList/>
         <Contracts/>
         <CustomerService/>
+        <ContractsEnding/>
       </div>
     </Router>
   );
