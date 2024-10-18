@@ -21,7 +21,7 @@ class Contract(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     start_date = models.DateField()
     end_date = models.DateField()
-    file = models.FileField(upload_to='contracts/')
+    file = models.FileField(upload_to='contracts/', null=True, blank=True)
     status = models.CharField(max_length=100)
     name = models.CharField(max_length=100)  # Example field
 
