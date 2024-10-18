@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, CardContent, Typography, Grid, Box } from '@mui/material';
 
 interface Payment {
   id: string;
@@ -31,20 +32,32 @@ const UpcomingPayment: React.FC<UpcomingPaymentProps> = ({ payments }) => {
   const paymentData = payments || defaultPayments;
 
   return (
-    <div className="upcoming-payments p-4 bg-white shadow-lg rounded-lg" style={{ fontFamily: 'Roboto, sans-serif' }}>
-      <h2 className="text-xl font-semibold mb-4">Upcoming Payments</h2>
+    <Box sx={{ p: 4, bgcolor: 'background.paper', boxShadow: 3, borderRadius: 2, fontFamily: 'Roboto, sans-serif' }}>
+      <Typography variant="h5" component="h2" gutterBottom>
+        Upcoming Payments
+      </Typography>
       {paymentData.map((payment) => (
-        <div key={payment.id} className="payment-item flex justify-between items-center p-5 border-b last:border-b-0">
-          <div className="flex-1">
-            <p className="text-lg font-medium">{payment.description}</p>
-            <p className="text-sm text-gray-500">Due Date: {payment.dueDate.toLocaleDateString()}</p>
-          </div>
-          <div className="text-right">
-            <p className="text-lg font-semibold">${payment.amount.toFixed(2)}</p>
-          </div>
-        </div>
+        <Card key={payment.id} sx={{ mb: 2 }}>
+          <CardContent>
+            <Grid container justifyContent="space-between" alignItems="center">
+              <Grid item xs={8}>
+                <Typography variant="h6" component="p">
+                  {payment.description}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Due Date: {payment.dueDate.toLocaleDateString()}
+                </Typography>
+              </Grid>
+              <Grid item xs={4} textAlign="right">
+                <Typography variant="h6" component="p">
+                  ${payment.amount.toFixed(2)}
+                </Typography>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
       ))}
-    </div>
+    </Box>
   );
 };
 
