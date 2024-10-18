@@ -175,7 +175,7 @@ class UpcomingPaymentView(APIView):
             for payment in upcoming_payments:
                 upcoming_payment_data = {
                     "id": payment.id,
-                    "user": payment.user,
+                    "user": payment.user.username,
                     "name": payment.name,
                     "time": payment.time,
                     "date": payment.date,
@@ -196,3 +196,22 @@ class UpcomingPaymentView(APIView):
             account_id=data['account_id']
         )
         return Response({'success': 'Upcoming payment created successfully'})
+    
+class CreditCardView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request):
+        credit_cards = CreditCard.objects.all()
+        if credit_cards.exists():
+            credit_cards_json = []
+            for credit_card in credit_cards:
+                credit_card_data = {
+                    "id": credit_card.id,
+                    "card_name": credit_card.card_name,
+                    "card_number": credit_card.card_number,
+                    "cvv": credit_card.cvv,
+                    "date_of_expiry": credit_card.date_of_expiry,
+
+                   
+                   
