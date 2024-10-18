@@ -24,7 +24,7 @@ import axiosPrivate from './ctx/axiosPrivate';
 import Exchange from './pages/Exchange';
 export const themeOptions: ThemeOptions = {
   palette: {
-    mode: 'light',
+    mode: 'dark',
     primary: {
       main: '#3f51b5',
     },

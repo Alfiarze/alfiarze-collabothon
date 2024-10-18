@@ -1,4 +1,3 @@
-import React from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import IconButton from "@mui/material/IconButton";
@@ -8,13 +7,13 @@ const Root = styled(Card)({
     width: "100%",
     height: "100%",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   });
   
   const Header = styled('div')({
     display: "flex",
     alignItems: "center",
-    padding: "0.5rem"
+    padding: "0.5rem",
   });
   
   const Spacer = styled('div')({
@@ -23,7 +22,7 @@ const Root = styled(Card)({
   
   const Body = styled('div')({
     padding: "0.5rem",
-    flexGrow: 1
+    flexGrow: 1,
   });
 
 const widgetNames = {
