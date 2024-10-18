@@ -1,15 +1,14 @@
 from api import settings
 import requests
+from api.commerzbank.func import refresh_oauth_token
 from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import Contract, UpcomingPayment, UserLayer
+from .models import Contract, CreditCard, UpcomingPayment, UserLayer
 from django.core.exceptions import ObjectDoesNotExist
-from django.conf import settings
-from .func import refresh_oauth_token
 
 
 
@@ -142,28 +141,6 @@ class AccountView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
-
-class OAuthView(APIView):
-    # permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        return Response({"message": "OAuth view"})
-
-    def post(self, request):
-        try:
-            user = request.user
-            if not user.is_authenticated:
-                return Response({"error": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
-            response = refresh_oauth_token(user)
-
-            if response:
-                return Response(response, status=status.HTTP_200_OK)
-            else:
-                return Response({"error": "Failed to refresh token"}, status=status.HTTP_400_BAD_REQUEST)
-            
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 class UpcomingPaymentView(APIView):
     def get(self, request):
         authentication_classes = []
@@ -200,7 +177,6 @@ class UpcomingPaymentView(APIView):
 class CreditCardView(APIView):
     authentication_classes = []
     permission_classes = []
-
     def get(self, request):
         credit_cards = CreditCard.objects.all()
         if credit_cards.exists():
@@ -208,10 +184,49 @@ class CreditCardView(APIView):
             for credit_card in credit_cards:
                 credit_card_data = {
                     "id": credit_card.id,
+                    "card_type": credit_card.card_type,
                     "card_name": credit_card.card_name,
                     "card_number": credit_card.card_number,
                     "cvv": credit_card.cvv,
                     "date_of_expiry": credit_card.date_of_expiry,
+                }
+                credit_cards_json.append(credit_card_data)
+            return Response(credit_cards_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No credit cards exist"}, status=status.HTTP_404_NOT_FOUND)
+    
+def post(self, request):
+        data = request.data
+        credit_card = CreditCard.objects.create(
+            user=data['user'],
+            card_type=data['card_type'],
+            card_name=data['card_name'],
+            card_number=data['card_number'],
+            cvv=data['cvv'],
+            date_of_expiry=data['date_of_expiry']
+        )
+        return Response({'success': 'Credit card created successfully'})
+
+class OAuthView(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({"message": "OAuth view"})
+
+    def post(self, request):
+        try:
+            user = request.user
+            if not user.is_authenticated:
+                return Response({"error": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+            response = refresh_oauth_token(user)
+
+            if response:
+                return Response(response, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Failed to refresh token"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
                    
                    
