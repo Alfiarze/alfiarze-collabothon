@@ -19,7 +19,7 @@ interface TableProps {
 }
 
 const columns: Column[] = [
-  { header: 'Contract ID', accessor: 'id' },
+  { header: 'ID', accessor: 'id' },
   { header: 'Name', accessor: 'name' },
   { header: 'Start Date', accessor: 'startDate' },
   { header: 'End Date', accessor: 'endDate' },
@@ -27,9 +27,22 @@ const columns: Column[] = [
   { header: 'Status', accessor: 'status' },
 ];
 
-const Table: React.FC<TableProps> = ({ data }) => {
+// Sample data
+const sampleData: ContractData[] = [
+  {
+    id: '001',
+    name: 'Contract A',
+    startDate: '2023-01-01',
+    endDate: '2023-12-31',
+    value: 10000,
+    status: 'Active'
+  },
+  // Add more sample data as needed
+];
+
+const Table: React.FC = () => {
   return (
-    <div className="overflow-x-auto shadow-md sm:rounded-lg">
+    <div className="overflow-x-auto shadow-md sm:rounded-lg" style={{ fontFamily: 'Roboto, sans-serif' }}>
       <table className="w-full text-sm text-left text-blue-700">
         <thead className="text-xs uppercase bg-blue-100">
           <tr>
@@ -41,7 +54,7 @@ const Table: React.FC<TableProps> = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((contract, rowIndex) => (
+          {sampleData.map((contract, rowIndex) => (
             <tr key={rowIndex} className="bg-white border-b hover:bg-yellow-50">
               <td className="px-6 py-4">{contract.id}</td>
               <td className="px-6 py-4">{contract.name}</td>
