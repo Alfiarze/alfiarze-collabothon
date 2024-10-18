@@ -19,6 +19,33 @@ import { useUser } from './context/UserContext';
 import { useEffect } from 'react';
 import Dashboard from './pages/Dashboard';
 
+
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeOptions } from '@mui/material/styles';
+
+export const themeOptions: ThemeOptions = {
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#3f51b5',
+    },
+    secondary: {
+      main: '#f50057',
+    },
+  },
+  typography: {
+    fontFamily: 'Gotham, Arial, sans-serif',
+  },
+};
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#002E3C',
+    },
+  },
+});
+
 function App() {
   const { user, checkUser } = useUser();
 
@@ -28,6 +55,7 @@ function App() {
 
   if(!user){
     return (
+      <ThemeProvider theme={theme}>
       <Router>
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
           <Switch>
@@ -37,10 +65,13 @@ function App() {
           </Switch>
         </div>
       </Router>
+      </ThemeProvider>
     )
   }
 
   return (
+    <ThemeProvider theme={theme}>
+
     <Router>
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Nav />
@@ -74,6 +105,7 @@ function App() {
         </Box>
       </div>
     </Router>
+    </ThemeProvider>
   );
 }
 

@@ -8,4 +8,5 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register'),
     path('commerzbank/accounts/', views.AccountView.as_view(), name='accounts'),
     path('commerzbank/oauth/', views.OAuthView.as_view(), name='oauth'),
+    path('upcoming-payments/', views.UpcomingPaymentView.as_view(), name='upcoming-payments'),
 ]

@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import Contract, UserLayer
+from .models import Contract, UpcomingPayment, UserLayer
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from .func import refresh_oauth_token
@@ -163,3 +163,36 @@ class OAuthView(APIView):
             
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class UpcomingPaymentView(APIView):
+    def get(self, request):
+        authentication_classes = []
+        permission_classes = []
+
+        upcoming_payments = UpcomingPayment.objects.all()
+        if upcoming_payments.exists():
+            upcoming_payments_json = []
+            for payment in upcoming_payments:
+                upcoming_payment_data = {
+                    "id": payment.id,
+                    "user": payment.user,
+                    "name": payment.name,
+                    "time": payment.time,
+                    "date": payment.date,
+                    "account_id": payment.account_id
+                }
+                upcoming_payments_json.append(upcoming_payment_data)
+            return Response(upcoming_payments_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No upcoming payments exist"}, status=status.HTTP_404_NOT_FOUND)
+        
+    def post(self, request):
+        data = request.data
+        upcoming_payment = UpcomingPayment.objects.create(
+            user=data['user'],
+            name=data['name'],
+            time=data['time'],
+            date=data['date'],
+            account_id=data['account_id']
+        )
+        return Response({'success': 'Upcoming payment created successfully'})
