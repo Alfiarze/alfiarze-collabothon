@@ -140,4 +140,24 @@ class AccountView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
+class UpcomingPaymentView(APIView):
+    def get(self, request):
+        authentication_classes = []
+        permission_classes = []
+
+        upcoming_payments = UpcomingPayment.objects.all()
+        if upcoming_payments.exists():
+            upcoming_payments_json = []
+            for payment in upcoming_payments:
+                upcoming_payment_data = {
+                    "id": payment.id,
+                    "user": payment.user,
+                    "time": payment.time,
+                    "date": payment.date,
+                    "account_id": payment.account_id
+                }
+                upcoming_payments_json.append(upcoming_payment_data)
+            return Response(upcoming_payments_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No upcoming payments exist"}, status=status.HTTP_404_NOT_FOUND)
         

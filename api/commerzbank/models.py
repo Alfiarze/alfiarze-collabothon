@@ -28,3 +28,14 @@ class Contract(models.Model):
     def __str__(self):
         return self.name  # or any other appropriate string representation
     
+class UpcomingPayment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    time = models.TimeField()
+    date = models.DateField()
+    account_id = models.CharField(max_length=100)  # Adjust max_length as needed
+
+    def __str__(self):
+        return f"Payment for {self.user.username} on {self.date} at {self.time}"
+
+    class Meta:
+        ordering = ['date', 'time']  # Optional: orders payments by date and time
