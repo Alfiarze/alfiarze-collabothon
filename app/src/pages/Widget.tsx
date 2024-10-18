@@ -30,7 +30,8 @@ const widgetNames = {
   a: "A",
   b: "B",
   c: "C",
-  d: "D"
+  d: "D",
+  e: "E"
 };
 
 export default function Widget({ id, onRemoveItem }: { id: string; onRemoveItem: (id: string) => void }) {
