@@ -49,6 +49,8 @@ const theme = createTheme({
 function App() {
   const { user, checkUser } = useUser();
 
+
+
   useEffect(() => {
     console.log('user', user);
   }, [user]);

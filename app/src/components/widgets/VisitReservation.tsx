@@ -11,6 +11,9 @@ import {
     Container,
     Paper
 } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider, DatePicker, TimePicker } from '@mui/x-date-pickers';
+import dayjs, { Dayjs } from 'dayjs';
 
 const topics = [
     'Account Issues',
@@ -24,41 +27,54 @@ const VisitReservation = () => {
     const [topic, setTopic] = useState('');
     const [description, setDescription] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [contactTime, setContactTime] = useState({ start: '', end: '' });
+    const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+    const [selectedTime, setSelectedTime] = useState<Dayjs | null>(null);
+    const [isConfirmed, setIsConfirmed] = useState(false);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleInitialSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // Here you would typically send the form data to your backend
-        console.log('Form submitted:', { topic, description });
-        
-        // Set contact time to 1 hour from now
-        const now = new Date();
-        const startTime = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour later
-        const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 2 hours later
-
-        setContactTime({
-            start: startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            end: endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        });
-        
-        // Set form as submitted
+        console.log('Initial form submitted:', { topic, description });
         setIsSubmitted(true);
     };
+
+    const handleFinalSubmit = () => {
+        console.log('Final form submitted:', { selectedDate, selectedTime });
+        setIsConfirmed(true);
+    };
+
+    const isDateValid = (date: Dayjs) => {
+        return date.isAfter(dayjs(), 'day') || date.isSame(dayjs(), 'day');
+    };
+
+    const isTimeValid = (time: Dayjs) => {
+        if (!selectedDate) return false;
+        if (selectedDate.isAfter(dayjs(), 'day')) return true;
+        return time.isAfter(dayjs());
+    };
+
+    if (isConfirmed && selectedDate && selectedTime) {
+        const formattedDate = dayjs(selectedDate).format('MMMM D, YYYY');
+        const formattedTime = dayjs(selectedTime).format('h:mm A');
+        
+        return (
+            <Container maxWidth="sm">
+                <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
+                    <Typography variant="h5" component="h2" gutterBottom>
+                        Consultation Confirmed
+                    </Typography>
+                    <Typography variant="body1">
+                        A consultant will call you on {formattedDate} at {formattedTime}.
+                    </Typography>
+                </Paper>
+            </Container>
+        );
+    }
 
     return (
         <Container maxWidth="sm">
             <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-                {isSubmitted ? (
-                    <Box sx={{ textAlign: 'center' }}>
-                        <Typography variant="h5" component="h2" gutterBottom>
-                            Thank you for your inquiry
-                        </Typography>
-                        <Typography variant="body1">
-                            A consultant will contact you today between {contactTime.start} and {contactTime.end}.
-                        </Typography>
-                    </Box>
-                ) : (
-                    <Box component="form" onSubmit={handleSubmit}>
+                {!isSubmitted ? (
+                    <Box component="form" onSubmit={handleInitialSubmit}>
                         <Typography variant="h4" component="h1" gutterBottom>
                             Contact a Bank Consultant
                         </Typography>
@@ -100,6 +116,40 @@ const VisitReservation = () => {
                             disabled={!topic || !description}
                         >
                             Send
+                        </Button>
+                    </Box>
+                ) : (
+                    <Box>
+                        <Typography variant="h5" component="h2" gutterBottom>
+                            Choose Consultation Time
+                        </Typography>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Date"
+                                value={selectedDate}
+                                onChange={(newValue) => setSelectedDate(newValue)}
+                                disablePast
+                                shouldDisableDate={(date) => !isDateValid(date)}
+                            />
+                            <TimePicker
+                                label="Time"
+                                value={selectedTime}
+                                onChange={(newValue) => setSelectedTime(newValue)}
+                                disabled={!selectedDate}
+                                shouldDisableTime={(time, view) => 
+                                    view === 'hours' && !isTimeValid(time)
+                                }
+                            />
+                        </LocalizationProvider>
+                        <Button 
+                            onClick={handleFinalSubmit} 
+                            variant="contained" 
+                            color="primary" 
+                            fullWidth 
+                            sx={{ mt: 2 }}
+                            disabled={!selectedDate || !selectedTime}
+                        >
+                            Confirm
                         </Button>
                     </Box>
                 )}
