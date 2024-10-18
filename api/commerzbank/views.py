@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import Contract, CreditCard, Reservation, UpcomingPayment, UserLayer, Transaction, TransactionCategory, Recipe, RecipeItem
+from .models import Contract, CreditCard, LoanOffer, Reservation, UpcomingPayment, UserLayer, Transaction, TransactionCategory, Recipe, RecipeItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.db import transaction
@@ -318,6 +318,9 @@ class TransactionView(APIView):
         return Response({'success': 'Transaction deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 class ReservationView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         reservations = Reservation.objects.all()
         if reservations.exists():
@@ -348,6 +351,9 @@ class ReservationView(APIView):
         return Response({'success': 'Reservation created successfully'})
 
 class RecipeView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         recipes = Recipe.objects.all()
         if recipes.exists():
@@ -403,3 +409,40 @@ class RecipeView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     # You can add put and delete methods here if needed
+
+class LoanOffersView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        loan_offers = LoanOffer.objects.all()
+        if loan_offers.exists():
+            loan_offers_json = []
+            for loan_offer in loan_offers:
+                loan_offer_data = {
+                    "id": loan_offer.id,
+                    "loan_amount": loan_offer.loan_amount,
+                    "interest_rate": loan_offer.interest_rate,
+                    "period": loan_offer.period,
+                    "description": loan_offer.description,
+                    "type": loan_offer.type
+                    }
+                loan_offers_json.append(loan_offer_data)
+            return Response(loan_offers_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No loan offers exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request):
+        data = request.data
+        loan_offer = LoanOffer.objects.create(
+            id=data['id'],
+            loan_amount=data['loan_amount'],
+            interest_rate=data['interest_rate'],
+            period=data['period'],
+            description=data['description'],
+            type=data['type']
+        )
+        return Response({'success': 'Loan offer created successfully'})
+    
+
+        

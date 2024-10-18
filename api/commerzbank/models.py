@@ -108,3 +108,14 @@ class RecipeItem(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.quantity} x {self.unit_price}"
+
+class LoanOffer(models.Model):
+    id = models.AutoField(primary_key=True)
+    loan_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    interest_rate = models.DecimalField(max_digits=10, decimal_places=2)
+    period = models.IntegerField()
+    description = models.TextField()
+    type = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"Loan Offer {self.id}: {self.loan_amount} - {self.interest_rate}"
