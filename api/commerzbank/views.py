@@ -80,7 +80,7 @@ class ContractView(APIView):
     permission_classes = []
 
     def get(self, request):
-        contracts = Contract.objects.all()
+        contracts = ContractView.objects.all()
         if contracts.exists():
             contracts_json = []
             for contract in contracts:
@@ -102,7 +102,7 @@ class ContractView(APIView):
 
     def post(self, request):
         data = request.data
-        contract = Contract.objects.create(
+        contract = ContractView.objects.create(
             user_id=data['user_id'],
             contract_id=data['contract_id'],
             contract_type=data['contract_type'],
