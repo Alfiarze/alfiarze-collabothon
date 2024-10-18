@@ -130,3 +130,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+COMMERZBANK_API_URL = 'https://api-sandbox.commerzbank.com/auth/realms/sandbox/protocol/openid-connect/auth'
+COMMERZBANK_API_TOKEN = 'https://api-sandbox.commerzbank.com/auth/realms/sandbox/protocol/openid-connect/token'
+COMMERZBANK_API_KEY = '323b0c97-6082-4710-a1a8-0c9b908a555b'
+COMMERZBANK_API_SECRET = '25050c2d-3815-4086-b6d6-a4bbb689806f'
