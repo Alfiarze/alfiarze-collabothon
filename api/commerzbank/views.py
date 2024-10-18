@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import Contract, CreditCard, Reservation, UpcomingPayment, UserLayer, Transaction
+from .models import Contract, CreditCard, Reservation, UpcomingPayment, UserLayer, Transaction, TransactionCategory
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
@@ -251,7 +251,8 @@ class TransactionView(APIView):
                     "transaction_name": transaction.transaction_name,
                     "from_account": transaction.from_account,
                     "to_account": transaction.to_account,
-                    "amount": transaction.amount
+                    "amount": str(transaction.amount),
+                    "categories": [category.name for category in transaction.categories.all()]
                 }
                 transactions_json.append(transaction_data)
             return Response(transactions_json, status=status.HTTP_200_OK)
@@ -268,9 +269,17 @@ class TransactionView(APIView):
                 to_account=data['to_account'],
                 amount=data['amount']
             )
+            
+            # Handle categories
+            category_names = data.get('categories', [])
+            for category_name in category_names:
+                category, created = TransactionCategory.objects.get_or_create(name=category_name)
+                transaction.categories.add(category)
+            
             return Response({
                 'success': 'Transaction created successfully',
-                'transaction_id': transaction.id
+                'transaction_id': transaction.id,
+                'categories': [category.name for category in transaction.categories.all()]
             }, status=status.HTTP_201_CREATED)
         except KeyError as e:
             return Response({'error': f'Missing required field: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
@@ -286,8 +295,19 @@ class TransactionView(APIView):
             transaction.from_account = data.get('from_account', transaction.from_account)
             transaction.to_account = data.get('to_account', transaction.to_account)
             transaction.amount = data.get('amount', transaction.amount)
+            
+            # Update categories
+            if 'categories' in data:
+                transaction.categories.clear()
+                for category_name in data['categories']:
+                    category, created = TransactionCategory.objects.get_or_create(name=category_name)
+                    transaction.categories.add(category)
+            
             transaction.save()
-            return Response({'success': 'Transaction updated successfully'}, status=status.HTTP_200_OK)
+            return Response({
+                'success': 'Transaction updated successfully',
+                'categories': [category.name for category in transaction.categories.all()]
+            }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 

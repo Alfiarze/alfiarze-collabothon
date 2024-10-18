@@ -54,7 +54,17 @@ class CreditCard(models.Model):
 
     def __str__(self):
         return f"{self.card_name} - {self.card_number}"
-    
+
+class TransactionCategory(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Transaction Categories"
+      
 class Transaction(models.Model):
     id = models.AutoField(primary_key=True)
     account_id = models.IntegerField()
@@ -62,6 +72,7 @@ class Transaction(models.Model):
     from_account = models.IntegerField()
     to_account = models.IntegerField()
     amount = models.IntegerField()
+    categories = models.ManyToManyField(TransactionCategory, related_name='transactions' , blank=True)
 
     def __str__(self):
         return f"Transaction {self.id}: {self.transaction_name}"
@@ -77,4 +88,6 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f"Reservation {self.id}: {self.name}"
+    
+    
     
