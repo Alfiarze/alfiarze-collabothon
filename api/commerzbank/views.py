@@ -1,3 +1,5 @@
+from api import settings
+import requests
 from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
@@ -112,3 +114,27 @@ class ContractView(APIView):
             status=data['status']
         )
         return Response({'success': 'Contract created successfully'})
+
+class AccountView(APIView):
+    def get(self, request):
+        url = "https://api-sandbox.commerzbank.com/accounts/v1/accounts"
+        headers = {
+            "Accept": "application/json",
+            "X-Api-Key": settings.COMMERZBANK_API_KEY,
+            "X-Secret-Key": settings.COMMERZBANK_SECRET_KEY
+        }
+
+        try:
+            response = requests.get(url, headers=headers)
+            if response.status_code == 200:
+                return Response(response.json(), status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"error": "Request to Commerzbank API failed", "status_code": response.status_code},
+                    status=response.status_code
+                )
+        except requests.RequestException as e:
+            return Response(
+                {"error": f"Request to Commerzbank API failed: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

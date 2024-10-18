@@ -21,8 +21,10 @@ class Contract(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     start_date = models.DateField()
     end_date = models.DateField()
+    file = models.FileField(upload_to='contracts/')
     status = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)  # Example field
 
     def __str__(self):
-        return f"{self.user.username} - {self.contract_id}"
+        return self.name  # or any other appropriate string representation
     
