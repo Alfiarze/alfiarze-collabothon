@@ -30,6 +30,7 @@ class Contract(models.Model):
     
 class UpcomingPayment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
     time = models.TimeField()
     date = models.DateField()
     account_id = models.CharField(max_length=100)  # Adjust max_length as needed

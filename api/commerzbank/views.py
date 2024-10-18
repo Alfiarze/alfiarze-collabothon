@@ -152,6 +152,7 @@ class UpcomingPaymentView(APIView):
                 upcoming_payment_data = {
                     "id": payment.id,
                     "user": payment.user,
+                    "name": payment.name,
                     "time": payment.time,
                     "date": payment.date,
                     "account_id": payment.account_id
@@ -165,6 +166,7 @@ class UpcomingPaymentView(APIView):
         data = request.data
         upcoming_payment = UpcomingPayment.objects.create(
             user=data['user'],
+            name=data['name'],
             time=data['time'],
             date=data['date'],
             account_id=data['account_id']
