@@ -3,11 +3,14 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import logo from '../assets/images/logo.png';
+import { useUser } from "../context/UserContext";
 
 
 const Nav = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+
+    const { logout } = useUser();
     const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
       setAnchorEl(event.currentTarget);
     };
@@ -15,11 +18,13 @@ const Nav = () => {
     const handleMenuClose = () => {
       setAnchorEl(null);
     };
+
+    const handleLogout = () => {
+      logout();
+    };
   
     const menuItems = [
       { to: '/offer', label: 'Offer' },
-      { to: '/Filiptest', label: 'Filip test' },
-      { to: '/MatiTest', label: 'Mati test' },
       { to: '/Actions', label: 'Actions' },
       { to: '/Contracts', label: 'Contracts' },
       { to: '/Logging', label: 'Logging' },
@@ -34,7 +39,7 @@ const Nav = () => {
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link to="/">
-            <img src={logo} alt="Commerzbank logo" style={{ maxWidth: '100%', height: 'auto', maxHeight: '40px', width: 'auto'}}  />
+                <img src={logo} alt="Commerzbank logo" style={{ maxWidth: '100%', height: 'auto', maxHeight: '40px', width: 'auto', marginRight: '10px' }}  />
             </Link>
             </Typography>
             {menuItems.slice(0, 5).map((item) => (
@@ -62,6 +67,7 @@ const Nav = () => {
                 </MenuItem>
               ))}
             </Menu>
+            <Button color="inherit" onClick={handleLogout}>Logout</Button>
           </Toolbar>
         </AppBar>
   );
