@@ -1,12 +1,10 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import Offer from './pages/Offer';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <Router>
       <div>
@@ -27,10 +25,8 @@ function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <Route path="/about" component={About} />
-          <Route path="/users" component={Users} />
-            <Users />
-          </Route>
+          <Route path="/offer" component={Offer} />
+          <Route path="/dashboard" component={Dashboard} />
           <Route path="/">
             <Home />
           </Route>
