@@ -8,7 +8,7 @@ const Filiptest = () => {
       <div>
         <h1>Filiptest123</h1>
         <Survey/>
-        <Exchange/>
+        
       </div>
     </Router>
   );

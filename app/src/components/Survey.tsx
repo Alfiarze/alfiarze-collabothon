@@ -1,54 +1,74 @@
 import React, { useState } from 'react';
 
 function Survey() {
-    const [name, setName] = useState('');
-    const [rating, setRating] = useState('');
-    const [comment, setComment] = useState('');
+    const [questionIndex, setQuestionIndex] = useState(0);
+    const [answers, setAnswers] = useState<string[]>(['', '', '', '']);
+    const [isCompleted, setIsCompleted] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("Survey responses:", { name, rating, comment });
-        // Here you would typically send the responses to your backend
+    const questions = [
+        {
+            question: "What is your favorite color?",
+            options: ["Red", "Blue", "Green", "Yellow"]
+        },
+        {
+            question: "How old are you?",
+            options: ["Under 18", "18-30", "31-50", "Over 50"]
+        },
+        {
+            question: "What's your favorite hobby?",
+            options: ["Reading", "Sports", "Music", "Gaming"]
+        },
+        {
+            question: "Where would you like to travel next?",
+            options: ["Europe", "Asia", "Africa", "Americas"]
+        }
+    ];
+
+    const handleNextQuestion = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault(); // Prevent default form submission
+        if (questionIndex < questions.length - 1) {
+            setQuestionIndex(questionIndex + 1);
+        } else {
+            setIsCompleted(true);
+        }
     };
+
+    const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newAnswers = [...answers];
+        newAnswers[questionIndex] = e.target.value;
+        setAnswers(newAnswers);
+    };
+
+    if (isCompleted) {
+        return (
+            <div>
+                <h2>Thank you for completing the survey!</h2>
+            </div>
+        );
+    }
 
     return (
         <div>
-            <h1>Quick Survey</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="name">Your Name:</label>
-                    <input
-                        id="name"
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="rating">Rate our service (1-5):</label>
-                    <select
-                        id="rating"
-                        value={rating}
-                        onChange={(e) => setRating(e.target.value)}
-                    >
-                        <option value="">Select...</option>
-                        <option value="1">1 - Poor</option>
-                        <option value="2">2 - Fair</option>
-                        <option value="3">3 - Good</option>
-                        <option value="4">4 - Very Good</option>
-                        <option value="5">5 - Excellent</option>
-                    </select>
-                </div>
-                <div>
-                    <label htmlFor="comment">Additional Comments:</label>
-                    <textarea
-                        id="comment"
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
-                    />
-                </div>
-                <button type="submit">Submit</button>
+            <h1>Survey</h1>
+            <h2>{questions[questionIndex].question}</h2>
+            <form>
+                {questions[questionIndex].options.map((option, index) => (
+                    <div key={index}>
+                        <input
+                            type="radio"
+                            id={`option-${index}`}
+                            name={`question-${questionIndex}`}
+                            value={option}
+                            checked={answers[questionIndex] === option}
+                            onChange={handleAnswerChange}
+                        />
+                        <label htmlFor={`option-${index}`}>{option}</label>
+                    </div>
+                ))}
             </form>
+            <button onClick={handleNextQuestion} disabled={!answers[questionIndex]}>
+                {questionIndex === questions.length - 1 ? "Finish" : "Next question"}
+            </button>
         </div>
     );
 }
