@@ -14,3 +14,15 @@ class UserLayer(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.layer.name}"
     
+class Contract(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    contract_id = models.CharField(max_length=100)
+    contract_type = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    status = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.contract_id}"
+    
