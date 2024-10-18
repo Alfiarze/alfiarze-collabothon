@@ -47,8 +47,8 @@ class UpcomingPayment(models.Model):
 class CreditCard(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     card_name = models.CharField(max_length=100)
-    card_number = models.CharField(max_length=100)
-    cvv = models.CharField(max_length=100)
+    card_number = models.CharField(max_length=16)
+    cvv = models.CharField(max_length=3)
     date_of_expiry = models.DateField()
     card_type = models.CharField(max_length=100)
 
