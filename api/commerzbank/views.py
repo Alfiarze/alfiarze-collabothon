@@ -139,3 +139,5 @@ class AccountView(APIView):
                 {"error": f"Request to Commerzbank API failed: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+        
+        
