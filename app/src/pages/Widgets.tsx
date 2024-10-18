@@ -1,10 +1,14 @@
 import CardsList from "../components/widgets/CardsList";
 import Contracts from "../components/widgets/Contracts";
 import ContractsEnding from "../components/widgets/ContractsEnding";
+import Credit from "../components/widgets/Credit";
 import CustomerService from "../components/widgets/CustomerService";
+import LoyaltyPrograms from "../components/widgets/LoyaltyPrograms";
 import OtherAccounts from "../components/widgets/OtherAccounts";
 import RecentTransfersList from "../components/widgets/RecentTransfersList";
 import StockMarket from "../components/widgets/StockMarket";
+import UpcomingPayment from "../components/widgets/UpcomingPayment";
+import VisitReservation from "../components/widgets/VisitReservation";
 
 const Widgets = () => {
     return (
@@ -17,6 +21,10 @@ const Widgets = () => {
             <CustomerService/>
             <ContractsEnding/>
             <OtherAccounts/>
+            <LoyaltyPrograms/>
+            <UpcomingPayment/>
+            <VisitReservation/>
+            <Credit/>
         </div>
     )
 }

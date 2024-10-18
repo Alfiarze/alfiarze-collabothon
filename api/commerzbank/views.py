@@ -195,7 +195,7 @@ class CreditCardView(APIView):
         else:
             return Response({"message": "No credit cards exist"}, status=status.HTTP_404_NOT_FOUND)
     
-def post(self, request):
+    def post(self, request):
         data = request.data
         credit_card = CreditCard.objects.create(
             user=data['user'],
@@ -218,7 +218,11 @@ class OAuthView(APIView):
             user = request.user
             if not user.is_authenticated:
                 return Response({"error": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
-            response = refresh_oauth_token(user)
+            
+            # Log the user information for debugging
+            print(f"User: {user.username} is attempting to refresh token.")
+
+            response = refresh_oauth_token(user, "client_credentials")
 
             if response:
                 return Response(response, status=status.HTTP_200_OK)
@@ -226,6 +230,8 @@ class OAuthView(APIView):
                 return Response({"error": "Failed to refresh token"}, status=status.HTTP_400_BAD_REQUEST)
             
         except Exception as e:
+            # Log the exception for debugging
+            print(f"Exception occurred: {str(e)}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
                    
