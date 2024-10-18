@@ -160,6 +160,7 @@ class UpcomingPaymentView(APIView):
             return Response(upcoming_payments_json, status=status.HTTP_200_OK)
         else:
             return Response({"message": "No upcoming payments exist"}, status=status.HTTP_404_NOT_FOUND)
+        
     def post(self, request):
         data = request.data
         upcoming_payment = UpcomingPayment.objects.create(
