@@ -8,6 +8,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from .models import Contract, UserLayer
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
+from .func import refresh_oauth_token
 
 
 
@@ -140,4 +142,24 @@ class AccountView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
-        
+
+class OAuthView(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({"message": "OAuth view"})
+
+    def post(self, request):
+        try:
+            user = request.user
+            if not user.is_authenticated:
+                return Response({"error": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+            response = refresh_oauth_token(user)
+
+            if response:
+                return Response(response, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Failed to refresh token"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

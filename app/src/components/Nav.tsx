@@ -16,13 +16,11 @@ const Nav = () => {
     };
   
     const menuItems = [
-      { to: '/', label: 'Home' },
       { to: '/offer', label: 'Offer' },
       { to: '/Filiptest', label: 'Filip test' },
       { to: '/MatiTest', label: 'Mati test' },
       { to: '/Actions', label: 'Actions' },
       { to: '/Contracts', label: 'Contracts' },
-      { to: '/Dashboard', label: 'Dashboard' },
       { to: '/Logging', label: 'Logging' },
       { to: '/Exchange', label: 'Exchange' },
       { to: '/Schelude', label: 'Schedule' },
@@ -34,7 +32,7 @@ const Nav = () => {
     <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Commerzbank
+            <Link to="/">Commerzbank</Link>
             </Typography>
             {menuItems.slice(0, 5).map((item) => (
               <Button key={item.to} color="inherit" component={Link} to={item.to}>

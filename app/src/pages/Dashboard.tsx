@@ -45,7 +45,7 @@ function Content({ size }: { size: { width: number } }) {
   };
 
   return (
-    <>
+    <div style={{ height: '100vh', width: '100%', flexGrow: 1, display: 'flex', flexDirection: 'column'  }}>
       <ResponsiveGridLayout
         className="layout"
         layouts={layouts}
@@ -54,6 +54,8 @@ function Content({ size }: { size: { width: number } }) {
         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
         rowHeight={30}
         width={size.width}
+        containerPadding={[20, 20]}
+        style={{ minHeight: '100%' }}
       >
         {items.map((key) => (
           <div key={key}>
@@ -61,7 +63,7 @@ function Content({ size }: { size: { width: number } }) {
           </div>
         ))}
       </ResponsiveGridLayout>
-    </>
+    </div>
   );
 }
 

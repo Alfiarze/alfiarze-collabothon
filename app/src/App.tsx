@@ -1,10 +1,9 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Actions from './pages/Actions';
 import Contracts from './pages/Contracts';
-import Dashboard from './pages/Dashboard';
+import withSize from './pages/Dashboard';
 import Exchange from './components/Exchange';
 import Filiptest from './pages/Filiptest';
-import Home from './pages/Home';
 import Logging from './pages/Logging';
 import Login from './pages/Login';
 import Offer from './pages/Offer';
@@ -17,20 +16,26 @@ import { Typography,  Container, Box } from '@mui/material';
 import MatiTest from './pages/MatiTest';
 import Nav from './components/Nav';
 import { useUser } from './context/UserContext';
+import { useEffect } from 'react';
+import Dashboard from './pages/Dashboard';
 
 function App() {
-  const { user } = useUser();
+  const { user, checkUser } = useUser();
+
+  useEffect(() => {
+    console.log('user', user);
+  }, [user]);
 
   if(!user){
     return (
       <Router>
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Switch>
-              <Route path="/register" component={Register} />
-              <Route path="/login" component={Login} />
-              <Route path="/" component={Login} />
-              </Switch>
-      </div>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          <Switch>
+            <Route path="/register" component={Register} />
+            <Route path="/login" component={Login} />
+            <Route path="/" component={Login} />
+          </Switch>
+        </div>
       </Router>
     )
   }
@@ -47,7 +52,6 @@ function App() {
           <Switch>
             <Route path="/actions" component={Actions} />
             <Route path="/contracts" component={Contracts} />
-            <Route path="/dashboard" component={Dashboard} />
             <Route path="/exchange" component={Exchange} />
             <Route path="/filiptest" component={Filiptest} />
             <Route path="/matitest" component={MatiTest} />
@@ -59,11 +63,11 @@ function App() {
             <Route path="/support" component={Support} />
             <Route path="/Survey" component={Survey} />
             <Route path="/transfers" component={Transfers} />
-            <Route path="/" component={Home} />
+            <Route path="/" component={Dashboard} />
           </Switch>
         </Box>
         </Container>
-        <Box component="footer" sx={{ py: 3, px: 2, mt: 'auto', backgroundColor: 'primary.main' }}>
+        <Box component="footer" sx={{ py: 3, px: 2, backgroundColor: 'primary.main' }}>
           <Typography variant="body2" color="white" align="center">
             © {new Date().getFullYear()} Commerzbank. All rights reserved.
           </Typography>

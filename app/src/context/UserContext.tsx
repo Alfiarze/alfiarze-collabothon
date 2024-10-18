@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 type User = {
   id: string;
@@ -15,6 +15,7 @@ type UserContextType = {
   setToken: (token: string | null) => void;
   setRefreshToken: (refreshToken: string | null) => void;
   logout: () => void;
+  checkUser: () => void;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -24,15 +25,30 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [token, setToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
 
+  useEffect(() => {
+    checkUser();
+  }, []);
+
+  const checkUser = () => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setToken(localStorage.getItem('token'));
+      setRefreshToken(localStorage.getItem('refreshToken'));
+    }
+  };
+
   const logout = () => {
     setUser(null);
     setToken(null);
     setRefreshToken(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     // Add any additional logout logic here (e.g., clearing localStorage)
   };
-
   return (
-    <UserContext.Provider value={{ user, token, refreshToken, setUser, setToken, setRefreshToken, logout }}>
+    <UserContext.Provider value={{ user, token, refreshToken, setUser, setToken, setRefreshToken, logout, checkUser }}>
       {children}
     </UserContext.Provider>
   );

@@ -143,3 +143,7 @@ COMMERZBANK_API_URL = 'https://api-sandbox.commerzbank.com/auth/realms/sandbox/p
 COMMERZBANK_API_TOKEN = 'https://api-sandbox.commerzbank.com/auth/realms/sandbox/protocol/openid-connect/token'
 COMMERZBANK_API_KEY = '323b0c97-6082-4710-a1a8-0c9b908a555b'
 COMMERZBANK_API_SECRET = '25050c2d-3815-4086-b6d6-a4bbb689806f'
+
+# Commerzbank API credentials
+COMMERCZBANK_CLIENT_ID = 'ddd94153-dda0-4702-a22a-30c5b604efbe'
+COMMERCZBANK_CLIENT_SECRET = '371b419e-8a72-4b08-96a1-9f0706e95115'
