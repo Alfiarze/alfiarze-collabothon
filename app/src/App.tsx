@@ -42,10 +42,10 @@ function App() {
               <Link to="/Dashboard">Dashboard</Link>
             </li>
             <li>
-              <Link to="/Exchange">Exchange</Link>
+              <Link to="/Logging">Logging</Link>
             </li>
             <li>
-              <Link to="/Logging">Logging</Link>
+              <Link to="/Exchange">Exchange</Link>
             </li>
             <li>
               <Link to="/Login">Login</Link>
@@ -83,15 +83,15 @@ function App() {
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/exchange" component={Exchange} />
           <Route path="/filiptest" component={Filiptest} />
-          <Route path="/" component={Home} />
           <Route path="/logging" component={Logging} />
           <Route path="/login" component={Login} />
           <Route path="/offer" component={Offer} />
           <Route path="/register" component={Register} />
           <Route path="/schelude" component={Schelude} />
           <Route path="/support" component={Support} />
-          <Route path="/survey" component={Survey} />
+          <Route path="/Survey" component={Survey} />
           <Route path="/transfers" component={Transfers} />
+          <Route path="/" component={Home} />
         </Switch>
         </div>
 
