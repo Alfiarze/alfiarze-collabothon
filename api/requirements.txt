@@ -1,10 +1,5 @@
-fastapi
-uvicorn
-sqlalchemy
-asyncpg
-databases
-psycopg2-binary
-fastapi[all]
-sqlalchemy
-passlib[bcrypt]
-python-jose[cryptography]
+Django
+djangorestframework
+djangorestframework-simplejwt
+django-cors-headers
+psycopg2

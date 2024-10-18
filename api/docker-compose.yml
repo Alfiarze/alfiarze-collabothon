@@ -11,8 +11,6 @@ services:
       - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
     depends_on:
       - db
-    volumes:
-      - ./:/app
 
   db:
     image: postgres:13
@@ -27,3 +25,4 @@ services:
 
 volumes:
   postgres_data:
+
