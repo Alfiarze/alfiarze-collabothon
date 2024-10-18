@@ -6,6 +6,7 @@ import CardsList from '../components/widgets/CardsList';
 import RecentTransfersList from '../components/widgets/RecentTransfersList';
 import StockMarket from '../components/widgets/StockMarket';
 import Contracts from '../components/widgets/Contracts';
+import CustomerService from '../components/widgets/CustomerService';
 const Filiptest = () => {
   return (
     <Router>
@@ -15,6 +16,7 @@ const Filiptest = () => {
         <CardsList/>
         <RecentTransfersList/>
         <Contracts/>
+        <CustomerService/>
       </div>
     </Router>
   );
