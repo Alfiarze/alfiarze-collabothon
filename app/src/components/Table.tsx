@@ -5,12 +5,29 @@ export interface Column {
   accessor: string;
 }
 
-interface TableProps {
-  columns: Column[];
-  data: any[];
+interface ContractData {
+  id: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+  value: number;
+  status: string;
 }
 
-const Table: React.FC<TableProps> = ({ columns, data }) => {
+interface TableProps {
+  data: ContractData[];
+}
+
+const columns: Column[] = [
+  { header: 'Contract ID', accessor: 'id' },
+  { header: 'Name', accessor: 'name' },
+  { header: 'Start Date', accessor: 'startDate' },
+  { header: 'End Date', accessor: 'endDate' },
+  { header: 'Value', accessor: 'value' },
+  { header: 'Status', accessor: 'status' },
+];
+
+const Table: React.FC<TableProps> = ({ data }) => {
   return (
     <div className="overflow-x-auto shadow-md sm:rounded-lg">
       <table className="w-full text-sm text-left text-blue-700">
@@ -24,13 +41,14 @@ const Table: React.FC<TableProps> = ({ columns, data }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((row, rowIndex) => (
+          {data.map((contract, rowIndex) => (
             <tr key={rowIndex} className="bg-white border-b hover:bg-yellow-50">
-              {columns.map((column, colIndex) => (
-                <td key={colIndex} className="px-6 py-4">
-                  {row[column.accessor]}
-                </td>
-              ))}
+              <td className="px-6 py-4">{contract.id}</td>
+              <td className="px-6 py-4">{contract.name}</td>
+              <td className="px-6 py-4">{contract.startDate}</td>
+              <td className="px-6 py-4">{contract.endDate}</td>
+              <td className="px-6 py-4">${contract.value.toLocaleString()}</td>
+              <td className="px-6 py-4">{contract.status}</td>
             </tr>
           ))}
         </tbody>
