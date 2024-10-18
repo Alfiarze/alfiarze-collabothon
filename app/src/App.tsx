@@ -47,6 +47,8 @@ const theme = createTheme({
 function App() {
   const { user } = useUser();
 
+
+
   useEffect(() => {
     console.log('user', user);
   }, [user]);

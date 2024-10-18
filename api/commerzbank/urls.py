@@ -10,4 +10,6 @@ urlpatterns = [
     path('commerzbank/oauth/', views.OAuthView.as_view(), name='oauth'),
     path('upcoming-payments/', views.UpcomingPaymentView.as_view(), name='upcoming-payments'),
     path('credit-cards/', views.CreditCardView.as_view(), name='credit-cards'),
+    path('transactions/', views.TransactionView.as_view(), name='transactions'),
+    path('transactions/<int:transaction_id>/', views.TransactionView.as_view(), name='transaction-detail'),
 ]
