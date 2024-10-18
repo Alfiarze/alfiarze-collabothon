@@ -22,6 +22,7 @@ import Dashboard from './pages/Dashboard';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material/styles';
+import axiosPrivate from './ctx/axiosPrivate';
 
 export const themeOptions: ThemeOptions = {
   palette: {
@@ -49,7 +50,12 @@ const theme = createTheme({
 function App() {
   const { user, checkUser } = useUser();
 
-
+  useEffect(() => {
+    axiosPrivate.get('/api/userLayout/').then((res) => {
+      console.log(res);
+    });
+    
+  }, [checkUser]);
 
   useEffect(() => {
     console.log('user', user);
