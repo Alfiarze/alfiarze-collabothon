@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import UserLayer
+from .models import Contract, UserLayer
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -80,7 +80,7 @@ class ContractView(APIView):
     permission_classes = []
 
     def get(self, request):
-        contracts = ContractView.objects.all()
+        contracts = Contract.objects.all()
         if contracts.exists():
             contracts_json = []
             for contract in contracts:
@@ -102,7 +102,7 @@ class ContractView(APIView):
 
     def post(self, request):
         data = request.data
-        contract = ContractView.objects.create(
+        contract = Contract.objects.create(
             user_id=data['user_id'],
             contract_id=data['contract_id'],
             contract_type=data['contract_type'],
