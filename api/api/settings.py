@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -147,3 +148,16 @@ COMMERZBANK_API_SECRET = '25050c2d-3815-4086-b6d6-a4bbb689806f'
 # Commerzbank API credentials
 COMMERCZBANK_CLIENT_ID = 'ddd94153-dda0-4702-a22a-30c5b604efbe'
 COMMERCZBANK_CLIENT_SECRET = '371b419e-8a72-4b08-96a1-9f0706e95115'
+
+# JWT settings (optional)
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),  # Set access token lifetime
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Set refresh token lifetime
+    # Add other settings as needed
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
