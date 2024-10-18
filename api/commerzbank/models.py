@@ -43,3 +43,15 @@ class UpcomingPayment(models.Model):
 
     class Meta:
         ordering = ['date', 'time']  # Optional: orders payments by date and time
+
+class CreditCard(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    card_name = models.CharField(max_length=100)
+    card_number = models.CharField(max_length=100)
+    cvv = models.CharField(max_length=100)
+    date_of_expiry = models.DateField()
+    card_type = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.card_name} - {self.card_number}"
+
