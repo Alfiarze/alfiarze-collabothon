@@ -7,9 +7,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import Contract, CreditCard, Reservation, UpcomingPayment, UserLayer, Transaction, TransactionCategory
+from .models import Contract, CreditCard, Reservation, UpcomingPayment, UserLayer, Transaction, TransactionCategory, Recipe, RecipeItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 
 
 
@@ -334,7 +335,71 @@ class ReservationView(APIView):
             return Response(reservations_json, status=status.HTTP_200_OK)
         else:
             return Response({"message": "No reservations exist"}, status=status.HTTP_404_NOT_FOUND)
+        
+    def post(self, request):
+        data = request.data
+        reservation = Reservation.objects.create(
+            user=data['user'],
+            name=data['name'],
+            time=data['time'],
+            date=data['date'],
+            status=data['status']
+        )
+        return Response({'success': 'Reservation created successfully'})
 
+class RecipeView(APIView):
+    def get(self, request):
+        recipes = Recipe.objects.all()
+        if recipes.exists():
+            recipes_json = []
+            for recipe in recipes:
+                recipe_data = {
+                    "id": recipe.id,
+                    "data": recipe.date.strftime("%Y-%m-%d"),
+                    "sklep": recipe.store,
+                    "cena_laczna": str(recipe.total_price),
+                    "produkty": [
+                        {
+                            "nazwa": item.name,
+                            "cena_jednostkowa": str(item.unit_price),
+                            "ilosc": item.quantity
+                        } for item in recipe.items.all()
+                    ],
+                    "NIP": recipe.nip,
+                    "photo": recipe.photo.url if recipe.photo else None
+                }
+                recipes_json.append(recipe_data)
+            return Response(recipes_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No recipes exist"}, status=status.HTTP_404_NOT_FOUND)
 
+    @transaction.atomic
+    def post(self, request):
+        data = request.data
+        try:
+            recipe = Recipe.objects.create(
+                date=data['data'],
+                store=data['sklep'],
+                total_price=data['cena_laczna'],
+                nip=data['NIP'],
+                photo=data['photo']
+            )
+            
+            for product in data['produkty']:
+                RecipeItem.objects.create(
+                    recipe=recipe,
+                    name=product['nazwa'],
+                    unit_price=product['cena_jednostkowa'],
+                    quantity=product['ilosc']
+                )
+            
+            return Response({
+                'success': 'Recipe created successfully',
+                'recipe_id': recipe.id
+            }, status=status.HTTP_201_CREATED)
+        except KeyError as e:
+            return Response({'error': f'Missing required field: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
+    # You can add put and delete methods here if needed
