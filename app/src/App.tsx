@@ -14,6 +14,7 @@ import Schelude from './pages/Schelude';
 import Support from './pages/Support';
 import Survey from './components/Survey';
 import Transfers from './pages/Transfers';
+import Widgets from './pages/Widgets';
 
 function App() {
   return (
@@ -68,6 +69,9 @@ function App() {
             <li>
               <Link to="/Transfers">Transfers</Link>
             </li>
+            <li>
+              <Link to="/Widgets">Widgets</Link>
+            </li>
           </ul>
         </nav>
 
@@ -94,6 +98,7 @@ function App() {
           <Route path="/support" component={Support} />
           <Route path="/Survey" component={Survey} />
           <Route path="/transfers" component={Transfers} />
+          <Route path="/widgets" component={Widgets} />
           <Route path="/" component={Home} />
         </Switch>
         </div>
