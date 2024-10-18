@@ -36,7 +36,7 @@ const RecentTransfersList: React.FC = () => {
             </ListItemAvatar>
             <ListItemText
               primary={transfer.recipient}
-              secondary={`${transfer.type === 'incoming' ? '+' : '-'}$${transfer.amount} - ${transfer.date}`}
+              secondary={`${transfer.type === 'incoming' ? '+' : '-'}$${transfer.amount} | ${transfer.date}`}
             />
           </ListItem>
         ))}

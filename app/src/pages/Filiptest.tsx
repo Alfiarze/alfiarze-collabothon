@@ -8,6 +8,8 @@ import StockMarket from '../components/widgets/StockMarket';
 import Contracts from '../components/widgets/Contracts';
 import CustomerService from '../components/widgets/CustomerService';
 import ContractsEnding from '../components/widgets/ContractsEnding';
+import OtherAccounts from '../components/widgets/OtherAccounts';
+
 const Filiptest = () => {
   return (
     <Router>
@@ -19,6 +21,7 @@ const Filiptest = () => {
         <Contracts/>
         <CustomerService/>
         <ContractsEnding/>
+        <OtherAccounts/>
       </div>
     </Router>
   );

@@ -1,74 +1,49 @@
-import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Typography, List, ListItem, ListItemText, Paper, Box, CircularProgress } from '@mui/material';
 
-export interface Column {
-  header: string;
-  accessor: string;
-}
+const ContractList = () => {
+  const [contracts, setContracts] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-interface ContractData {
-  id: string;
-  name: string;
-  startDate: string;
-  endDate: string;
-  value: number;
-  status: string;
-}
+  useEffect(() => {
+    axios.get('http://localhost:8000/api/contracts/')
+      .then(response => {
+        setContracts(response.data as any[]);
+        setLoading(false);
+      })
+      .catch(error => {
+        setError(error.message);
+        setLoading(false);
+      });
+  }, []);
 
-interface TableProps {
-  data: ContractData[];
-}
+  if (loading) {
+    return <Box display="flex" justifyContent="center" alignItems="center" height="100vh"><CircularProgress /></Box>;
+  }
 
-const columns: Column[] = [
-  { header: 'ID', accessor: 'id' },
-  { header: 'Name', accessor: 'name' },
-  { header: 'Start Date', accessor: 'startDate' },
-  { header: 'End Date', accessor: 'endDate' },
-  { header: 'Value', accessor: 'value' },
-  { header: 'Status', accessor: 'status' },
-];
+  if (error) {
+    return <Typography color="error" align="center">Error: {error}</Typography>;
+  }
 
-// Sample data
-const sampleData: ContractData[] = [
-  {
-    id: '001',
-    name: 'Contract A',
-    startDate: '2023-01-01',
-    endDate: '2023-12-31',
-    value: 10000,
-    status: 'Active'
-  },
-  // Add more sample data as needed
-];
-
-const ContractTable: React.FC = () => {
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            {columns.map((column, index) => (
-              <TableCell key={index} align="left">
-                {column.header}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {sampleData.map((contract, rowIndex) => (
-            <TableRow key={rowIndex} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell component="th" scope="row">{contract.id}</TableCell>
-              <TableCell>{contract.name}</TableCell>
-              <TableCell>{contract.startDate}</TableCell>
-              <TableCell>{contract.endDate}</TableCell>
-              <TableCell>${contract.value.toLocaleString()}</TableCell>
-              <TableCell>{contract.status}</TableCell>
-            </TableRow>
+    <Box p={3}>
+      <Typography variant="h4" gutterBottom align="center">Contracts</Typography>
+      <Paper elevation={3}>
+        <List>
+          {contracts.map(contract => (
+            <ListItem key={contract.id} divider>
+              <ListItemText
+                primary={`${contract.contract_id} - ${contract.contract_type}`}
+                secondary={`Amount: $${contract.amount}`}
+              />
+            </ListItem>
           ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+        </List>
+      </Paper>
+    </Box>
   );
 };
 
-export default ContractTable;
+export default ContractList;
