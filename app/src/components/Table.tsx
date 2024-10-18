@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Typography, List, ListItem, ListItemText, Paper, Box, CircularProgress } from '@mui/material';
+import axiosPrivate from '../ctx/axiosPrivate';
 
 const ContractList = () => {
   const [contracts, setContracts] = useState<any[]>([]);
@@ -8,7 +8,7 @@ const ContractList = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/contracts/')
+    axiosPrivate.get('api/contracts/')
       .then(response => {
         setContracts(response.data as any[]);
         setLoading(false);
