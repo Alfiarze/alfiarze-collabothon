@@ -53,7 +53,7 @@ function App() {
       console.log(res);
     });
     
-  }, [checkUser]);
+  }, []);
 
   useEffect(() => {
     console.log('user', user);
