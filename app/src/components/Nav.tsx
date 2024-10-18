@@ -2,6 +2,7 @@ import { AppBar, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from 
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import logo from '../assets/images/logo.png';
 
 
 const Nav = () => {
@@ -34,7 +35,9 @@ const Nav = () => {
     <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Commerzbank
+              <a href="https://www.commerzbank.de/">
+            <img src={logo} alt="Commerzbank logo" style={{ maxWidth: '100%', height: 'auto', maxHeight: '40px', width: 'auto'}}  />
+            </a>
             </Typography>
             {menuItems.slice(0, 5).map((item) => (
               <Button key={item.to} color="inherit" component={Link} to={item.to}>
