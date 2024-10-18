@@ -1,4 +1,5 @@
 import React from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 export interface Column {
   header: string;
@@ -19,7 +20,7 @@ interface TableProps {
 }
 
 const columns: Column[] = [
-  { header: 'Contract ID', accessor: 'id' },
+  { header: 'ID', accessor: 'id' },
   { header: 'Name', accessor: 'name' },
   { header: 'Start Date', accessor: 'startDate' },
   { header: 'End Date', accessor: 'endDate' },
@@ -27,34 +28,47 @@ const columns: Column[] = [
   { header: 'Status', accessor: 'status' },
 ];
 
-const Table: React.FC<TableProps> = ({ data }) => {
+// Sample data
+const sampleData: ContractData[] = [
+  {
+    id: '001',
+    name: 'Contract A',
+    startDate: '2023-01-01',
+    endDate: '2023-12-31',
+    value: 10000,
+    status: 'Active'
+  },
+  // Add more sample data as needed
+];
+
+const ContractTable: React.FC = () => {
   return (
-    <div className="overflow-x-auto shadow-md sm:rounded-lg">
-      <table className="w-full text-sm text-left text-blue-700">
-        <thead className="text-xs uppercase bg-blue-100">
-          <tr>
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
             {columns.map((column, index) => (
-              <th key={index} scope="col" className="px-6 py-3">
+              <TableCell key={index} align="left">
                 {column.header}
-              </th>
+              </TableCell>
             ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((contract, rowIndex) => (
-            <tr key={rowIndex} className="bg-white border-b hover:bg-yellow-50">
-              <td className="px-6 py-4">{contract.id}</td>
-              <td className="px-6 py-4">{contract.name}</td>
-              <td className="px-6 py-4">{contract.startDate}</td>
-              <td className="px-6 py-4">{contract.endDate}</td>
-              <td className="px-6 py-4">${contract.value.toLocaleString()}</td>
-              <td className="px-6 py-4">{contract.status}</td>
-            </tr>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {sampleData.map((contract, rowIndex) => (
+            <TableRow key={rowIndex} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell component="th" scope="row">{contract.id}</TableCell>
+              <TableCell>{contract.name}</TableCell>
+              <TableCell>{contract.startDate}</TableCell>
+              <TableCell>{contract.endDate}</TableCell>
+              <TableCell>${contract.value.toLocaleString()}</TableCell>
+              <TableCell>{contract.status}</TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
-export default Table;
+export default ContractTable;

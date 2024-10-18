@@ -16,6 +16,7 @@ import Survey from './components/Survey';
 import Transfers from './pages/Transfers';
 import { AppBar, Button, IconButton, Toolbar, Typography, Menu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import MatiTest from './pages/MatiTest';
 
 function App() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -91,6 +92,7 @@ function App() {
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/exchange" component={Exchange} />
             <Route path="/filiptest" component={Filiptest} />
+            <Route path="/matitest" component={MatiTest} />
             <Route path="/logging" component={Logging} />
             <Route path="/login" component={Login} />
             <Route path="/offer" component={Offer} />
