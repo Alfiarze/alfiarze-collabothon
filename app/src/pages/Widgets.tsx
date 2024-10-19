@@ -1,5 +1,5 @@
 import CardsList from "../components/widgets/CardsList";
-import Contracts from "../components/widgets/Contracts";
+import Contracts from "../components/widgets/ContractsWidget";
 import ContractsEnding from "../components/widgets/ContractsEnding";
 import Credit from "../components/widgets/Credit";
 import CustomerService from "../components/widgets/CustomerService";
