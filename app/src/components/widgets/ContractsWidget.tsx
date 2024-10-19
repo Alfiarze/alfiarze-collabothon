@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { List, ListItem, ListItemText, Typography, Paper } from '@mui/material';
+import { List, ListItem, ListItemText, Typography, Paper, IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import axiosPrivate from '../../ctx/axiosPrivate';
 
 interface ContractResponse {
@@ -23,8 +24,11 @@ const Contracts = () => {
 
     return (
         <Paper elevation={3} sx={{ padding: 2, maxWidth: 400, margin: 'auto' }}>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" gutterBottom sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 Contracts
+                <IconButton color="primary" aria-label="add contract">
+                    <AddIcon />
+                </IconButton>
             </Typography>
             <List>
                 {contracts.map((contract, index) => (

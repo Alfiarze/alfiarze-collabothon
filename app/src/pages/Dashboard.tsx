@@ -3,6 +3,8 @@ import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { SizeMe } from "react-sizeme";
 import { Card,  IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import TopBar from "../components/TopBar";
+
 import CardsList from "../components/widgets/CardsList";
 import Contracts from "../components/widgets/ContractsWidget";
 import Credit from "../components/widgets/Credit";
@@ -11,7 +13,6 @@ import RecentTransfersList from "../components/widgets/RecentTransfersList";
 import LoyaltyProgram from "../components/widgets/LoyaltyPrograms";
 import UpcomingPayment from "../components/widgets/UpcomingPayment";
 import OtherAccounts from "../components/widgets/OtherAccounts";
-import TopBar from "../components/TopBar";
 import ReceiptWidget from "../components/widgets/ReceiptWidget";
 // Define a mapping of widget IDs to their components
 const widgetComponents: { [key: string]: React.ComponentType } = {
@@ -20,8 +21,8 @@ const widgetComponents: { [key: string]: React.ComponentType } = {
   c: Credit,
   d: ContractsEnding,
   e: RecentTransfersList,
-  f: LoyaltyProgram,
-  g: UpcomingPayment,
+  f: UpcomingPayment,
+  g: LoyaltyProgram,
   h: OtherAccounts,
   i: ReceiptWidget
 };
@@ -31,14 +32,14 @@ const originalItems = Object.keys(widgetComponents);
 const initialLayouts = {
   lg: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
-    { i: "b", x: 1, y: 0, w: 1, h: 2 },
-    { i: "c", x: 2, y: 0, w: 1, h: 2 },
-    { i: "d", x: 3, y: 0, w: 1, h: 2 },
-    { i: "e", x: 4, y: 0, w: 1, h: 2 },
-    { i: "f", x: 5, y: 0, w: 1, h: 2 },
-    { i: "g", x: 6, y: 0, w: 1, h: 2 },
-    { i: "h", x: 7, y: 0, w: 1, h: 2 },
-    { i: "i", x: 8, y: 0, w: 1, h: 2 }
+    { i: "b", x: 0, y: 2, w: 1, h: 2 },
+    { i: "c", x: 1, y: 0, w: 1, h: 2 },
+    { i: "d", x: 1, y: 2, w: 1, h: 2 },
+    { i: "e", x: 2, y: 0, w: 1, h: 2 },
+    { i: "f", x: 2, y: 2, w: 1, h: 2 },
+    { i: "g", x: 3, y: 0, w: 1, h: 2 },
+    { i: "h", x: 3, y: 2, w: 1, h: 2 },
+    { i: "i", x: 0, y: 4, w: 1, h: 2 }
   ]
 };
 
@@ -52,11 +53,7 @@ function Dashboard() {
 
 function Content({ size }: { size: { width: number | null } }) {
   const [items, setItems] = useState<string[]>(originalItems);
-  const [layouts, setLayouts] = useState<any>(() => {
-    const savedLayouts = getFromLS("layouts");
-    console.log("Initial layouts from localStorage:", savedLayouts);
-    return savedLayouts || initialLayouts;
-  });
+  const [layouts, setLayouts] = useState<any>(initialLayouts);
 
   useEffect(() => {
     console.log("Current layouts:", layouts);
@@ -65,7 +62,8 @@ function Content({ size }: { size: { width: number | null } }) {
   const onLayoutChange = (allLayouts: any) => {
     console.log("Layout changed. New layouts:", allLayouts);
     setLayouts(allLayouts);
-    saveToLS("layouts", allLayouts);
+    // Comment out the following line to prevent saving to localStorage
+    // saveToLS("layouts", allLayouts);
   };
 
   // Remove this function as it's no longer needed
@@ -134,27 +132,8 @@ const Widget: React.FC<WidgetProps & { editMode: boolean }> = ({ id, onRemoveIte
   );
 };
 
-function getFromLS(key: string): any {
-  let ls: { [key: string]: any } = {};
-  if (typeof window !== 'undefined' && window.localStorage) {
-    try {
-      ls = JSON.parse(window.localStorage.getItem("rgl-8") || "{}") || {};
-    } catch (e) {
-      console.error("Error parsing localStorage:", e);
-    }
-  }
-  return ls[key];
-}
-
-function saveToLS(key: string, value: any) {
-  if (typeof window !== 'undefined' && window.localStorage) {
-    window.localStorage.setItem(
-      "rgl-8",
-      JSON.stringify({
-        [key]: value
-      })
-    );
-  }
-}
+// Comment out or remove the getFromLS and saveToLS functions
+// function getFromLS(key: string): any { ... }
+// function saveToLS(key: string, value: any) { ... }
 
 export default Dashboard;
