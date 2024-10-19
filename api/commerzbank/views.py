@@ -327,10 +327,10 @@ class TransactionView(APIView):
             for transaction in transactions:
                 transaction_data = {
                     "id": transaction.id,
-                    "account_id": transaction.account_id,
-                    "transaction_name": transaction.transaction_name,
-                    "from_account": transaction.from_account,
-                    "to_account": transaction.to_account,
+                    "title": transaction.title,
+                    "reciver_id": transaction.reciver_id,
+                    "reciver_address": transaction.reciver_address,
+                    "bank_account_number": transaction.bank_account_number,
                     "amount": str(transaction.amount),
                     "categories": [category.name for category in transaction.categories.all()]
                 }
@@ -343,11 +343,12 @@ class TransactionView(APIView):
         data = request.data
         try:
             transaction = Transaction.objects.create(
-                account_id=data['account_id'],
-                transaction_name=data['transaction_name'],
-                from_account=data['from_account'],
-                to_account=data['to_account'],
-                amount=data['amount']
+                title=data['title'],
+                reciver_id=data['reciver_id'],
+                reciver_address=data['reciver_address'],
+                bank_account_number=data['bank_account_number'],
+                amount=data['amount'],
+                categories=data['categories']
             )
             
             # Handle categories
@@ -370,11 +371,11 @@ class TransactionView(APIView):
         transaction = get_object_or_404(Transaction, id=transaction_id)
         data = request.data
         try:
-            transaction.account_id = data.get('account_id', transaction.account_id)
-            transaction.transaction_name = data.get('transaction_name', transaction.transaction_name)
-            transaction.from_account = data.get('from_account', transaction.from_account)
-            transaction.to_account = data.get('to_account', transaction.to_account)
-            transaction.amount = data.get('amount', transaction.amount)
+            transaction.title = data.get('title', transaction.title)
+            transaction.reciver_id = data.get('reciver_id', transaction.reciver_id)
+            transaction.reciver_address = data.get('reciver_address', transaction.reciver_address)
+            transaction.bank_account_number = data.get('bank_account_number', transaction.bank_account_number)
+            transaction.amount = data.get('amount', transaction.amount) 
             
             # Update categories
             if 'categories' in data:

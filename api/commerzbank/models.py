@@ -82,15 +82,15 @@ class TransactionCategory(models.Model):
       
 class Transaction(models.Model):
     id = models.AutoField(primary_key=True)
-    account_id = models.IntegerField()
-    transaction_name = models.CharField(max_length=250)
-    from_account = models.IntegerField()
-    to_account = models.IntegerField()
+    title = models.CharField(max_length=250)
+    reciver_id = models.IntegerField()
+    reciver_address = models.CharField(max_length=250)
+    bank_account_number = models.CharField(max_length=26)
     amount = models.IntegerField()
     categories = models.ManyToManyField(TransactionCategory, related_name='transactions' , blank=True)
 
     def __str__(self):
-        return f"Transaction {self.id}: {self.transaction_name}"
+        return f"Transaction {self.id}: {self.title}"
     
     
 class Reservation(models.Model):
