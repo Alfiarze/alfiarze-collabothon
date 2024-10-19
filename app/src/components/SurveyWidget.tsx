@@ -52,7 +52,11 @@ function Survey() {
     };
 
     if (isCompleted) {
-        axiosPrivate.post('/api/userLayout/', formData);
+        axiosPrivate.post('/api/userLayout/', formData).then(() => {
+            window.location.href = '/';
+        }).catch((error) => {
+            console.error('Error submitting survey:', error);
+        });
         return (
             <Box sx={{
                 border: '1px solid #e0e0e0',
