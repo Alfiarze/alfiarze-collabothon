@@ -1,24 +1,33 @@
-from openai import AzureOpenAI
+from openai import AsyncAzureOpenAI
 from django.conf import settings
 
-client = AzureOpenAI(
-    api_key=settings.AZURE_OPENAI_API_KEY,
-    api_version=settings.AZURE_OPENAI_API_VERSION,
-    azure_endpoint=settings.AZURE_OPENAI_API_ENDPOINT
-)
+async def send_prompt_to_azure_openai(prompt):
+    # Configure Azure OpenAI client
+    client = AsyncAzureOpenAI(
+        api_key=settings.AZURE_OPENAI_API_KEY,
+        api_version=settings.AZURE_OPENAI_API_VERSION,
+        azure_endpoint=settings.AZURE_OPENAI_API_ENDPOINT
+    )
 
-def get_gpt4_response(prompt):
     try:
-        response = client.chat.completions.create(
-            model="gpt-4",  # Make sure this model name is correct for your Azure setup
+        # Send the prompt to Azure OpenAI
+        response = await client.chat.completions.create(
+            model="gpt-35-turbo",  # Adjust this to match your deployed model name
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
-            ]
+            ],
+            max_tokens=150
         )
-        return response.choices[0].message.content
+
+        # Extract and return the generated text
+        return response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"Error in GPT-4 request: {str(e)}")
-        return None
+        # Handle any errors
+        return f"Error: {str(e)}"
 
-
+# Example usage
+if __name__ == "__main__":
+    import asyncio
+    result = asyncio.run(send_prompt_to_azure_openai("Tell me a joke about programming."))
+    print(result)
