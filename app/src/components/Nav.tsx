@@ -27,11 +27,7 @@ const Nav = () => {
       { to: '/offer', label: 'Offer' },
       { to: '/Actions', label: 'Actions' },
       { to: '/Contracts', label: 'Contracts' },
-      { to: '/Logging', label: 'Logging' },
-      { to: '/Exchange', label: 'Exchange' },
-      { to: '/Schelude', label: 'Schedule' },
       { to: '/Support', label: 'Support' },
-      { to: '/Survey', label: 'Survey' },
       { to: '/Transfers', label: 'Transfers' },
     ];
   return (

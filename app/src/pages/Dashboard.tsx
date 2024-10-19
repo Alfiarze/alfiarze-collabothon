@@ -14,6 +14,8 @@ import LoyaltyProgram from "../components/widgets/LoyaltyPrograms";
 import UpcomingPayment from "../components/widgets/UpcomingPayment";
 import OtherAccounts from "../components/widgets/OtherAccounts";
 import ReceiptWidget from "../components/widgets/ReceiptWidget";
+import ShowQRCode from "../components/widgets/ShowQRCode";
+
 // Define a mapping of widget IDs to their components
 const widgetComponents: { [key: string]: React.ComponentType } = {
   a: CardsList,
@@ -24,7 +26,8 @@ const widgetComponents: { [key: string]: React.ComponentType } = {
   f: UpcomingPayment,
   g: LoyaltyProgram,
   h: OtherAccounts,
-  i: ReceiptWidget
+  i: ReceiptWidget,
+  j: ShowQRCode,
 };
 
 const originalItems = Object.keys(widgetComponents);
@@ -38,8 +41,8 @@ const initialLayouts = {
     { i: "e", x: 2, y: 0, w: 1, h: 2 },
     { i: "f", x: 2, y: 2, w: 1, h: 2 },
     { i: "g", x: 3, y: 0, w: 1, h: 2 },
-    { i: "h", x: 3, y: 2, w: 1, h: 2 },
-    { i: "i", x: 0, y: 4, w: 1, h: 2 }
+    { i: "h", x: 3, y: 2, w: 3, h: 2 },
+    { i: "i", x: 3, y: 3, w: 1, h: 2 }
   ]
 };
 
@@ -121,7 +124,7 @@ interface WidgetProps {
 
 const Widget: React.FC<WidgetProps & { editMode: boolean }> = ({ id, onRemoveItem, component: Component, editMode }) => {
   return (
-    <Card>
+    <Card sx={{ height: '100%', overflow: 'auto' }}>
       {editMode && (
         <IconButton aria-label="delete" onClick={() => onRemoveItem(id)}>
           <CloseIcon fontSize="small" />
