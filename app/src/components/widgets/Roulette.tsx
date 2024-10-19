@@ -63,7 +63,7 @@ export default () => {
           mustStartSpinning={mustSpin}
           prizeNumber={prizeNumber ?? 0}
           data={data}
-          backgroundColors={data.map(item => item.style?.backgroundColor || '#f1a80e')}
+          backgroundColors={['#f1a80e', '#002e3c']}
           radiusLineColor='#14343c'
           textColors={data.map(item => item.style?.textColor || 'white')}
           textDistance={80}

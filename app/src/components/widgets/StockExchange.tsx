@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Box, Typography, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface Stock {
@@ -97,7 +97,7 @@ const StockExchange: React.FC = () => {
     setStocks(mockStocks);
   }, []);
 
-  const handleStockChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleStockChange = (event: SelectChangeEvent) => {
     setSelectedStock(event.target.value as string);
   };
 
