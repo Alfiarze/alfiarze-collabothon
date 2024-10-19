@@ -37,7 +37,7 @@ class UserLayoutProvider(APIView):
                 "layout": userLayer.layout,
                 "datetime": userLayer.datetime
             }
-            return Response(users_json, status=status.HTTP_200_OK)
+            return Response(user_data, status=status.HTTP_200_OK)
         else:
             return Response({"message": "No users exist"}, status=status.HTTP_404_NOT_FOUND)
     
