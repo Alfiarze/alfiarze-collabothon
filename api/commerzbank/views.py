@@ -17,6 +17,9 @@ from openai import AzureOpenAI
 from chatai.func import analyze_text 
 import json
 from decimal import Decimal, InvalidOperation
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import os
 
 
 
@@ -397,8 +400,8 @@ class ReservationView(APIView):
         return Response({'success': 'Reservation created successfully'})
 
 class RecipeView(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
+
 
     def get(self, request):
         recipes = Recipe.objects.all()
@@ -435,6 +438,10 @@ class RecipeView(APIView):
         # Create the recipe with just the photo
         recipe = Recipe.objects.create(photo=photo)
 
+        # Save the file temporarily
+        temp_path = default_storage.save('temp_recipe_photo.jpg', ContentFile(photo.read()))
+        temp_full_path = os.path.join(settings.MEDIA_ROOT, temp_path)
+
         # Prepare the prompt for the AI service
         final_prompt = """
         Analyze the recipe in this photo and provide the following information in JSON format:
@@ -456,8 +463,10 @@ class RecipeView(APIView):
         prompt = final_prompt + prompt
 
         try:
-            analysis_result = analyze_text(prompt, image_path=photo.path)
+            analysis_result = analyze_text(prompt, image_path=temp_full_path)
             recipe_data = json.loads(analysis_result["choices"][0]["message"]["content"])
+
+            print(analysis_result)
 
             # Update the recipe with extracted data
             recipe.date = recipe_data.get('date')
@@ -628,3 +637,4 @@ class AINavigatorView(APIView):
         response = analyze_text(prompt, endpoint="https://alfiarzepl.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-15-preview")
 
         return Response(response["choices"][0]["message"]["content"], status=status.HTTP_200_OK)
+
