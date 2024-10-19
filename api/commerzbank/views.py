@@ -1,3 +1,4 @@
+
 from api import settings
 import requests
 from .func import refresh_oauth_token
@@ -33,7 +34,7 @@ class UserLayoutProvider(APIView):
                 userLayer = UserLayer.objects.filter(user=user).first()
                 try:    
                     user_data = {
-                    "answer_1": userLayer.answer_1,
+                        "answer_1": userLayer.answer_1,
                     "answer_2": userLayer.answer_2,
                     "answer_3": userLayer.answer_3,
                     "answer_4": userLayer.answer_4,
@@ -167,7 +168,7 @@ class AccountView(APIView):
         headers = {
             "Accept": "application/json",
             "X-Api-Key": settings.COMMERZBANK_API_KEY,
-            "X-Secret-Key": settings.COMMERZBANK_SECRET_KEY
+            "X-Secret-Key": settings.COMMERCZBANK_CLIENT_SECRET
         }
 
         try:
@@ -294,8 +295,6 @@ class OAuthView(APIView):
 
 
 class TransactionView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         transactions = Transaction.objects.all()
@@ -374,7 +373,6 @@ class TransactionView(APIView):
         return Response({'success': 'Transaction deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 class ReservationView(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -510,7 +508,6 @@ class RecipeView(APIView):
             return Response({'error': f'An error occurred during analysis: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class LoanOffersView(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -544,8 +541,12 @@ class LoanOffersView(APIView):
     
 
 class TestAIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+
     def get(self, request):
-        result = send_prompt_to_azure_openai("Tell me a joke about programming.")
+        result = analyze_text(text="Tell me a joke about programming.", prompt="You are an AI assistant for a banking application. Analyze user queries and provide appropriate responses.")
+        print(result)
         return Response({"message": result})
 
 
@@ -580,7 +581,6 @@ class CommerzbankBranchesView(APIView):
 
 
 class LoyalProgramView(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -609,7 +609,7 @@ class LoyalProgramView(APIView):
         return Response({'success': 'Loyal program created successfully'}, status=status.HTTP_201_CREATED)
         
 class AINavigatorView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def post(self, request):
         prompt = request.data["prompt"]
@@ -619,10 +619,10 @@ class AINavigatorView(APIView):
         final_prompt = """
         To jest struktrua url w naszej aplikacji bankowej:
         Offer: '/offer',
-        Actions: '/Actions', 
-        Contracts: '/Contracts', 
-        Support: '/Support', 
-        Transfers: '/Transfers'
+        Actions: '/actions', 
+        Contracts: '/contracts', 
+        Support: '/support', 
+        Transfers: '/transfers'
         Na podstawie pytania użytkownika określ potrzebę użytkownika. Jeżeli nie wiesz co odpowiedzić jasno o tym powiedz. Na końcu zwróć json w podanym formacie {
         "action": "redirect",
         "path": right_path,
@@ -636,14 +636,20 @@ class AINavigatorView(APIView):
         "action": "none"
         }
         Additional info uzupełniasz tylko jak jesteś w stanie uzupełnić dane na bazie informacji z zapytania  w przeciwnym wypadku zostaw puste pole. Odpowiadaj tylko json.
-
         """
 
-        prompt = final_prompt + prompt
+        response = analyze_text(text=prompt, prompt=final_prompt)
 
-        response = analyze_text(prompt, endpoint="https://alfiarzepl.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-15-preview")
+        print(response)  # Keep this for debugging
 
-        return Response(response["choices"][0]["message"]["content"], status=status.HTTP_200_OK)
+        try:
+            # Parse the JSON string from the response
+            parsed_response = json.loads(response)
+            return Response(parsed_response, status=status.HTTP_200_OK)
+        except json.JSONDecodeError:
+            return Response({"error": "Failed to parse AI response"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except KeyError:
+            return Response({"error": "Unexpected AI response format"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GenerateQRCodeView(APIView):
     permission_classes = [IsAuthenticated]
@@ -668,5 +674,6 @@ class GenerateQRCodeView(APIView):
             'success': 'QR code created successfully',
             'code': qr_code.code
         }, status=status.HTTP_201_CREATED)
+
 
 
