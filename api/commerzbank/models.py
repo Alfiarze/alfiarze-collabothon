@@ -39,6 +39,7 @@ class Contract(models.Model):
     file = models.FileField(upload_to='contracts/', null=True, blank=True)
     status = models.CharField(max_length=100)
     name = models.CharField(max_length=100)  # Example field
+    currency = models.CharField(max_length=6)
 
     def __str__(self):
         return self.name  # or any other appropriate string representation
@@ -49,6 +50,8 @@ class UpcomingPayment(models.Model):
     time = models.TimeField()
     date = models.DateField()
     account_id = models.CharField(max_length=100)  # Adjust max_length as needed
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=6)
 
     def __str__(self):
         return f"Payment for {self.user.username} on {self.date} at {self.time}"

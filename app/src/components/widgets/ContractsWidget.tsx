@@ -14,7 +14,7 @@ interface ContractResponse {
     status: string;
 }
 
-const ContractsWidget = () => {
+const ContractsWidget = (openWidget: boolean, setOpenWidget: (open: boolean) => void) => {
     const [contracts, setContracts] = useState<ContractResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
