@@ -90,6 +90,8 @@ class UserLayoutProvider(APIView):
 
 
 class RegisterView(APIView):
+    permission_classes = []
+    authentication_classes = []
 
     def post(self, request):
         username = request.data.get('username')
