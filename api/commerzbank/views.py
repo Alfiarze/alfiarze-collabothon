@@ -15,8 +15,8 @@ from django.db import transaction
 
 
 class UserLayoutProvider(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    authentication_classes = []
+    permission_classes = []
 
     def get(self, request):
         users = UserLayer.objects.all()

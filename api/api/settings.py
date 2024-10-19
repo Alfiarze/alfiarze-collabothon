@@ -161,3 +161,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+
+AZURE_OPENAI_API_KEY = os.environ.get('AZURE_OPENAI_API_KEY')
+AZURE_OPENAI_API_ENDPOINT = os.environ.get('AZURE_OPENAI_API_ENDPOINT')
+AZURE_OPENAI_API_VERSION = os.environ.get('AZURE_OPENAI_API_VERSION')
+AZURE_OPENAI_API_LOCATION = os.environ.get('AZURE_OPENAI_API_LOCATION')
