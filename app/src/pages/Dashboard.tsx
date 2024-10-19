@@ -124,7 +124,7 @@ function Content({ size }: { size: { width: number | null } }) {
 
       if (newBreakpoint !== currentBreakpoint) {
         setCurrentBreakpoint(newBreakpoint);
-        setLayouts((prevLayouts: any) => ({
+        setLayouts((prevLayouts: { [key: string]: any }) => ({
           ...prevLayouts,
           [newBreakpoint]: prevLayouts[newBreakpoint] || initialLayouts[newBreakpoint],
         }));
@@ -137,7 +137,7 @@ function Content({ size }: { size: { width: number | null } }) {
     return () => window.removeEventListener("resize", handleResize);
   }, [currentBreakpoint]);
 
-  const onLayoutChange = useCallback((currentLayout: any, allLayouts: any) => {
+  const onLayoutChange = useCallback(( allLayouts: any) => {
     console.log("Layout changed. New layouts:", allLayouts);
     setLayouts(allLayouts);
   }, []);
