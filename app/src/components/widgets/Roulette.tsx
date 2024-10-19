@@ -67,6 +67,7 @@ export default () => {
           radiusLineColor='#14343c'
           textColors={['white']}
           textDistance={80}
+          fontSize={18}
           perpendicularText={true}
           innerRadius={25}
           innerBorderColor='#14343c'
