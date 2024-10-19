@@ -1,4 +1,6 @@
 /app/.env
 /api/.env
 /app/node_modules/
+/api/recipes/
+
 /node_modules/

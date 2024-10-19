@@ -552,40 +552,36 @@ class TestAIView(APIView):
         result = send_prompt_to_azure_openai("Tell me a joke about programming.")
         return Response({"message": result})
 
+
+class CommerzbankBranchesView(APIView):
+    def get(self, request):
+        # Define the base URL and headers required for Commerzbank API
+        base_url = 'https://api-sandbox.commerzbank.com/branches-api/1/v1/geosearch/city_street'
+        headers = {
+            'Accept': 'application/json',
+            'keyid': settings.COMMERZBANK_API_KEY,
+        }
         
-#do tego wrocimy kiedys 
-# class BranchView(APIView):
-#     def get(self, request):
-#         url = "https://api-sandbox.commerzbank.com/branches-api/1/v1"
-#         headers = {
-#             "Accept": "application/json",
-#             "X-Api-Key": settings.COMMERZBANK_API_KEY,
-#             "X-Secret-Key": settings.COMMERZBANK_API_SECRET
-#         }
+        # Get query parameters from the request, with defaults
+        params = {
+            'city': request.query_params.get('city', 'Hamburg'),
+            'street': request.query_params.get('street', 'Mönckebergstraße'),
+            'type': request.query_params.get('type', 'P'),
+        }
 
-#         # Get query parameters
-#         latitude = request.query_params.get('latitude')
-#         longitude = request.query_params.get('longitude')
-#         radius = request.query_params.get('radius')
+        try:
+            # Make the GET request to the Commerzbank API
+            response = requests.get(base_url, headers=headers, params=params)
+            response.raise_for_status()  # Raise an error for bad status codes
 
-#         # Add query parameters to the URL if provided
-#         if latitude and longitude and radius:
-#             url += f"?latitude={latitude}&longitude={longitude}&radius={radius}"
+            # Parse the JSON response and return it to the client
+            data = response.json()
+            return Response(data, status=status.HTTP_200_OK)
 
-#         try:
-#             response = requests.get(url, headers=headers)
-#             if response.status_code == 200:
-#                 return Response(response.json(), status=status.HTTP_200_OK)
-#             else:
-#                 return Response(
-#                     {"error": "Request to Commerzbank Branches API failed", "status_code": response.status_code},
-#                     status=response.status_code
-#                 )
-#         except requests.RequestException as e:
-#             return Response(
-#                 {"error": f"Request to Commerzbank Branches API failed: {str(e)}"},
-#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
-#             )
+        except requests.exceptions.RequestException as e:
+            # Return an error response if something goes wrong with the request
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LoyalProgramView(APIView):
     authentication_classes = [SessionAuthentication]
@@ -616,4 +612,5 @@ class LoyalProgramView(APIView):
         )
         return Response({'success': 'Loyal program created successfully'}, status=status.HTTP_201_CREATED)
         
+
 
