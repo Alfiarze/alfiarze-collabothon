@@ -115,7 +115,7 @@ class ContractView(APIView):
             end_date=data['end_date'],
             status=data['status']
         )
-        return Response({'success': 'Contract created successfully'})
+        return Response({'success': 'Contract created successfully'}, status=status.HTTP_201_CREATED)
 
 class AccountView(APIView):
     def get(self, request):
@@ -424,7 +424,7 @@ class LoanOffersView(APIView):
                     "period": loan_offer.period,
                     "description": loan_offer.description,
                     "type": loan_offer.type
-                    }
+                }
                 loan_offers_json.append(loan_offer_data)
             return Response(loan_offers_json, status=status.HTTP_200_OK)
         else:
@@ -433,14 +433,13 @@ class LoanOffersView(APIView):
     def post(self, request):
         data = request.data
         loan_offer = LoanOffer.objects.create(
-            id=data['id'],
             loan_amount=data['loan_amount'],
             interest_rate=data['interest_rate'],
             period=data['period'],
             description=data['description'],
             type=data['type']
         )
-        return Response({'success': 'Loan offer created successfully'})
+        return Response({'success': 'Loan offer created successfully'}, status=status.HTTP_201_CREATED)
     
 
         

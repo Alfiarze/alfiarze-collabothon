@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install Python dependencies
 COPY requirements.txt /app/
-RUN pip install --upgrade pip && pip install -r requirements.txt && pip install daphne
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy the project files into the container
 COPY . /app/
@@ -25,8 +25,6 @@ COPY . /app/
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
-# Expose the port Daphne will run on
-EXPOSE 8000
-
-# Run the application using Daphne
-CMD python manage.py migrate && daphne -b 0.0.0.0 -p 8000 api.asgi:application
+# Run the application
+CMD ["python", "manage.py", "migrate"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
