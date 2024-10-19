@@ -9,6 +9,7 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import axiosPrivate from '../../ctx/axiosPrivate';
 
 interface Payment {
@@ -64,11 +65,46 @@ const UpcomingPayments = () => {
   }
 
   if (error) {
-    return <Alert severity="error">Error: {error}</Alert>;
+    return (
+      <Box p={3}>
+        <Alert 
+          severity="error" 
+          icon={<ErrorOutlineIcon fontSize="inherit" />}
+          sx={{
+            backgroundColor: 'primary.main',
+            color: 'white',
+            '& .MuiAlert-icon': {
+              color: 'white',
+            },
+          }}
+        >
+          <Typography variant="body1" color="inherit">
+            Error: {error}
+          </Typography>
+        </Alert>
+      </Box>
+    );
   }
 
   if (payments.length === 0) {
-    return <Alert severity="info">No upcoming payments exist</Alert>;
+    return (
+      <Box p={3}>
+        <Alert 
+          severity="info"
+          sx={{
+            backgroundColor: 'primary.main',
+            color: 'white',
+            '& .MuiAlert-icon': {
+              color: 'white',
+            },
+          }}
+        >
+          <Typography variant="body1" color="inherit">
+            No upcoming payments exist
+          </Typography>
+        </Alert>
+      </Box>
+    );
   }
 
   return (
