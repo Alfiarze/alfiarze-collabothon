@@ -8,4 +8,6 @@ const axiosPrivate = axios.create({
     }
 });
 
+console.log('API URL:', import.meta.env.API_URL);
+
 export default axiosPrivate;
