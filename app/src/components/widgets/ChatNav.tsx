@@ -1,4 +1,4 @@
-import { Box, Button, TextField, IconButton } from "@mui/material";
+import { Box, TextField, IconButton } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import { useState } from "react";
 import axiosPrivate from "../../ctx/axiosPrivate";
@@ -36,7 +36,7 @@ const ChatNav = () => {
                 <TextField
                     fullWidth
                     variant="outlined"
-                    placeholder="Type your message..."
+                    placeholder="Write down what you want to do at the bank"
                     size="small"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}

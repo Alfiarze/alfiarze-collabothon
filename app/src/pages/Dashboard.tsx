@@ -162,6 +162,7 @@ function Content({ size }: { size: { width: number | null } }) {
     <>
       <CurrencyBar />
       <TopBar editMode={editMode} toggleEditMode={toggleEditMode} />
+      <ChatNav />
       {size.width && (
         <ResponsiveGridLayout
           className="layout"
