@@ -58,7 +58,7 @@ const CurrencyBar: React.FC = () => {
         const response = await axios.get('https://api.exchangerate-api.com/v4/latest/USD');
         const data = response.data.rates;
         
-        const selectedCurrencies = ['EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'SEK', 'NZD', 'MXN'];
+        const selectedCurrencies = ['EUR', 'PLN', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'SEK', 'NZD', 'MXN'];
         const formattedRates = selectedCurrencies.map(currency => ({
           currency,
           rate: data[currency]

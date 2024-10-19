@@ -1,6 +1,8 @@
 import  { useEffect, useState } from 'react';
-import { Typography, List, ListItem, ListItemText, Paper, Box, CircularProgress } from '@mui/material';
+import { Typography, List, ListItem, ListItemText, Paper, Box, CircularProgress, Alert } from '@mui/material';
 import axiosPrivate from '../ctx/axiosPrivate';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 const ContractList = () => {
   const [contracts, setContracts] = useState<any[]>([]);
@@ -14,7 +16,11 @@ const ContractList = () => {
         setLoading(false);
       })
       .catch(error => {
-        setError(error.message);
+        if (error.response && error.response.status === 404) {
+          setError('Contracts not found. The resource may have been moved or deleted.');
+        } else {
+          setError('An error occurred while fetching contracts. Please try again later.');
+        }
         setLoading(false);
       });
   }, []);
@@ -24,23 +30,47 @@ const ContractList = () => {
   }
 
   if (error) {
-    return <Typography color="error" align="center">Error: {error}</Typography>;
+    return (
+      <Box p={3}>
+        <Alert 
+          severity="info" 
+          icon={<InfoOutlinedIcon fontSize="inherit" />}
+          sx={{
+            backgroundColor: 'primary.main',
+            color: 'white',
+            '& .MuiAlert-icon': {
+              color: 'white',
+            },
+          }}
+        >
+          <Typography variant="body1" color="inherit">
+            {error}
+          </Typography>
+        </Alert>
+      </Box>
+    );
   }
 
   return (
     <Box p={3}>
       <Typography variant="h4" gutterBottom align="center">Contracts</Typography>
       <Paper elevation={3}>
-        <List>
-          {contracts.map(contract => (
-            <ListItem key={contract.id} divider>
-              <ListItemText
-                primary={`${contract.contract_id} - ${contract.contract_type}`}
-                secondary={`Amount: $${contract.amount}`}
-              />
-            </ListItem>
-          ))}
-        </List>
+        {contracts.length > 0 ? (
+          <List>
+            {contracts.map(contract => (
+              <ListItem key={contract.id} divider>
+                <ListItemText
+                  primary={`${contract.contract_id} - ${contract.contract_type}`}
+                  secondary={`Amount: $${contract.amount}`}
+                />
+              </ListItem>
+            ))}
+          </List>
+        ) : (
+          <Box p={3} textAlign="center">
+            <Typography variant="body1">No contracts available</Typography>
+          </Box>
+        )}
       </Paper>
     </Box>
   );
