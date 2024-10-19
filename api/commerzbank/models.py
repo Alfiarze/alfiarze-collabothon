@@ -103,6 +103,7 @@ class Reservation(models.Model):
     
 
 class Recipe(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipes')
     photo = models.ImageField(upload_to='recipes/')
     date = models.DateField(null=True, blank=True)
     store = models.CharField(max_length=255, blank=True)
@@ -110,7 +111,7 @@ class Recipe(models.Model):
     nip = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-        return f"Recipe {self.id}"
+        return f"Recipe {self.id} by {self.user.username}"
 
 class RecipeItem(models.Model):
     recipe = models.ForeignKey(Recipe, related_name='items', on_delete=models.CASCADE)
