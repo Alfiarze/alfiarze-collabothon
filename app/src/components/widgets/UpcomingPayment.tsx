@@ -1,5 +1,14 @@
-import  { useEffect, useState } from 'react';
-import { Typography, List, ListItem, ListItemText, Paper, Box, CircularProgress, Alert } from '@mui/material';
+import { useEffect, useState } from 'react';
+import {
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Box,
+  CircularProgress,
+  Alert,
+} from '@mui/material';
 import axiosPrivate from '../../ctx/axiosPrivate';
 
 interface Payment {
@@ -11,12 +20,10 @@ interface Payment {
   account_id: string;
 }
 
-const formatPaymentData = (payment: Payment) => {
-  return {
-    primary: `User: ${payment.user} - Name: ${payment.name} - Account ID: ${payment.account_id}`,
-    secondary: `Date: ${payment.date} - Time: ${payment.time}`
-  };
-};
+const formatPaymentData = (payment: Payment) => ({
+  primary: `User: ${payment.user} - Name: ${payment.name} - Account ID: ${payment.account_id}`,
+  secondary: `Date: ${payment.date} - Time: ${payment.time}`,
+});
 
 const fetchUpcomingPayments = async (): Promise<Payment[]> => {
   try {
@@ -49,7 +56,11 @@ const UpcomingPayments = () => {
   }, []);
 
   if (loading) {
-    return <Box display="flex" justifyContent="center" alignItems="center" height="100vh"><CircularProgress /></Box>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (error) {
@@ -62,17 +73,16 @@ const UpcomingPayments = () => {
 
   return (
     <Box p={3}>
-      <Typography variant="h4" gutterBottom align="center">Upcoming Payments</Typography>
+      <Typography variant="h5" component="h2" gutterBottom>
+        Upcoming Payments
+      </Typography>
       <Paper elevation={3}>
         <List>
-          {Array.isArray(payments) && payments.map(payment => {
+          {payments.map((payment) => {
             const { primary, secondary } = formatPaymentData(payment);
             return (
               <ListItem key={payment.id} divider>
-                <ListItemText
-                  primary={primary}
-                  secondary={secondary}
-                />
+                <ListItemText primary={primary} secondary={secondary} />
               </ListItem>
             );
           })}

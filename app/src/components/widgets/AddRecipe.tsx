@@ -9,7 +9,7 @@ import {
   Snackbar,
   IconButton
 } from '@mui/material';
-import { PhotoCamera, Close, Upload } from '@mui/icons-material';
+import { PhotoCamera, Close } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import axiosPrivate from '../../ctx/axiosPrivate';
 
@@ -63,25 +63,15 @@ const AddRecipe: React.FC = () => {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Box display="flex" flexDirection="column" alignItems="center">
-              <input
-                accept="image/*"
-                style={{ display: 'none' }}
-                id="raised-button-file"
-                type="file"
-                onChange={handleFileChange}
-              />
-              <label htmlFor="raised-button-file">
-                <Button
-                  variant="contained"
-                  component="span"
-                  startIcon={<Upload />}
-                >
-                  Choose Photo
-                </Button>
+              <label htmlFor="icon-button-file">
+                <Input accept="image/*" id="icon-button-file" type="file" onChange={handleFileChange} />
+                <IconButton color="primary" aria-label="upload picture" component="span">
+                  <PhotoCamera />
+                </IconButton>
               </label>
               {file && (
-                <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
-                  Selected file: {file.name}
+                <Typography variant="body2" color="textSecondary">
+                  {file.name}
                 </Typography>
               )}
             </Box>
