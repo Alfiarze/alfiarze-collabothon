@@ -9,6 +9,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import axiosPrivate from '../../ctx/axiosPrivate';
 import MuiAlert from '@mui/material/Alert';
 
+interface AddUpcomingPaymentProps {
+  onPaymentAdded?: () => void;  // Make this prop optional
+}
+
 const validationSchema = Yup.object({
   name: Yup.string().required('Required'),
   date: Yup.date().required('Required').nullable(),
@@ -16,9 +20,10 @@ const validationSchema = Yup.object({
   account_id: Yup.string().required('Required'),
 });
 
-const AddUpcomingPayment: React.FC = () => {
+const AddUpcomingPayment: React.FC<AddUpcomingPaymentProps> = ({ onPaymentAdded }) => {
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState('');
+
   const handleSubmit = async (values: any, { setSubmitting, resetForm }: any) => {
     try {
       const userId = 1; // Replace with your auth system's user ID retrieval logic
@@ -31,6 +36,11 @@ const AddUpcomingPayment: React.FC = () => {
       console.log('Payment added:', response.data);
       resetForm();
       setSnackbarMessage('Payment added successfully!');
+      
+      // Call the onPaymentAdded callback here
+      if (onPaymentAdded && typeof onPaymentAdded === 'function') {
+        onPaymentAdded();
+      }
     } catch (error) {
       console.error('Error adding payment:', error);
       setSnackbarMessage('Error adding payment. Please try again.');
