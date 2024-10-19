@@ -1,35 +1,58 @@
-from openai import AzureOpenAI
-from django.conf import settings
+# from .settings import AZURE_OPENAI_API_KEY, AZURE_OPENAI_API_ENDPOINT, AZURE_OPENAI_API_VERSION
 import logging
+import requests
+import base64
 
 logger = logging.getLogger(__name__)
 
 def send_prompt_to_azure_openai(prompt):
     try:
-        # Configure Azure OpenAI client
-        client = AzureOpenAI(
-            api_key=settings.AZURE_OPENAI_API_KEY,
-            api_version=settings.AZURE_OPENAI_API_VERSION,
-            azure_endpoint=settings.AZURE_OPENAI_API_ENDPOINT
-        )
 
-        # Log configuration details (be careful not to log the API key)
-        logger.info(f"Connecting to Azure OpenAI with endpoint: {settings.AZURE_OPENAI_API_ENDPOINT}")
-        logger.info(f"Using API version: {settings.AZURE_OPENAI_API_VERSION}")
-        logger.info(f"Using location: {settings.AZURE_OPENAI_API_LOCATION}")
+        API_KEY = '77df61f00eef4063baba417606231f53'
+        # IMAGE_PATH = "YOUR_IMAGE_PATH"
+        # encoded_image = base64.b64encode(open(IMAGE_PATH, 'rb').read()).decode('ascii')
+        headers = {
+            "Content-Type": "application/json",
+            "api-key": API_KEY,
+        }
 
-        # Send the prompt to Azure OpenAI
-        response = client.chat.completions.create(
-            model="gpt-35-turbo",  # Make sure this model is deployed in your Azure OpenAI resource
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=150
-        )
+        # Payload for the request
+        payload = {
+        "messages": [
+            {
+            "role": "system",
+            "content": [
+                {
+                "type": "text",
+                "text": "You are an AI assistant that helps people find information."
+                }
+            ]
+            },
+            {
+            "role": "user",
+            "content": [
+                {
+                "type": "text",
+                "text": prompt
+                }
+            ]
+            }
+        ],
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "max_tokens": 800
+        }
 
-        # Extract and return the generated text
-        return response.choices[0].message.content.strip()
+        ENDPOINT = "https://alfiarze.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview"
+
+        # Send request
+        try:
+            response = requests.post(ENDPOINT, headers=headers, json=payload)
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException as e:
+            raise SystemExit(f"Failed to make the request. Error: {e}")
+
     except Exception as e:
         # Log the full error details
         logger.error(f"Error in send_prompt_to_azure_openai: {str(e)}", exc_info=True)
@@ -46,3 +69,8 @@ def send_prompt_to_azure_openai(prompt):
         
         logger.error(error_message)
         return error_message
+
+if __name__ == "__main__":
+    result = send_prompt_to_azure_openai("Dlaczego kacper backend wszystko psuje?.")
+    print(result)
+
