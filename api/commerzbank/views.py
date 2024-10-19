@@ -45,34 +45,50 @@ class UserLayoutProvider(APIView):
     
     def post(self, request):
         data = request.data
-        user_obj = User.objects.get(id=request.user.id)
+        print(request.user)
+        user_obj = request.user
 
-        result = "Test"
-        layout = "Test"
+        # Validate input data
+        required_fields = ['answer_1', 'answer_2', 'answer_3', 'answer_4']
+        for field in required_fields:
+            if field not in data:
+                return Response({"error": f"Missing required field: {field}"}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = UserLayer.objects.create(
-            user=user_obj,
-            answer_1=data['answer_1'],
-            answer_2=data['answer_2'],
-            answer_3=data['answer_3'],
-            answer_4=data['answer_4'],
-            result=result,
-            layout=layout,
-        )
+        # TODO: Implement logic to determine result and layout based on answers
+        result = self.calculate_result(data)
+        layout = self.determine_layout(result)
 
-        
-        
+        try:
+            user = UserLayer.objects.create(
+                user=user_obj,
+                answer_1=data['answer_1'],
+                answer_2=data['answer_2'],
+                answer_3=data['answer_3'],
+                answer_4=data['answer_4'],
+                result=result,
+                layout=layout,
+            )
 
-        user_json = {
-            "answer_1": user.answer_1,
-            "answer_2": user.answer_2,
-            "answer_3": user.answer_3,
-            "answer_4": user.answer_4,
-            "result": user.result,
-            "layout": user.layout,
-            "datetime": user.datetime
-        }
-        return Response(user_json, status=status.HTTP_201_CREATED)
+            user_json = {
+                "answer_1": user.answer_1,
+                "answer_2": user.answer_2,
+                "answer_3": user.answer_3,
+                "answer_4": user.answer_4,
+                "result": user.result,
+                "layout": user.layout,
+                "datetime": user.datetime
+            }
+            return Response(user_json, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def calculate_result(self, data):
+        # TODO: Implement logic to calculate result based on answers
+        return "Calculated Result"
+
+    def determine_layout(self, result):
+        # TODO: Implement logic to determine layout based on result
+        return "Determined Layout"
 
 
 class RegisterView(APIView):
