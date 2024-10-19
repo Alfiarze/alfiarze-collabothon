@@ -6,7 +6,7 @@ const Contracts = () => {
       <div>
         <h1>Contracts</h1>
         <ContractsWidget/>
-        <ShowQRCode/>
+        <ShowQRCode qrCodeUrl="https://www.google.com"/>
       </div>
     )
   }

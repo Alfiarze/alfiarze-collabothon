@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Typography, List, ListItem, ListItemText, Paper, Chip, IconButton } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Box, Typography, List, ListItem, ListItemText, Chip, IconButton } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import axiosPrivate from '../../ctx/axiosPrivate';
@@ -21,15 +21,17 @@ const OtherAccounts = () => {
 
   useEffect(() => {
     axiosPrivate.get('api/commerzbank/accounts/').then((res) => {
-        console.log(res.data);
-
-        // if (Array.isArray(res.data)) {
-        //     setAccounts(res.data.map((account: Account) => ({
- 
-        //     })));
-        // }
+      if (Array.isArray(res.data)) {
+        setAccounts(res.data.map((account: OtherAccounts) => ({
+          id: account.id,
+          name: account.name,
+          balance: account.balance,
+          type: account.type,
+          lastTransaction: account.lastTransaction
+        })));
+      }
     });
-}, []);
+  }, []);
 
   const [showBalances, setShowBalances] = useState<boolean>(false);
 

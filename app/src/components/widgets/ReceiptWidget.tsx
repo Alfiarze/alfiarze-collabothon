@@ -48,43 +48,45 @@ const ReceiptWidget = () => {
   };
 
   return (
-    <CardContent>
-    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h5" component="h2" gutterBottom>
-        Receipt
+    <StyledCard>
+      <CardContent>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h5" component="h2" gutterBottom>
+            Receipt
+            </Typography>
+            <IconButton onClick={togglePhoto} color={showPhoto ? "primary" : "default"}>
+            <PhotoIcon />
+            </IconButton>
+        </Box>
+        {showPhoto && (
+            <PhotoPlaceholder>
+            <Typography>Photo Placeholder</Typography>
+            </PhotoPlaceholder>
+        )}
+        <Typography variant="body2" color="text.secondary" gutterBottom>
+            Date: {receiptData.date}
         </Typography>
-        <IconButton onClick={togglePhoto} color={showPhoto ? "primary" : "default"}>
-        <PhotoIcon />
-        </IconButton>
-    </Box>
-    {showPhoto && (
-        <PhotoPlaceholder>
-        <Typography>Photo Placeholder</Typography>
-        </PhotoPlaceholder>
-    )}
-    <Typography variant="body2" color="text.secondary" gutterBottom>
-        Date: {receiptData.date}
-    </Typography>
-    <Typography variant="body1" gutterBottom>
-        {receiptData.storeName}
-    </Typography>
-    <List>
-        {receiptData.items.map((item, index) => (
-        <ListItem key={index} disablePadding>
-            <ListItemText 
-            primary={item.name} 
-            secondary={`$${item.price.toFixed(2)}`} 
-            />
-        </ListItem>
-        ))}
-    </List>
-    <Typography variant="h6" gutterBottom>
-        Total: ${totalPrice.toFixed(2)}
-    </Typography>
-    <Typography variant="body2" color="text.secondary">
-        NIP: {receiptData.nip}
-    </Typography>
+        <Typography variant="body1" gutterBottom>
+            {receiptData.storeName}
+        </Typography>
+        <List>
+            {receiptData.items.map((item, index) => (
+            <ListItem key={index} disablePadding>
+                <ListItemText 
+                primary={item.name} 
+                secondary={`$${item.price.toFixed(2)}`} 
+                />
+            </ListItem>
+            ))}
+        </List>
+        <Typography variant="h6" gutterBottom>
+            Total: ${totalPrice.toFixed(2)}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+            NIP: {receiptData.nip}
+        </Typography>
       </CardContent>
+    </StyledCard>
   );
 };
 

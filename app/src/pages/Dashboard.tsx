@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
+import { Responsive as ResponsiveGridLayout, Layout } from "react-grid-layout";
 import { SizeMe } from "react-sizeme";
 import { Card,  IconButton, Box, useTheme, useMediaQuery } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
@@ -20,7 +20,7 @@ import BankBalance from "../components/widgets/BankBalance";
 import CurrencyBar from "../components/widgets/CurrencyBar";
 
 // Define a mapping of widget IDs to their components
-const widgetComponents: { [key: string]: React.ComponentType } = {
+const widgetComponents: { [key: string]: React.ComponentType<any> } = {
   a: CardsList,
   b: Contracts,
   c: ContractsEnding,
@@ -36,7 +36,12 @@ const widgetComponents: { [key: string]: React.ComponentType } = {
 
 const originalItems = Object.keys(widgetComponents);
 
-const initialLayouts = {
+// At the top of the file, add this type definition
+type BreakpointLayouts = {
+  [key in 'lg' | 'md' | 'sm' | 'xs']: { i: string; x: number; y: number; w: number; h: number; }[];
+};
+
+const initialLayouts: BreakpointLayouts = {
   lg: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
     { i: "b", x: 1, y: 0, w: 1, h: 2 },
@@ -110,7 +115,7 @@ function Content({ size }: { size: { width: number | null } }) {
   const rowHeight = isMobile ? 200 : 150;
 
   const [items, setItems] = useState<string[]>(originalItems);
-  const [layouts, setLayouts] = useState<any>(initialLayouts);
+  const [layouts, setLayouts] = useState<BreakpointLayouts>(initialLayouts);
   const [currentBreakpoint, setCurrentBreakpoint] = useState<string>("lg");
 
   // Add this useEffect to update layouts when the screen size changes
@@ -124,9 +129,9 @@ function Content({ size }: { size: { width: number | null } }) {
 
       if (newBreakpoint !== currentBreakpoint) {
         setCurrentBreakpoint(newBreakpoint);
-        setLayouts((prevLayouts: any) => ({
+        setLayouts((prevLayouts: BreakpointLayouts) => ({
           ...prevLayouts,
-          [newBreakpoint]: prevLayouts[newBreakpoint] || initialLayouts[newBreakpoint],
+          [newBreakpoint as keyof BreakpointLayouts]: prevLayouts[newBreakpoint as keyof BreakpointLayouts] || initialLayouts[newBreakpoint as keyof BreakpointLayouts],
         }));
       }
     };
@@ -137,7 +142,7 @@ function Content({ size }: { size: { width: number | null } }) {
     return () => window.removeEventListener("resize", handleResize);
   }, [currentBreakpoint]);
 
-  const onLayoutChange = useCallback((currentLayout: any, allLayouts: any) => {
+  const onLayoutChange = useCallback((currentLayout: Layout[], allLayouts: BreakpointLayouts) => {
     console.log("Layout changed. New layouts:", allLayouts);
     setLayouts(allLayouts);
   }, []);
