@@ -1,5 +1,5 @@
-import { Button } from '@mui/material';
 import React, { useState } from 'react';
+import { Button, Typography, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Box } from '@mui/material';
 
 function Survey() {
     const [questionIndex, setQuestionIndex] = useState(0);
@@ -42,34 +42,67 @@ function Survey() {
 
     if (isCompleted) {
         return (
-            <div>
-                <h2>Thank you for completing the survey!</h2>
-            </div>
+            <Box sx={{
+                border: '1px solid #e0e0e0',
+                borderRadius: '4px',
+                padding: '16px',
+                maxWidth: '400px',
+                margin: 'auto',
+                backgroundColor: '#ffffff',
+            }}>
+                <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '16px' }}>
+                    Thank you for completing the survey!
+                </Typography>
+            </Box>
         );
     }
 
     return (
-        <div>
-            <h1>Survey</h1>
-            <h2>{questions[questionIndex].question}</h2>
-            <form>
-                {questions[questionIndex].options.map((option, index) => (
-                    <div key={index}>
-                        <input
-                            type="radio"
-                            id={`option-${index}`}
-                            name={`question-${questionIndex}`}
+        <Box sx={{
+            border: '1px solid #e0e0e0',
+            borderRadius: '4px',
+            padding: '16px',
+            maxWidth: '400px',
+            margin: 'auto',
+            backgroundColor: '#ffffff',
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '400px', // Adjust this value as needed
+        }}>
+            <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '16px' }}>
+                Survey
+            </Typography>
+            <FormControl component="fieldset" sx={{ flexGrow: 1 }}>
+                <FormLabel component="legend">
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
+                        {questions[questionIndex].question}
+                    </Typography>
+                </FormLabel>
+                <RadioGroup
+                    value={answers[questionIndex]}
+                    onChange={handleAnswerChange}
+                >
+                    {questions[questionIndex].options.map((option, index) => (
+                        <FormControlLabel
+                            key={index}
                             value={option}
-                            checked={answers[questionIndex] === option}
-                            onChange={handleAnswerChange}
+                            control={<Radio />}
+                            label={<Typography variant="body1">{option}</Typography>}
+                            sx={{ marginBottom: '8px' }}
                         />
-                        <label htmlFor={`option-${index}`}>{option}</label>
-                    </div>
-                ))}
-            </form>
-
-            <Button variant="contained" onClick={handleNextQuestion} disabled={!answers[questionIndex]}>{questionIndex === questions.length - 1 ? "Finish" : "Next question"}</Button>
-        </div>
+                    ))}
+                </RadioGroup>
+            </FormControl>
+            <Box sx={{ marginTop: 'auto', textAlign: 'right' }}>
+                <Button 
+                    variant="contained" 
+                    onClick={handleNextQuestion} 
+                    disabled={!answers[questionIndex]}
+                >
+                    {questionIndex === questions.length - 1 ? "Finish" : "Next question"}
+                </Button>
+            </Box>
+        </Box>
     );
 }
 
