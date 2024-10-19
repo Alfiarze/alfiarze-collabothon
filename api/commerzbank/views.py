@@ -320,91 +320,77 @@ return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class TransactionView(APIView):
 
-def get(self, request):
-transactions = Transaction.objects.all()
-if transactions.exists():
-transactions_json = []
-for transaction in transactions:
-transaction_data = {
-"id": transaction.id,
-                    "account_id": transaction.account_id,
-                    "transaction_name": transaction.transaction_name,
-                    "from_account": transaction.from_account,
-                    "to_account": transaction.to_account,
+    def get(self, request):
+        transactions = Transaction.objects.all()
+        if transactions.exists():
+            transactions_json = []
+            for transaction in transactions:
+                transaction_data = {
+                    "id": transaction.id,
                     "title": transaction.title,
                     "reciver_id": transaction.reciver_id,
                     "reciver_address": transaction.reciver_address,
                     "bank_account_number": transaction.bank_account_number,
-"amount": str(transaction.amount),
-"categories": [category.name for category in transaction.categories.all()]
-}
-transactions_json.append(transaction_data)
-return Response(transactions_json, status=status.HTTP_200_OK)
-else:
-return Response({"message": "No transactions exist"}, status=status.HTTP_404_NOT_FOUND)
+                    "amount": str(transaction.amount),
+                    "categories": [category.name for category in transaction.categories.all()]
+                }
+                transactions_json.append(transaction_data)
+            return Response(transactions_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No transactions exist"}, status=status.HTTP_404_NOT_FOUND)
 
-def post(self, request):
-data = request.data
-try:
-transaction = Transaction.objects.create(
-                account_id=data['account_id'],
-                transaction_name=data['transaction_name'],
-                from_account=data['from_account'],
-                to_account=data['to_account'],
-                amount=data['amount']
+    def post(self, request):
+        data = request.data
+        try:
+            transaction = Transaction.objects.create(
                 title=data['title'],
                 reciver_id=data['reciver_id'],
                 reciver_address=data['reciver_address'],
                 bank_account_number=data['bank_account_number'],
                 amount=data['amount'],
                 categories=data['categories']
-)
+            )
+            
+            # Handle categories
+            category_names = data.get('categories', [])
+            for category_name in category_names:
+                category, created = TransactionCategory.objects.get_or_create(name=category_name)
+                transaction.categories.add(category)
+            
+            return Response({
+                'success': 'Transaction created successfully',
+                'transaction_id': transaction.id,
+                'categories': [category.name for category in transaction.categories.all()]
+            }, status=status.HTTP_201_CREATED)
+        except KeyError as e:
+            return Response({'error': f'Missing required field: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-# Handle categories
-category_names = data.get('categories', [])
-for category_name in category_names:
-category, created = TransactionCategory.objects.get_or_create(name=category_name)
-transaction.categories.add(category)
-
-return Response({
-'success': 'Transaction created successfully',
-'transaction_id': transaction.id,
-'categories': [category.name for category in transaction.categories.all()]
-}, status=status.HTTP_201_CREATED)
-except KeyError as e:
-return Response({'error': f'Missing required field: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
-except Exception as e:
-return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-def put(self, request, transaction_id):
-transaction = get_object_or_404(Transaction, id=transaction_id)
-data = request.data
-try:
-            transaction.account_id = data.get('account_id', transaction.account_id)
-            transaction.transaction_name = data.get('transaction_name', transaction.transaction_name)
-            transaction.from_account = data.get('from_account', transaction.from_account)
-            transaction.to_account = data.get('to_account', transaction.to_account)
-            transaction.amount = data.get('amount', transaction.amount)
+    def put(self, request, transaction_id):
+        transaction = get_object_or_404(Transaction, id=transaction_id)
+        data = request.data
+        try:
             transaction.title = data.get('title', transaction.title)
             transaction.reciver_id = data.get('reciver_id', transaction.reciver_id)
             transaction.reciver_address = data.get('reciver_address', transaction.reciver_address)
             transaction.bank_account_number = data.get('bank_account_number', transaction.bank_account_number)
             transaction.amount = data.get('amount', transaction.amount) 
-
-# Update categories
-if 'categories' in data:
-transaction.categories.clear()
-for category_name in data['categories']:
-category, created = TransactionCategory.objects.get_or_create(name=category_name)
-transaction.categories.add(category)
-
-transaction.save()
-return Response({
-'success': 'Transaction updated successfully',
-'categories': [category.name for category in transaction.categories.all()]
-}, status=status.HTTP_200_OK)
-except Exception as e:
-return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Update categories
+            if 'categories' in data:
+                transaction.categories.clear()
+                for category_name in data['categories']:
+                    category, created = TransactionCategory.objects.get_or_create(name=category_name)
+                    transaction.categories.add(category)
+            
+            transaction.save()
+            return Response({
+                'success': 'Transaction updated successfully',
+                'categories': [category.name for category in transaction.categories.all()]
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 def delete(self, request, transaction_id):
 transaction = get_object_or_404(Transaction, id=transaction_id)
