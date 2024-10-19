@@ -38,31 +38,11 @@ const Nav = () => {
                 <img src={logo} alt="Commerzbank logo" style={{ maxWidth: '100%', height: 'auto', maxHeight: '40px', width: 'auto', marginRight: '10px' }}  />
             </Link>
             </Typography>
-            {menuItems.slice(0, 5).map((item) => (
+            {menuItems.map((item) => (
               <Button key={item.to} color="inherit" component={Link} to={item.to}>
                 {item.label}
               </Button>
             ))}
-            <IconButton
-              size="large"
-              edge="end"
-              color="inherit"
-              aria-label="menu"
-              onClick={handleMenuOpen}
-            >
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-            >
-              {menuItems.slice(5).map((item) => (
-                <MenuItem key={item.to} onClick={handleMenuClose} component={Link} to={item.to}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </Menu>
             <Button color="inherit" onClick={handleLogout}>Logout</Button>
           </Toolbar>
         </AppBar>

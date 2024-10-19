@@ -32,15 +32,15 @@ ENDPOINT = "https://alfiarzepl.openai.azure.com/openai/deployments/gpt-4-alfiarz
 
 
 
-def analyze_text(text, image_path=None):
+def analyze_text(text, image_path=None, endpoint=ENDPOINT):
     try:
-
+        print(endpoint)
         payload["messages"][0]["content"][0]["text"] = text
         if image_path:
             encoded_image = base64.b64encode(open(image_path, 'rb').read()).decode('ascii')
             payload["messages"][0]["content"][0]["image_url"] = {"url": f"data:image/png;base64,{encoded_image}"}
 
-        response = requests.post(ENDPOINT, headers=headers, json=payload)
+        response = requests.post(endpoint, headers=headers, json=payload)
         response.raise_for_status()
     except requests.RequestException as e:
         raise SystemExit(f"Failed to make the request. Error: {e}")

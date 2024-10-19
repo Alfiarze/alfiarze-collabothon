@@ -15,6 +15,7 @@ import UpcomingPayment from "../components/widgets/UpcomingPayment";
 import OtherAccounts from "../components/widgets/OtherAccounts";
 import ReceiptWidget from "../components/widgets/ReceiptWidget";
 import ShowQRCode from "../components/widgets/ShowQRCode";
+import ChatNav from "../components/widgets/ChatNav";
 
 // Define a mapping of widget IDs to their components
 const widgetComponents: { [key: string]: React.ComponentType } = {
@@ -153,6 +154,7 @@ function Content({ size }: { size: { width: number | null } }) {
   return (
     <>
       <TopBar editMode={editMode} toggleEditMode={toggleEditMode} />
+      <ChatNav />
       {size.width && (
         <ResponsiveGridLayout
           className="layout"

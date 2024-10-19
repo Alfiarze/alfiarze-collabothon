@@ -10,10 +10,8 @@ from rest_framework import status
 from .models import Contract, CreditCard, LoanOffer, LoyalProgram, Reservation, UpcomingPayment, UserLayer, Transaction, TransactionCategory, Recipe, RecipeItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
-from django.db import transaction
 import base64
 from django.conf import settings
-from openai import AzureOpenAI
 from chatai.func import analyze_text
 from decimal import Decimal
 
@@ -593,5 +591,40 @@ class LoyalProgramView(APIView):
         )
         return Response({'success': 'Loyal program created successfully'}, status=status.HTTP_201_CREATED)
         
+class AINavigatorView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def post(self, request):
+        prompt = request.data["prompt"]
+        if not prompt:
+            return Response({"error": "No prompt provided"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        final_prompt = """
+        To jest struktrua url w naszej aplikacji bankowej:
+        Offer: '/offer',
+        Actions: '/Actions', 
+        Contracts: '/Contracts', 
+        Support: '/Support', 
+        Transfers: '/Transfers'
+        Na podstawie pytania użytkownika określ potrzebę użytkownika. Jeżeli nie wiesz co odpowiedzić jasno o tym powiedz. Na końcu zwróć json w podanym formacie {
+        "action": "redirect",
+        "path": right_path,
+        "additional_info": {
+        "account_id": "",
+        "transaction_name": "",
+        "to_account": ""
+        }
+        }
+        Jeżeli nie znasz odpowiedź, zwróc json w formacie: {
+        "action": "none"
+        }
+        Additional info uzupełniasz tylko jak jesteś w stanie uzupełnić dane na bazie informacji z zapytania  w przeciwnym wypadku zostaw puste pole. Odpowiadaj tylko json.
+
+        """
+
+        prompt = final_prompt + prompt
+
+        response = analyze_text(prompt, endpoint="https://alfiarzepl.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-15-preview")
+
+        return Response(response["choices"][0]["message"]["content"], status=status.HTTP_200_OK)
 
