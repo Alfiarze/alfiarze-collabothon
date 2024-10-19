@@ -15,5 +15,6 @@ urlpatterns = [
     path('reservations/', views.ReservationView.as_view(), name='reservations'),
     path('recipes/', views.RecipeView.as_view(), name='recipes'),
     path('loan-offers/', views.LoanOffersView.as_view(), name='loan-offers'),
-    path('commerzbank/branches/', views.BranchView.as_view(), name='branches'),
+    # path('commerzbank/branches/', views.BranchView.as_view(), name='branches'),
+    path('test-ai/', views.TestAIView.as_view(), name='test-ai'),
 ]

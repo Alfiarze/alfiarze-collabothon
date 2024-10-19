@@ -11,6 +11,7 @@ from .models import Contract, CreditCard, LoanOffer, Reservation, UpcomingPaymen
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.db import transaction
+from chatai.func import send_prompt_to_azure_openai
 
 
 
@@ -441,6 +442,11 @@ class LoanOffersView(APIView):
         )
         return Response({'success': 'Loan offer created successfully'}, status=status.HTTP_201_CREATED)
     
+
+class TestAIView(APIView):
+    def get(self, request):
+        result = send_prompt_to_azure_openai("Tell me a joke about programming.")
+        return Response({"message": result})
 
         
 #do tego wrocimy kiedys 
