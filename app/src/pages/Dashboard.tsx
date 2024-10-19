@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { SizeMe } from "react-sizeme";
-import { Card,  IconButton } from "@mui/material";
+import { Card,  IconButton, Box, useTheme, useMediaQuery } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import TopBar from "../components/TopBar";
 
@@ -35,39 +35,104 @@ const originalItems = Object.keys(widgetComponents);
 const initialLayouts = {
   lg: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
-    { i: "b", x: 0, y: 2, w: 1, h: 2 },
-    { i: "c", x: 1, y: 0, w: 1, h: 2 },
-    { i: "d", x: 1, y: 2, w: 1, h: 2 },
-    { i: "e", x: 2, y: 0, w: 1, h: 2 },
+    { i: "b", x: 1, y: 0, w: 1, h: 2 },
+    { i: "c", x: 2, y: 0, w: 1, h: 2 },
+    { i: "d", x: 3, y: 0, w: 1, h: 2 },
+    { i: "e", x: 0, y: 2, w: 1, h: 2 },
+    { i: "f", x: 1, y: 2, w: 1, h: 2 },
+    { i: "g", x: 2, y: 2, w: 1, h: 2 },
+    { i: "h", x: 3, y: 2, w: 1, h: 2 },
+    { i: "i", x: 0, y: 4, w: 1, h: 2 },
+    { i: "j", x: 1, y: 4, w: 1, h: 2 }
+  ],
+  md: [
+    { i: "a", x: 0, y: 0, w: 1, h: 2 },
+    { i: "b", x: 1, y: 0, w: 1, h: 2 },
+    { i: "c", x: 2, y: 0, w: 1, h: 2 },
+    { i: "d", x: 0, y: 2, w: 1, h: 2 },
+    { i: "e", x: 1, y: 2, w: 1, h: 2 },
     { i: "f", x: 2, y: 2, w: 1, h: 2 },
-    { i: "g", x: 3, y: 0, w: 1, h: 2 },
-    { i: "h", x: 3, y: 2, w: 3, h: 2 },
-    { i: "i", x: 3, y: 3, w: 1, h: 2 }
+    { i: "g", x: 0, y: 4, w: 1, h: 2 },
+    { i: "h", x: 1, y: 4, w: 1, h: 2 },
+    { i: "i", x: 2, y: 4, w: 1, h: 2 },
+    { i: "j", x: 0, y: 6, w: 1, h: 2 }
+  ],
+  sm: [
+    { i: "a", x: 0, y: 0, w: 1, h: 2 },
+    { i: "b", x: 1, y: 0, w: 1, h: 2 },
+    { i: "c", x: 0, y: 2, w: 1, h: 2 },
+    { i: "d", x: 1, y: 2, w: 1, h: 2 },
+    { i: "e", x: 0, y: 4, w: 1, h: 2 },
+    { i: "f", x: 1, y: 4, w: 1, h: 2 },
+    { i: "g", x: 0, y: 6, w: 1, h: 2 },
+    { i: "h", x: 1, y: 6, w: 1, h: 2 },
+    { i: "i", x: 0, y: 8, w: 1, h: 2 },
+    { i: "j", x: 1, y: 8, w: 1, h: 2 }
+  ],
+  xs: [
+    { i: "a", x: 0, y: 0, w: 1, h: 2 },
+    { i: "b", x: 0, y: 2, w: 1, h: 2 },
+    { i: "c", x: 0, y: 4, w: 1, h: 2 },
+    { i: "d", x: 0, y: 6, w: 1, h: 2 },
+    { i: "e", x: 0, y: 8, w: 1, h: 2 },
+    { i: "f", x: 0, y: 10, w: 1, h: 2 },
+    { i: "g", x: 0, y: 12, w: 1, h: 2 },
+    { i: "h", x: 0, y: 14, w: 1, h: 2 },
+    { i: "i", x: 0, y: 16, w: 1, h: 2 },
+    { i: "j", x: 0, y: 18, w: 1, h: 2 }
   ]
 };
 
 function Dashboard() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
-    <SizeMe>
-      {({ size }) => <Content size={size} />}
-    </SizeMe>
+    <Box sx={{ p: isMobile ? 1 : 2 }}>
+      <SizeMe>
+        {({ size }) => <Content size={size} />}
+      </SizeMe>
+    </Box>
   );
 }
 
 function Content({ size }: { size: { width: number | null } }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const rowHeight = isMobile ? 200 : 150;
+
   const [items, setItems] = useState<string[]>(originalItems);
   const [layouts, setLayouts] = useState<any>(initialLayouts);
+  const [currentBreakpoint, setCurrentBreakpoint] = useState<string>("lg");
 
+  // Add this useEffect to update layouts when the screen size changes
   useEffect(() => {
-    console.log("Current layouts:", layouts);
-  }, [layouts]);
+    const handleResize = () => {
+      const width = window.innerWidth;
+      let newBreakpoint = "lg";
+      if (width < 480) newBreakpoint = "xs";
+      else if (width < 768) newBreakpoint = "sm";
+      else if (width < 996) newBreakpoint = "md";
 
-  const onLayoutChange = (allLayouts: any) => {
+      if (newBreakpoint !== currentBreakpoint) {
+        setCurrentBreakpoint(newBreakpoint);
+        setLayouts((prevLayouts: any) => ({
+          ...prevLayouts,
+          [newBreakpoint]: prevLayouts[newBreakpoint] || initialLayouts[newBreakpoint],
+        }));
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Call once to set initial state
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [currentBreakpoint]);
+
+  const onLayoutChange = useCallback((currentLayout: any, allLayouts: any) => {
     console.log("Layout changed. New layouts:", allLayouts);
     setLayouts(allLayouts);
-    // Comment out the following line to prevent saving to localStorage
-    // saveToLS("layouts", allLayouts);
-  };
+  }, []);
 
   // Remove this function as it's no longer needed
   // const onLayoutSave = () => {
@@ -93,12 +158,16 @@ function Content({ size }: { size: { width: number | null } }) {
           className="layout"
           layouts={layouts}
           breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-          cols={{ lg: 4, md: 4, sm: 2, xs: 1, xxs: 1 }}
-          rowHeight={300}
+          cols={{ lg: 4, md: 3, sm: 2, xs: 1, xxs: 1 }}
+          rowHeight={rowHeight}
           width={size.width}
           onLayoutChange={onLayoutChange}
+          onBreakpointChange={(newBreakpoint) => setCurrentBreakpoint(newBreakpoint)}
           isDraggable={editMode}
           isResizable={editMode}
+          compactType="vertical"
+          preventCollision={true}
+          margin={[16, 16]}
         >
           {items.map((key) => (
             <div key={key} className="widget">
@@ -124,13 +193,17 @@ interface WidgetProps {
 
 const Widget: React.FC<WidgetProps & { editMode: boolean }> = ({ id, onRemoveItem, component: Component, editMode }) => {
   return (
-    <Card sx={{ height: '100%', overflow: 'auto' }}>
+    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {editMode && (
-        <IconButton aria-label="delete" onClick={() => onRemoveItem(id)}>
-          <CloseIcon fontSize="small" />
-        </IconButton>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
+          <IconButton aria-label="delete" onClick={() => onRemoveItem(id)} size="small">
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Box>
       )}
-      <Component />
+      <Box sx={{ flexGrow: 1, overflow: 'auto', p: 2 }}>
+        <Component />
+      </Box>
     </Card>
   );
 };
