@@ -457,10 +457,8 @@ class RecipeView(APIView):
         try:
             response = analyze_text(prompt, photo.path)
 
-            # Extract the analysis result from the API response
             analysis_result = response.choices[0].message.content
 
-            # Parse the JSON response
             recipe_data = json.loads(analysis_result)
 
             # Update the recipe with extracted data
