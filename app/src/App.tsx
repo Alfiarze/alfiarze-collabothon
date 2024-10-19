@@ -23,6 +23,7 @@ import axiosPrivate from './ctx/axiosPrivate';
 import Exchange from './pages/Exchange';
 import Chat from './pages/Chat';
 import Loading from './components/Loading';
+import AddContract from './pages/AddContract';
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
@@ -96,6 +97,7 @@ function App() {
           <Container maxWidth="lg" sx={{ width: '100%', maxWidth: '1340px !important', flexGrow: 1, my: 2 }}>
             <Switch>
               <Route path="/actions" component={Actions} />
+              <Route path="/add-contract" component={AddContract} />
               <Route path="/contracts" component={Contracts} />
               <Route path="/exchange" component={Exchange} />
               <Route path="/matitest" component={MatiTest} />
