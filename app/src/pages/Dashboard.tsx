@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Responsive as ResponsiveGridLayout, Layout } from "react-grid-layout";
 import { SizeMe } from "react-sizeme";
 import { Card,  IconButton, Box, useTheme, useMediaQuery } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import TopBar from "../components/TopBar";
+import axiosPrivate from '../ctx/axiosPrivate';
 
 import CardsList from "../components/widgets/CardsList";
 import Contracts from "../components/widgets/ContractsWidget";
@@ -116,46 +117,44 @@ function Content({ size }: { size: { width: number | null } }) {
   const rowHeight = isMobile ? 200 : 150;
 
   const [items, setItems] = useState<string[]>(originalItems);
-  const [layouts, setLayouts] = useState<BreakpointLayouts>(initialLayouts);
-  const [currentBreakpoint, setCurrentBreakpoint] = useState<keyof BreakpointLayouts>("lg");
+  const [layouts, setLayouts] = useState<any>(initialLayouts);
+  const [currentBreakpoint, setCurrentBreakpoint] = useState<string>("lg");
+  const [editMode, setEditMode] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      let newBreakpoint: keyof BreakpointLayouts = "lg";
-      if (width < 480) newBreakpoint = "xs";
-      else if (width < 768) newBreakpoint = "sm";
-      else if (width < 996) newBreakpoint = "md";
+  const onLayoutChange = useCallback((currentLayout: any, allLayouts: any) => {
+    console.log("Layout changed. New layouts:", allLayouts);
+    setLayouts(allLayouts);
+  }, []);
 
-      if (newBreakpoint !== currentBreakpoint) {
-        setCurrentBreakpoint(newBreakpoint);
-        setLayouts((prevLayouts) => ({
-          ...prevLayouts,
-          [newBreakpoint]: prevLayouts[newBreakpoint] || initialLayouts[newBreakpoint],
-        }));
+  const saveLayout = useCallback(async (layout: any) => {
+    try {
+      const userData = {
+        layout: layout
+      };
+
+      const response = await axiosPrivate.post('api/userLayout/', userData);
+
+      if (response.status === 200) {
+        console.log("Layout successfully saved to database");
+      } else {
+        console.error("Failed to save layout to database");
       }
-    };
+    } catch (error) {
+      console.error("Error saving layout to database:", error);
+    }
+  }, []);
 
-    window.addEventListener("resize", handleResize);
-    handleResize();
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, [currentBreakpoint]);
-
-  // Move this function outside of Content for better performance
-  // const onLayoutChange = useCallback((allLayouts: BreakpointLayouts) => {
-  //   console.log("Layout changed. New layouts:", allLayouts);
-  //   setLayouts(allLayouts);
-  // }, []);
+  const toggleEditMode = useCallback(() => {
+    setEditMode((prevEditMode) => {
+      if (prevEditMode) {
+        saveLayout(layouts[currentBreakpoint]);
+      }
+      return !prevEditMode;
+    });
+  }, [layouts, currentBreakpoint, saveLayout]);
 
   const onRemoveItem = (itemId: string) => {
     setItems(items.filter((i) => i !== itemId));
-  };
-
-  const [editMode, setEditMode] = useState(false);
-
-  const toggleEditMode = () => {
-    setEditMode(!editMode);
   };
 
   return (
@@ -171,7 +170,7 @@ function Content({ size }: { size: { width: number | null } }) {
           cols={{ lg: 4, md: 3, sm: 2, xs: 1, xxs: 1 }}
           rowHeight={rowHeight}
           width={size.width}
-          // onLayoutChange={onLayoutChange}
+          onLayoutChange={onLayoutChange}
           onBreakpointChange={(newBreakpoint) => setCurrentBreakpoint(newBreakpoint as keyof BreakpointLayouts)}
           isDraggable={editMode}
           isResizable={editMode}

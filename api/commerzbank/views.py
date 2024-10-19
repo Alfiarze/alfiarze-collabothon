@@ -1,3 +1,4 @@
+
 from api import settings
 import requests
 from .func import refresh_oauth_token
@@ -294,8 +295,6 @@ class OAuthView(APIView):
 
 
 class TransactionView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         transactions = Transaction.objects.all()
@@ -510,7 +509,6 @@ class RecipeView(APIView):
             return Response({'error': f'An error occurred during analysis: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class LoanOffersView(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -584,7 +582,6 @@ class CommerzbankBranchesView(APIView):
 
 
 class LoyalProgramView(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
