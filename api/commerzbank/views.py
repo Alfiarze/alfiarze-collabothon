@@ -167,7 +167,7 @@ class AccountView(APIView):
         headers = {
             "Accept": "application/json",
             "X-Api-Key": settings.COMMERZBANK_API_KEY,
-            "X-Secret-Key": settings.COMMERZBANK_SECRET_KEY
+            "X-Secret-Key": settings.COMMERCZBANK_CLIENT_SECRET
         }
 
         try:
