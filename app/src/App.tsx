@@ -60,71 +60,64 @@ function App() {
     }).catch((error) => {
       console.error(error);
       setLoading(false);
- //     setShowSurvey(true);
+      setShowSurvey(true);
     });
-    
   }, []);
 
-  useEffect(() => {
-    console.log('user', user);
-  }, [user]);
-
-  if(loading){
+  if (loading) {
     return <Loading />;
   }
 
-  // if(showSurvey && user){
-  //   return <Survey />;
-  // }
+  if (showSurvey && user) {
+    return <Survey />;
+  }
 
-  if(!user){
+  if (!user) {
     return (
       <ThemeProvider theme={theme}>
-      <Router>
-        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-          <Switch>
-            <Route path="/register" component={Register} />
-            <Route path="/login" component={Login} />
-            <Route path="/" component={Login} />
-          </Switch>
-        </div>
-      </Router>
+        <Router>
+          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+            <Switch>
+              <Route path="/register" component={Register} />
+              <Route path="/login" component={Login} />
+              <Route path="/" component={Login} />
+            </Switch>
+          </div>
+        </Router>
       </ThemeProvider>
-    )
+    );
   }
 
   return (
     <ThemeProvider theme={theme}>
-
-    <Router>
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Nav />
-
-      <Container maxWidth="lg" sx={{ width: '100%', maxWidth: '1340px !important', flexGrow: 1, my: 2 }}>
-          <Switch>
-            <Route path="/actions" component={Actions} />
-            <Route path="/contracts" component={Contracts} />
-            <Route path="/exchange" component={Exchange} />
-            <Route path="/matitest" component={MatiTest} />
-            <Route path="/logging" component={Logging} />
-            <Route path="/login" component={Login} />
-            <Route path="/offer" component={Offer} />
-            <Route path="/register" component={Register} />
-            <Route path="/schelude" component={Schelude} />
-            <Route path="/support" component={Support} />
-            <Route path="/Survey" component={Survey} />
-            <Route path="/transfers" component={Transfers} />
-            <Route path="/chat" component={Chat} />
-            <Route path="/" component={Dashboard} />
-          </Switch>
-        </Container>
-        <Box component="footer" sx={{ py: 3, px: 2, backgroundColor: 'primary.main' }}>
-          <Typography variant="body2" color="white" align="center">
-            © {new Date().getFullYear()} Commerzbank. All rights reserved.
-          </Typography>
-        </Box>
-      </div>
-    </Router>
+      <Router>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          <Nav />
+          <Container maxWidth="lg" sx={{ width: '100%', maxWidth: '1340px !important', flexGrow: 1, my: 2 }}>
+            <Switch>
+              <Route path="/actions" component={Actions} />
+              <Route path="/contracts" component={Contracts} />
+              <Route path="/exchange" component={Exchange} />
+              <Route path="/matitest" component={MatiTest} />
+              <Route path="/logging" component={Logging} />
+              <Route path="/login" component={Login} />
+              <Route path="/offer" component={Offer} />
+              <Route path="/register" component={Register} />
+              <Route path="/schelude" component={Schelude} />
+              <Route path="/support" component={Support} />
+              <Route path="/Survey" component={Survey} />
+              <Route path="/transfers" component={Transfers} />
+              <Route path="/chat" component={Chat} />
+              <Route path="/" component={Dashboard} />
+            </Switch>
+          </Container>
+          <Box component="footer" sx={{ py: 3, px: 2, backgroundColor: 'primary.main' }}>
+            <Typography variant="body2" color="white" align="center">
+              © {new Date().getFullYear()} Commerzbank. All rights reserved.
+            </Typography>
+          </Box>
+        </div>
+      </Router>
     </ThemeProvider>
   );
 }

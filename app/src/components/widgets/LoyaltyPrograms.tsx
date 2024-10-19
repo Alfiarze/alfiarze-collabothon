@@ -1,30 +1,38 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Typography, List, ListItem, ListItemText, Paper, Chip } from '@mui/material';
+import axiosPrivate from '../../ctx/axiosPrivate';
 
-interface LoyaltyBenefit {
+interface LoyaltyProgram {
   id: number;
   name: string;
   description: string;
-  type: 'cashback' | 'points' | 'travel' | 'lifestyle';
+  points: number;
 }
 
-const loyaltyBenefits: LoyaltyBenefit[] = [
+
+const LoyaltyProgram = () => {
+  const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgram[]>([
   { id: 1, name: "Cash Back Rewards", description: "Earn 2% cash back on all purchases", type: 'cashback' },
   { id: 2, name: "Travel Miles", description: "Earn 1.5x miles on every dollar spent", type: 'travel' },
   { id: 3, name: "Reward Points", description: "Collect points for exclusive discounts and offers", type: 'points' },
   { id: 4, name: "Lifestyle Perks", description: "Access to exclusive events and experiences", type: 'lifestyle' },
-];
+]);
 
-const LoyaltyPrograms: React.FC = () => {
-  const getBenefitTypeColor = (type: LoyaltyBenefit['type']): string => {
-    switch (type) {
-      case 'cashback': return '#4caf50';
-      case 'travel': return '#2196f3';
-      case 'points': return '#ff9800';
-      case 'lifestyle': return '#9c27b0';
-      default: return '#9e9e9e';
+
+useEffect(() => {
+  axiosPrivate.get('api/loyal-programs/').then((res) => {
+      console.log(res.data);
+      if (Array.isArray(res.data)) {
+        setLoyaltyPrograms(res.data.map((loyaltyProgram: LoyaltyProgram) => ({
+            id: loyaltyProgram.id,
+            name: loyaltyProgram.name,
+            description: loyaltyProgram.description,
+            points: loyaltyProgram.points
+        })));
     }
-  };
+  });
+}, []);
 
   return (
     <Paper elevation={3}>
@@ -33,7 +41,7 @@ const LoyaltyPrograms: React.FC = () => {
           Loyalty Program Benefits
         </Typography>
         <List>
-          {loyaltyBenefits.map((benefit) => (
+          {loyaltyPrograms.map((benefit) => (
             <ListItem key={benefit.id}>
               <ListItemText
                 primary={
@@ -43,9 +51,9 @@ const LoyaltyPrograms: React.FC = () => {
                         {benefit.name}
                       </Typography>
                       <Chip
-                        label={benefit.type}
+                        label={benefit.points}
                         size="small"
-                        sx={{ backgroundColor: getBenefitTypeColor(benefit.type), color: 'white' }}
+                        sx={{ backgroundColor: '#4caf50', color: 'white' }}
                       />
                     </Box>
                   </Box>
@@ -66,4 +74,4 @@ const LoyaltyPrograms: React.FC = () => {
   );
 };
 
-export default LoyaltyPrograms;
+export default LoyaltyProgram;

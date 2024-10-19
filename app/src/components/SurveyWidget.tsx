@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import { Button, Typography, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Box } from '@mui/material';
+import axiosPrivate from '../ctx/axiosPrivate';
 
 function Survey() {
     const [questionIndex, setQuestionIndex] = useState(0);
     const [answers, setAnswers] = useState<string[]>(['', '', '', '']);
     const [isCompleted, setIsCompleted] = useState(false);
+    const [formData, setFormData] = useState({
+        answer_1: '',
+        answer_2: '',
+        answer_3: '',
+        answer_4: '',
+        result: "kmk",
+        layout: '',
+    });
 
     const questions = [
         {
@@ -37,10 +46,16 @@ function Survey() {
     const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newAnswers = [...answers];
         newAnswers[questionIndex] = e.target.value;
+        setFormData({ ...formData, [questions[questionIndex].question]: e.target.value });
         setAnswers(newAnswers);
     };
 
     if (isCompleted) {
+        axiosPrivate.post('/api/userLayout/', formData).then(() => {
+            window.location.href = '/';
+        }).catch((error) => {
+            console.error('Error submitting survey:', error);
+        });
         return (
             <Box sx={{
                 border: '1px solid #e0e0e0',

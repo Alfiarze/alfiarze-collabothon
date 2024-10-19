@@ -21,27 +21,28 @@ from decimal import Decimal
 
 
 class UserLayoutProvider(APIView):
-    authentication_classes = []
-    permission_classes = []
-
     def get(self, request):
-        users = request.user
-        if users.exists():
-            users_json = []
-            for user in users:
-                user_data = {
-                    "answer_1": user.answer_1,
-                    "answer_2": user.answer_2,
-                    "answer_3": user.answer_3,
-                    "answer_4": user.answer_4,
-                    "result": user.result,
-                    "layout": user.layout.name if user.layout else None,
-                    "datetime": user.datetime
-                }
-                users_json.append(user_data)
-            return Response(users_json, status=status.HTTP_200_OK)
-        else:
-            return Response({"message": "No users exist"}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            user = request.user
+            if user:
+                userLayer = UserLayer.objects.filter(user=user).first()
+                try:    
+                    user_data = {
+                        "answer_1": userLayer.answer_1,
+                    "answer_2": userLayer.answer_2,
+                    "answer_3": userLayer.answer_3,
+                    "answer_4": userLayer.answer_4,
+                    "result": userLayer.result,
+                    "layout": userLayer.layout,
+                    "datetime": userLayer.datetime
+                    }
+                    return Response(user_data, status=status.HTTP_200_OK)
+                except:
+                    return Response({"message": "No user layer exists"}, status=status.HTTP_404_NOT_FOUND)
+            else:
+                return Response({"message": "No users exist"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def post(self, request):
         data = request.data
@@ -92,6 +93,8 @@ class UserLayoutProvider(APIView):
 
 
 class RegisterView(APIView):
+    permission_classes = []
+    authentication_classes = []
 
     def post(self, request):
         username = request.data.get('username')
@@ -173,8 +176,8 @@ class AccountView(APIView):
             )
         
 class UpcomingPaymentView(APIView):
-    authentication_classes = []
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
 
         upcoming_payments = UpcomingPayment.objects.all()
@@ -196,14 +199,28 @@ class UpcomingPaymentView(APIView):
         
     def post(self, request):
         data = request.data
-        upcoming_payment = UpcomingPayment.objects.create(
-            user=data['user'],
-            name=data['name'],
-            time=data['time'],
-            date=data['date'],
-            account_id=data['account_id']
-        )
-        return Response({'success': 'Upcoming payment created successfully'})
+        try:
+            upcoming_payment = UpcomingPayment.objects.create(
+                user=request.user,
+                name=data['name'],
+                time=data['time'],
+                date=data['date'],
+                account_id=data['account_id']
+            )
+            return Response(
+                {'success': 'Upcoming payment created successfully', 'id': upcoming_payment.id},
+                status=status.HTTP_201_CREATED
+            )
+        except KeyError as e:
+            return Response(
+                {'error': f'Missing required field: {str(e)}'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to create upcoming payment: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
     
 class CreditCardView(APIView):
     authentication_classes = []
@@ -594,3 +611,4 @@ class LoyalProgramView(APIView):
         )
         return Response({'success': 'Loyal program created successfully'}, status=status.HTTP_201_CREATED)
         
+

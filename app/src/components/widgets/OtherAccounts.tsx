@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, List, ListItem, ListItemText, Paper, Chip, IconButton } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import axiosPrivate from '../../ctx/axiosPrivate';
 
-interface Account {
+interface OtherAccounts {
   id: number;
   name: string;
   balance: number;
@@ -11,16 +12,28 @@ interface Account {
   lastTransaction: string;
 }
 
-const OtherAccounts: React.FC = () => {
-  const [accounts] = useState<Account[]>([
+const OtherAccounts = () => {
+  const [accounts, setAccounts] = useState<OtherAccounts[]>([
     { id: 1, name: 'Savings Account', balance: 5000, type: 'savings', lastTransaction: '2023-05-15' },
     { id: 2, name: 'Checking Account', balance: 2500, type: 'checking', lastTransaction: '2023-05-20' },
     { id: 3, name: 'Investment Account', balance: 10000, type: 'investment', lastTransaction: '2023-05-10' },
   ]);
 
+  useEffect(() => {
+    axiosPrivate.get('api/commerzbank/accounts/').then((res) => {
+        console.log(res.data);
+
+        // if (Array.isArray(res.data)) {
+        //     setAccounts(res.data.map((account: Account) => ({
+ 
+        //     })));
+        // }
+    });
+}, []);
+
   const [showBalances, setShowBalances] = useState<boolean>(false);
 
-  const getAccountTypeColor = (type: Account['type']): string => {
+  const getAccountTypeColor = (type: OtherAccounts['type']): string => {
     switch (type) {
       case 'savings': return '#4caf50';
       case 'checking': return '#2196f3';
