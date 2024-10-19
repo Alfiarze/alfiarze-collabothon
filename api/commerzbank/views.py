@@ -63,7 +63,25 @@ class UserLayoutProvider(APIView):
         # TODO: Implement logic to determine result and layout based on answers
         result = self.calculate_result(data)
         layout = self.determine_layout(result)
+        # TODO: Implement logic to determine result and layout based on answers
+        result = self.calculate_result(data)
+        layout = self.determine_layout(result)
 
+        try:
+            user_check = UserLayer.objects.filter(id=user_obj.id).first()
+            if user_check:
+                user_check.layout = layout
+                user_check.save()
+            else:
+                user = UserLayer.objects.create(
+                    user=user_obj,
+                answer_1=data['answer_1'],
+                answer_2=data['answer_2'],
+                answer_3=data['answer_3'],
+                answer_4=data['answer_4'],
+                    result=result,
+                    layout=layout,
+                )
         try:
             user_check = UserLayer.objects.filter(id=user_obj.id).first()
             if user_check:
@@ -92,11 +110,29 @@ class UserLayoutProvider(APIView):
             return Response(user_json, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            user_json = {
+                "answer_1": user.answer_1,
+                "answer_2": user.answer_2,
+                "answer_3": user.answer_3,
+                "answer_4": user.answer_4,
+                "result": user.result,
+                "layout": user.layout,
+                "datetime": user.datetime
+            }
+            return Response(user_json, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def calculate_result(self, data):
         # TODO: Implement logic to calculate result based on answers
         return "Calculated Result"
+    def calculate_result(self, data):
+        # TODO: Implement logic to calculate result based on answers
+        return "Calculated Result"
 
+    def determine_layout(self, result):
+        # TODO: Implement logic to determine layout based on result
+        return "Determined Layout"
     def determine_layout(self, result):
         # TODO: Implement logic to determine layout based on result
         return "Determined Layout"
@@ -105,7 +141,13 @@ class UserLayoutProvider(APIView):
 class RegisterView(APIView):
     permission_classes = []
     authentication_classes = []
+    permission_classes = []
+    authentication_classes = []
 
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        email = request.data.get('email')
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
@@ -113,17 +155,26 @@ class RegisterView(APIView):
 
         if not username or not password or not email:
             return Response({'error': 'Please provide username, password and email'})
+        if not username or not password or not email:
+            return Response({'error': 'Please provide username, password and email'})
 
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'Username already exists'})
         if User.objects.filter(username=username).exists():
             return Response({'error': 'Username already exists'})
 
         user = User.objects.create_user(username=username, password=password, email=email)
+        user = User.objects.create_user(username=username, password=password, email=email)
 
+        return Response({'success': 'User created successfully'})
         return Response({'success': 'User created successfully'})
 
         pass
+        pass
 
 class ContractView(APIView):
+    authentication_classes = []
+    permission_classes = []
     authentication_classes = []
     permission_classes = []
 
@@ -147,7 +198,29 @@ class ContractView(APIView):
         else:
             return Response({"message": "No contracts exist"}, status=status.HTTP_404_NOT_FOUND)
                 
+    def get(self, request):
+        contracts = Contract.objects.all()
+        if contracts.exists():
+            contracts_json = []
+            for contract in contracts:
+                contract_data = {
+                    "id": contract.id,
+                    "user_id": contract.user_id,
+                    "contract_id": contract.contract_id,
+                    "contract_type": contract.contract_type,
+                    "amount": contract.amount,
+                    "start_date": contract.start_date,
+                    "end_date": contract.end_date,
+                    "status": contract.status
+                }
+                contracts_json.append(contract_data)
+            return Response(contracts_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No contracts exist"}, status=status.HTTP_404_NOT_FOUND)
+                
 
+    def post(self, request):
+        data = request.data
     def post(self, request):
         data = request.data
 
@@ -172,7 +245,27 @@ class ContractView(APIView):
         (...)
         ]
         }"""
+        prompt = """
+        Twoim zadaniem jest wyciągnąć z umowy następujące informacje i zwrócić je w formacie json jak we wzorze. Jak czegoś nie wiesz to zostawiasz puste pole. Jak będziesz zmyślał to będę miał kłopoty.
+        {
+        contract_type: "",
+        amount: "",
+        start_date: "",
+        end_date: "",
+        name: "",
+        status: "",
+        upcomingPayments: [
+        {
+        date: "",
+        time: "",
+        amount: "",
+        name: "",
+        },
+        (...)
+        ]
+        }"""
 
+        response = analyze_text(prompt, image_path=temp_full_path)
         response = analyze_text(prompt, image_path=temp_full_path)
 
         contract = Contract.objects.create(
@@ -185,8 +278,25 @@ class ContractView(APIView):
             status=data['status']
         )
         return Response({'success': 'Contract created successfully'}, status=status.HTTP_201_CREATED)
+        contract = Contract.objects.create(
+            user_id=data['user_id'],
+            contract_id=data['contract_id'],
+            contract_type=data['contract_type'],
+            amount=data['amount'],
+            start_date=data['start_date'],
+            end_date=data['end_date'],
+            status=data['status']
+        )
+        return Response({'success': 'Contract created successfully'}, status=status.HTTP_201_CREATED)
 
 class AccountView(APIView):
+    def get(self, request):
+        url = "https://api-sandbox.commerzbank.com/accounts/v1/accounts"
+        headers = {
+            "Accept": "application/json",
+            "X-Api-Key": settings.COMMERZBANK_API_KEY,
+            "X-Secret-Key": settings.COMMERCZBANK_CLIENT_SECRET
+        }
     def get(self, request):
         url = "https://api-sandbox.commerzbank.com/accounts/v1/accounts"
         headers = {
@@ -210,11 +320,71 @@ class AccountView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
+        try:
+            response = requests.get(url, headers=headers)
+            if response.status_code == 200:
+                return Response(response.json(), status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"error": "Request to Commerzbank API failed", "status_code": response.status_code},
+                    status=response.status_code
+                )
+        except requests.RequestException as e:
+            return Response(
+                {"error": f"Request to Commerzbank API failed: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
 class UpcomingPaymentView(APIView):
     permission_classes = [IsAuthenticated]
     
     def get(self, request):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
 
+        upcoming_payments = UpcomingPayment.objects.all()
+        if upcoming_payments.exists():
+            upcoming_payments_json = []
+            for payment in upcoming_payments:
+                upcoming_payment_data = {
+                    "id": payment.id,
+                    "user": payment.user.username,
+                    "name": payment.name,
+                    "time": payment.time,
+                    "date": payment.date,
+                    "account_id": payment.account_id
+                }
+                upcoming_payments_json.append(upcoming_payment_data)
+            return Response(upcoming_payments_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No upcoming payments exist"}, status=status.HTTP_404_NOT_FOUND)
+        
+    def post(self, request):
+        data = request.data
+        try:
+            upcoming_payment = UpcomingPayment.objects.create(
+                user=request.user,
+                name=data['name'],
+                time=data['time'],
+                date=data['date'],
+                account_id=data['account_id']
+            )
+            return Response(
+                {'success': 'Upcoming payment created successfully', 'id': upcoming_payment.id},
+                status=status.HTTP_201_CREATED
+            )
+        except KeyError as e:
+            return Response(
+                {'error': f'Missing required field: {str(e)}'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to create upcoming payment: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
         upcoming_payments = UpcomingPayment.objects.all()
         if upcoming_payments.exists():
             upcoming_payments_json = []
@@ -470,6 +640,11 @@ class RecipeView(APIView):
 
         temp_path = default_storage.save('temp_recipe_photo.jpg', ContentFile(photo.read()))
         temp_full_path = os.path.join(settings.MEDIA_ROOT, temp_path)
+        # Save the file temporarily
+        temp_path = default_storage.save('temp_recipe_photo.jpg', ContentFile(photo.read()))
+        temp_full_path = os.path.join(settings.MEDIA_ROOT, temp_path)
+
+        print(temp_full_path)
 
         print(temp_full_path)
 
