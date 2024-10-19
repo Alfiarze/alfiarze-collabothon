@@ -19,4 +19,5 @@ urlpatterns = [
     path('test-ai/', views.TestAIView.as_view(), name='test-ai'),
     path('loyal-programs/', views.LoyalProgramView.as_view(), name='loyal-programs'),
     path('ai-navigator/', views.AINavigatorView.as_view(), name='ai-navigator'),
+    path('qr-codes/', views.GenerateQRCodeView.as_view(), name='qr-codes'),
 ]

@@ -10,6 +10,8 @@ import os
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.db import transaction
+import random
+import string
 
 class UserLayer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -138,4 +140,10 @@ class LoyalProgram(models.Model):
 
     def __str__(self):
         return f"Loyal Program {self.id}: {self.name}"
-    
+
+class QRCode(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=10, unique=True, blank=True)
+
+    def __str__(self):
+        return self.code
