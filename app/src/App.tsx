@@ -51,31 +51,31 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [showSurvey, setShowSurvey] = useState(false);
 
-  useEffect(() => {
-    setShowSurvey(false);
-    setLoading(true);
-    axiosPrivate.get('/api/userLayout/').then((res) => {
-      console.log(res);
-      setLoading(false);
-    }).catch((error) => {
-      console.error(error);
-      setLoading(false);
-      setShowSurvey(true);
-    });
+  // useEffect(() => {
+  //   setShowSurvey(false);
+  //   setLoading(true);
+  //   axiosPrivate.get('/api/userLayout/').then((res) => {
+  //     console.log(res);
+  //     setLoading(false);
+   // }).catch((error) => {
+    //  console.error(error);
+  //    setLoading(false);
+  //    setShowSurvey(true);
+  //  });
     
-  }, []);
+  // }, []);
 
-  useEffect(() => {
-    console.log('user', user);
-  }, [user]);
+  // useEffect(() => {
+  //   console.log('user', user);
+  // }, [user]);
 
-  if(loading){
-    return <Loading />;
-  }
+  // if(loading){
+  //   return <Loading />;
+  // }
 
-  if(showSurvey && user){
-     return <Survey />;
-  }
+  // if(showSurvey && user){
+  //    return <Survey />;
+  // }
 
   if(!user){
     return (
