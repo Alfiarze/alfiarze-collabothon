@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Exchange from '../components/Exchange';
 import CardsList from '../components/widgets/CardsList';
 import RecentTransfersList from '../components/widgets/RecentTransfersList';
