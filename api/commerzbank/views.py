@@ -15,6 +15,8 @@ import base64
 from django.conf import settings
 from openai import AzureOpenAI
 from chatai.func import send_prompt_to_azure_openai
+import json
+from decimal import Decimal
 
 
 
@@ -395,22 +397,21 @@ class RecipeView(APIView):
 
         # Prepare the prompt for the AI service
         prompt = """
-        Analyze the recipe in this photo and provide the following information:
-        1. List all ingredients with their quantities.
-        2. Describe the cooking steps in order.
-        3. Estimate the total preparation and cooking time.
-        4. Identify the cuisine type or origin of the dish.
-        5. Suggest any potential dietary restrictions or allergens.
-        6. Recommend any possible variations or substitutions.
-        7. Estimate the number of servings.
-        8. Provide any nutritional information you can infer.
-        9. Suggest wine pairings or complementary side dishes.
-        10. Highlight any unusual ingredients or cooking techniques.
-        11. Identify the date of the recipe (if visible).
-        12. Identify the store or source of the recipe (if visible).
-        13. Calculate the total price of the recipe (if visible).
-        14. Identify any NIP number (if visible).
-        Please be as detailed as possible in your analysis.
+        Analyze the recipe in this photo and provide the following information in JSON format:
+        {
+            "date": "YYYY-MM-DD",
+            "store": "Store name",
+            "total_price": 0.00,
+            "nip": "NIP number",
+            "ingredients": [
+                {
+                    "name": "Ingredient name",
+                    "unit_price": 0.00,
+                    "quantity": 0.00
+                }
+            ]
+        }
+        If any information is not visible or cannot be determined, use null for that field.
         """
 
         try:
@@ -436,30 +437,34 @@ class RecipeView(APIView):
             # Extract the analysis result from the API response
             analysis_result = response.choices[0].message.content
 
-            # Parse the analysis result to extract structured data
-            # This is where you'd implement the logic to extract specific data points
-            # For now, we'll use placeholder logic
-            recipe.date = None  # Extract date from analysis_result
-            recipe.store = ''  # Extract store from analysis_result
-            recipe.total_price = None  # Extract total price from analysis_result
-            recipe.nip = ''  # Extract NIP from analysis_result
+            # Parse the JSON response
+            recipe_data = json.loads(analysis_result)
+
+            # Update the recipe with extracted data
+            recipe.date = recipe_data.get('date')
+            recipe.store = recipe_data.get('store', '')
+            recipe.total_price = Decimal(recipe_data.get('total_price', 0))
+            recipe.nip = recipe_data.get('nip', '')
             recipe.save()
 
-            # Create recipe items (this is placeholder logic)
-            # You'd need to implement proper parsing of the analysis_result
-            RecipeItem.objects.create(
-                recipe=recipe,
-                name='Sample Item',
-                unit_price=0,
-                quantity=1
-            )
+            # Create recipe items
+            for ingredient in recipe_data.get('ingredients', []):
+                RecipeItem.objects.create(
+                    recipe=recipe,
+                    name=ingredient.get('name', ''),
+                    unit_price=Decimal(ingredient.get('unit_price', 0)),
+                    quantity=Decimal(ingredient.get('quantity', 0))
+                )
             
             return Response({
                 'success': 'Recipe analyzed and created successfully',
                 'recipe_id': recipe.id,
-                'analysis_result': analysis_result
+                'analysis_result': recipe_data
             }, status=status.HTTP_201_CREATED)
 
+        except json.JSONDecodeError:
+            recipe.delete()
+            return Response({'error': 'Failed to parse AI response'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as e:
             # If an error occurs, delete the partially created recipe
             recipe.delete()

@@ -11,3 +11,4 @@ admin.site.register(Recipe)
 admin.site.register(RecipeItem)
 admin.site.register(LoanOffer)
 admin.site.register(LoyalProgram)
+
