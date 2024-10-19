@@ -63,15 +63,20 @@ class UserLayoutProvider(APIView):
         layout = self.determine_layout(result)
 
         try:
-            user = UserLayer.objects.create(
-                user=user_obj,
+            user_check = UserLayer.objects.filter(user=user_obj).first()
+            if user_check:
+                user_check.layout = layout
+                user_check.save()
+            else:
+                user = UserLayer.objects.create(
+                    user=user_obj,
                 answer_1=data['answer_1'],
                 answer_2=data['answer_2'],
                 answer_3=data['answer_3'],
                 answer_4=data['answer_4'],
-                result=result,
-                layout=layout,
-            )
+                    result=result,
+                    layout=layout,
+                )
 
             user_json = {
                 "answer_1": user.answer_1,

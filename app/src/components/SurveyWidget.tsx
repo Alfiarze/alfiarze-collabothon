@@ -29,8 +29,8 @@ function Survey() {
             options: ["Yes", "No"]
         },
         {
-            question: "Are you using different types of accounts?",
-            options: ["No", "Savings", "Joint account", "Other"]
+            question: "Do you want loan offers?",
+            options: ["Yes", "No"]
         }
     ];
 

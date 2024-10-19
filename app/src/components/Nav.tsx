@@ -1,24 +1,16 @@
-import { AppBar, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import { AppBar, Button,  Toolbar, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import logo from '../assets/images/logo.png';
 import { useUser } from "../context/UserContext";
 
 
 const Nav = () => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
+    // Remove the following line
+    // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const { logout } = useUser();
-    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-      setAnchorEl(event.currentTarget);
-    };
-  
-    const handleMenuClose = () => {
-      setAnchorEl(null);
-    };
-
+    // Remove the handleMenuOpen function
+    
     const handleLogout = () => {
       logout();
     };

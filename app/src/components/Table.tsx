@@ -1,7 +1,6 @@
 import  { useEffect, useState } from 'react';
 import { Typography, List, ListItem, ListItemText, Paper, Box, CircularProgress, Alert } from '@mui/material';
 import axiosPrivate from '../ctx/axiosPrivate';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 const ContractList = () => {

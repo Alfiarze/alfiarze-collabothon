@@ -1,4 +1,4 @@
-import { Button, TextField, Snackbar, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Button, TextField,  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { useState, useEffect } from 'react';
 
 function TransferForm(){
@@ -44,6 +44,13 @@ function TransferForm(){
                     onChange={(e) => setAccountNumber(e.target.value)}
                 />
                 <TextField id="outlined-basic" label="Account Name" variant="outlined" value={accountName} onChange={(e) => setAccountName(e.target.value)}/><br/>
+                <TextField 
+                    type="number" 
+                    label="Amount" 
+                    variant="outlined" 
+                    value={amount} 
+                    onChange={(e) => setAmount(e.target.value)}
+                />
                 <TextField id="outlined-basic" label="Description" variant="outlined" value={description} onChange={(e) => setDescription(e.target.value)}/><br/>
                 <TextField type="date" id="outlined-basic" label="Transfer Date" variant="outlined" value={transferDate} InputLabelProps={{ shrink: true }} onChange={(e) => setTransferDate(e.target.value)}/><br/>
                 <Button variant="contained" type="submit">Submit</Button>

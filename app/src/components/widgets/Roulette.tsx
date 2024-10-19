@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { Wheel } from 'react-custom-roulette'
 import { Button } from '@mui/material'
 
@@ -44,7 +44,7 @@ const data = [
 
 export default () => {
   const [mustSpin, setMustSpin] = useState(false);
-  const [prizeNumber, setPrizeNumber] = useState(null);
+  const [prizeNumber, setPrizeNumber] = useState<number | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
 
   const handleSpinClick = () => {
@@ -61,11 +61,11 @@ export default () => {
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
         <Wheel
           mustStartSpinning={mustSpin}
-          prizeNumber={prizeNumber}
+          prizeNumber={prizeNumber ?? 0}
           data={data}
-          backgroundColors={['#f1a80e', '#002e3c']}
+          backgroundColors={data.map(item => item.style?.backgroundColor || '#f1a80e')}
           radiusLineColor='#14343c'
-          textColors={['white']}
+          textColors={data.map(item => item.style?.textColor || 'white')}
           textDistance={80}
           fontSize={18}
           perpendicularText={true}
@@ -78,10 +78,6 @@ export default () => {
           onStopSpinning={() => {
             setMustSpin(false);
             setIsSpinning(false);
-          }}
-          styleOptions={{
-            backgroundColor: (index) => data[index].style?.backgroundColor || undefined,
-            textColor: (index) => data[index].style?.textColor || undefined,
           }}
         />
       </div>
