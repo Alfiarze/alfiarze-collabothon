@@ -14,6 +14,7 @@ from django.db import transaction
 import base64
 from django.conf import settings
 from openai import AzureOpenAI
+from chatai.func import send_prompt_to_azure_openai
 
 
 
@@ -498,6 +499,11 @@ class LoanOffersView(APIView):
         )
         return Response({'success': 'Loan offer created successfully'}, status=status.HTTP_201_CREATED)
     
+
+class TestAIView(APIView):
+    def get(self, request):
+        result = send_prompt_to_azure_openai("Tell me a joke about programming.")
+        return Response({"message": result})
 
         
 #do tego wrocimy kiedys 
