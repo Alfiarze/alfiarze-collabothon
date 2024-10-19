@@ -64,13 +64,13 @@ function App() {
   //   });
   // }, []);
 
-  // if (loading) {
-  //   return <Loading />;
-  // }
+  // // if (loading) {
+  // //   return <Loading />;
+  // // }
 
-  // if (showSurvey && user) {
-  //   return <Survey />;
-  // }
+  if (showSurvey && user) {
+    return <Survey />;
+  }
 
   if (!user) {
     return (

@@ -1,10 +1,16 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { TextField, Button, Box, Typography, Container } from '@mui/material';
+import { TextField, Button, Box, Typography, Container, Snackbar } from '@mui/material';
+import axios from 'axios';
+import { useState } from 'react';
+import axiosPrivate from '../ctx/axiosPrivate'; // Correct the path to the actual location
 
 const ContractForm = () => {
+  const [snackbar, setSnackbar] = useState({ open: false, message: '' });
+
   const initialValues = {
-    id: '',
+    user_id: '', // Add this field
+    contract_id: '', // Rename 'id' to 'contract_id'
     contract_type: '',
     name: '',
     amount: '',
@@ -14,7 +20,8 @@ const ContractForm = () => {
   };
 
   const validationSchema = Yup.object({
-    id: Yup.string().required('Required'),
+    user_id: Yup.string().required('Required'),
+    contract_id: Yup.string().required('Required'),
     contract_type: Yup.string().required('Required'),
     name: Yup.string().required('Required'),
     amount: Yup.number().required('Required').positive('Must be positive'),
@@ -23,8 +30,20 @@ const ContractForm = () => {
     status: Yup.string().required('Required'),
   });
 
-  const onSubmit = (values: typeof initialValues) => {
-    console.log('Form data', values);
+  const onSubmit = async (values: typeof initialValues, { resetForm }: any) => {
+    try {
+      // Ensure axiosPrivate is correctly imported and used
+      const response = await axiosPrivate.post('api/contracts/', values);
+      setSnackbar({ open: true, message: 'Contract added successfully!' });
+      resetForm();
+    } catch (error: unknown) {
+      console.error('Error adding contract:', error);
+      if (error instanceof Error) {
+        setSnackbar({ open: true, message: `Error adding contract: ${error.message}` });
+      } else {
+        setSnackbar({ open: true, message: 'An unknown error occurred. Please try again.' });
+      }
+    }
   };
 
   return (
@@ -41,14 +60,26 @@ const ContractForm = () => {
           <Form>
             <Field
               as={TextField}
-              label="ID"
+              label="User ID"
               type="text"
-              id="id"
-              name="id"
+              id="user_id"
+              name="user_id"
               variant="outlined"
               fullWidth
               margin="normal"
-              helperText={<ErrorMessage name="id" />}
+              helperText={<ErrorMessage name="user_id" />}
+            />
+
+            <Field
+              as={TextField}
+              label="Contract ID"
+              type="text"
+              id="contract_id"
+              name="contract_id"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              helperText={<ErrorMessage name="contract_id" />}
             />
 
             <Field
@@ -131,6 +162,12 @@ const ContractForm = () => {
           </Form>
         </Formik>
       </Box>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+      />
     </Container>
   );
 };
