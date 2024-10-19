@@ -20,10 +20,10 @@ import ShowQRCode from "../components/widgets/ShowQRCode";
 const widgetComponents: { [key: string]: React.ComponentType } = {
   a: CardsList,
   b: Contracts,
-  c: Credit,
-  d: ContractsEnding,
-  e: RecentTransfersList,
-  f: UpcomingPayment,
+  c: ContractsEnding,
+  d: UpcomingPayment,
+  e: Credit,
+  f: RecentTransfersList,
   g: LoyaltyProgram,
   h: OtherAccounts,
   i: ReceiptWidget,
@@ -94,7 +94,7 @@ function Content({ size }: { size: { width: number | null } }) {
           layouts={layouts}
           breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
           cols={{ lg: 4, md: 4, sm: 2, xs: 1, xxs: 1 }}
-          rowHeight={150}
+          rowHeight={300}
           width={size.width}
           onLayoutChange={onLayoutChange}
           isDraggable={editMode}
