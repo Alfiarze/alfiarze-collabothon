@@ -2,5 +2,5 @@
 /api/.env
 /app/node_modules/
 /api/recipes/
-
+.env
 /node_modules/
