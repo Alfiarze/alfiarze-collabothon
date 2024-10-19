@@ -90,7 +90,6 @@ function App() {
             <Route path="/actions" component={Actions} />
             <Route path="/contracts" component={Contracts} />
             <Route path="/exchange" component={Exchange} />
-            <Route path="/filiptest" component={Filiptest} />
             <Route path="/matitest" component={MatiTest} />
             <Route path="/logging" component={Logging} />
             <Route path="/login" component={Login} />
