@@ -29,4 +29,6 @@ def analyze_text(text, prompt=None, model="gpt-4", image_path=None, max_retries=
         frequency_penalty=0,
         presence_penalty=0
     )
+    print(response)
+    # Extract the content from the response
     return response.choices[0].message.content

@@ -170,8 +170,8 @@ OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 
 # JWT settings (optional)
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),  # Set access token lifetime
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Set refresh token lifetime
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # Set access token lifetime
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Set refresh token lifetime
     # Add other settings as needed
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
