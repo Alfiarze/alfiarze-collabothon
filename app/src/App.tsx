@@ -7,7 +7,7 @@ import Offer from './pages/Offer';
 import Register from './pages/Register';
 import Schelude from './pages/Schelude';
 import Support from './pages/Support';
-import Survey from './components/Survey';
+import Survey from './components/SurveyWidget';
 import Transfers from './pages/Transfers';
 import { Typography,  Container, Box } from '@mui/material';
 import MatiTest from './pages/MatiTest';
@@ -49,8 +49,10 @@ const theme = createTheme({
 function App() {
   const { user } = useUser();
   const [loading, setLoading] = useState(true);
+  const [showSurvey, setShowSurvey] = useState(false);
 
   useEffect(() => {
+    setShowSurvey(false);
     setLoading(true);
     axiosPrivate.get('/api/userLayout/').then((res) => {
       console.log(res);
@@ -58,6 +60,7 @@ function App() {
     }).catch((error) => {
       console.error(error);
       setLoading(false);
+ //     setShowSurvey(true);
     });
     
   }, []);
@@ -69,6 +72,10 @@ function App() {
   if(loading){
     return <Loading />;
   }
+
+  // if(showSurvey && user){
+  //   return <Survey />;
+  // }
 
   if(!user){
     return (

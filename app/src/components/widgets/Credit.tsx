@@ -2,6 +2,15 @@ import { useEffect, useState } from 'react';
 import { Box, Typography, List, ListItem, ListItemText, Paper, Chip } from '@mui/material';
 import axiosPrivate from '../../ctx/axiosPrivate';
 
+interface LoanOffer {
+  id: number;
+  loan_amount: number;
+  interest_rate: number;
+  period: number;
+  description: string;
+  type: 'personal' | 'home' | 'emergency';
+}
+
 const LoanOffer = () => {
   const [loanOffers, setLoanOffers] = useState<LoanOffer[]>([
     { id: 1, loan_amount: 10000, interest_rate: 5, period: 12, description: "Personal loan with low interest rate", type: 'personal' },
@@ -25,14 +34,6 @@ const LoanOffer = () => {
     });
 }, []);
 
-interface LoanOffer {
-  id: number;
-  loan_amount: number;
-  interest_rate: number;
-  period: number;
-  description: string;
-  type: 'personal' | 'home' | 'emergency';
-}
 
   const getLoanTypeColor = (type: string): string => {
     switch (type) {
