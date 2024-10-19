@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Responsive as ResponsiveGridLayout, Layout } from "react-grid-layout";
 import { SizeMe } from "react-sizeme";
 import { Card,  IconButton, Box, useTheme, useMediaQuery } from "@mui/material";
@@ -168,7 +168,7 @@ function Content({ size }: { size: { width: number | null } }) {
           cols={{ lg: 4, md: 3, sm: 2, xs: 1, xxs: 1 }}
           rowHeight={rowHeight}
           width={size.width}
-          // onLayoutChange={onLayoutChange}
+          onLayoutChange={onLayoutChange}
           onBreakpointChange={(newBreakpoint) => setCurrentBreakpoint(newBreakpoint as keyof BreakpointLayouts)}
           isDraggable={editMode}
           isResizable={editMode}
