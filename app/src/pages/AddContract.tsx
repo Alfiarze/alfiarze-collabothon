@@ -1,7 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, Box, Typography, Container, Snackbar } from '@mui/material';
-import axios from 'axios';
 import { useState } from 'react';
 import axiosPrivate from '../ctx/axiosPrivate'; // Correct the path to the actual location
 
@@ -33,9 +32,10 @@ const ContractForm = () => {
   const onSubmit = async (values: typeof initialValues, { resetForm }: any) => {
     try {
       // Ensure axiosPrivate is correctly imported and used
-      const response = await axiosPrivate.post('api/contracts/', values);
-      setSnackbar({ open: true, message: 'Contract added successfully!' });
-      resetForm();
+      await axiosPrivate.post('api/contracts/', values).then((_response) => {
+        setSnackbar({ open: true, message: 'Contract added successfully!' });
+        resetForm();
+      });
     } catch (error: unknown) {
       console.error('Error adding contract:', error);
       if (error instanceof Error) {
