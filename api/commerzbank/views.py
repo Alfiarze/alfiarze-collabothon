@@ -26,16 +26,19 @@ class UserLayoutProvider(APIView):
             user = request.user
             if user:
                 userLayer = UserLayer.objects.filter(user=user).first()
-                user_data = {
-                    "answer_1": userLayer.answer_1,
+                try:    
+                    user_data = {
+                        "answer_1": userLayer.answer_1,
                     "answer_2": userLayer.answer_2,
                     "answer_3": userLayer.answer_3,
                     "answer_4": userLayer.answer_4,
                     "result": userLayer.result,
                     "layout": userLayer.layout,
                     "datetime": userLayer.datetime
-                }
-                return Response(user_data, status=status.HTTP_200_OK)
+                    }
+                    return Response(user_data, status=status.HTTP_200_OK)
+                except:
+                    return Response({"message": "No user layer exists"}, status=status.HTTP_404_NOT_FOUND)
             else:
                 return Response({"message": "No users exist"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
