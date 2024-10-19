@@ -1,5 +1,6 @@
 
 import Table from '../components/Table';
+import AddContractPhoto from '../components/widgets/AddContractPhoto';
 import AddRecipe from '../components/widgets/AddRecipe';
 import AddUpcomingPayment from '../components/widgets/AddUpcomingPayment';
 import UpcomingPayment from '../components/widgets/UpcomingPayment';
@@ -14,6 +15,8 @@ const MatiTest = () => {
     <AddContract/>
     <AddUpcomingPayment/>
     <AddRecipe/>
+    <AddContractPhoto/>
+    
     </>
   );
 };
