@@ -73,6 +73,7 @@ export default () => {
           innerBorderWidth={30}
           outerBorderColor='#14343c'
           outerBorderWidth={10}
+          spinDuration={0.6}
           onStopSpinning={() => {
             setMustSpin(false);
             setIsSpinning(false);
