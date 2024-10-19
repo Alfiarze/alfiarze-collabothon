@@ -75,6 +75,9 @@ const ContractsEnding = () => {
                       <Typography variant="subtitle1" component="span" mr={1}>
                         {contract.name}
                       </Typography>
+                      <Typography variant="subtitle1" component="span">
+                      {contract.amount.toFixed(2)}
+                      </Typography>
                       <Chip
                         label={contract.category}
                         size="small"
@@ -86,9 +89,7 @@ const ContractsEnding = () => {
                         sx={{ backgroundColor: getStatusColor(contract.status), color: 'white' }}
                       />
                     </Box>
-                    <Typography variant="subtitle1" component="span">
-                      ${contract.amount.toFixed(2)}
-                    </Typography>
+
                   </Box>
                 }
                 secondary={`Expires in ${calculateDaysRemaining(contract.end_date)} days (${contract.end_date})`}
