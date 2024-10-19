@@ -15,8 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.urls import re_path
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+import chatai.routing
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,3 +28,17 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
+
+# Add this new section for websocket routing
+websocket_urlpatterns = [
+    re_path(r'ws/chat/', chatai.routing.websocket_urlpatterns),
+]
+
+application = ProtocolTypeRouter({
+    'http': URLRouter(urlpatterns),
+    'websocket': AuthMiddlewareStack(
+        URLRouter(
+            websocket_urlpatterns
+        )
+    ),
+})

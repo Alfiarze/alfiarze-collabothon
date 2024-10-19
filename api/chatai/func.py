@@ -1,9 +1,9 @@
-from openai import AzureOpenAI
+from openai import AsyncAzureOpenAI
 from django.conf import settings
 
-def send_prompt_to_azure_openai(prompt):
+async def send_prompt_to_azure_openai(prompt):
     # Configure Azure OpenAI client
-    client = AzureOpenAI(
+    client = AsyncAzureOpenAI(
         api_key=settings.AZURE_OPENAI_API_KEY,
         api_version=settings.AZURE_OPENAI_API_VERSION,
         azure_endpoint=settings.AZURE_OPENAI_API_ENDPOINT
@@ -11,7 +11,7 @@ def send_prompt_to_azure_openai(prompt):
 
     try:
         # Send the prompt to Azure OpenAI
-        response = client.chat.completions.create(
+        response = await client.chat.completions.create(
             model="gpt-35-turbo",  # Adjust this to match your deployed model name
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
@@ -28,5 +28,6 @@ def send_prompt_to_azure_openai(prompt):
 
 # Example usage
 if __name__ == "__main__":
-    result = send_prompt_to_azure_openai("Tell me a joke about programming.")
+    import asyncio
+    result = asyncio.run(send_prompt_to_azure_openai("Tell me a joke about programming."))
     print(result)
