@@ -3,6 +3,7 @@ import { Box, TextField, Button, Paper, Typography, List, ListItem, IconButton }
 import ChatIcon from '@mui/icons-material/Chat';
 import CallIcon from '@mui/icons-material/Call';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import VisitReservation from './VisitReservation';
 
 const CustomerService = () => {
     const [messages, setMessages] = useState<string[]>([]);
@@ -10,6 +11,7 @@ const CustomerService = () => {
     const [isChatStarted, setIsChatStarted] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [showVisitReservation, setShowVisitReservation] = useState(false);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -43,11 +45,28 @@ const CustomerService = () => {
             case 'Chat':
                 return "What's your question?";
             case 'Call Support':
-                return `Call us at: +48 857 191 091`;
+                return (
+                    <>
+                        <Typography variant="body1" gutterBottom>
+                            Call us at: +48 857 191 091
+                        </Typography>
+                        <Button 
+                            variant="contained" 
+                            onClick={() => setShowVisitReservation(true)}
+                            sx={{ mt: 2 }}
+                        >
+                            Schedule a Visit
+                        </Button>
+                    </>
+                );
             default:
                 return null;
         }
     };
+
+    if (showVisitReservation) {
+        return <VisitReservation />;
+    }
 
     return (
         <Box sx={{ maxWidth: 400, margin: 'auto', mt: 4, height: '80vh', display: 'flex', flexDirection: 'column' }}>
