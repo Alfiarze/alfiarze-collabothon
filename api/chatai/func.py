@@ -47,6 +47,8 @@ def ocr_text_from_file(file_path):
     try:
         file_extension = os.path.splitext(file_path)[1].lower()
 
+        print(file_extension)
+
         if file_extension == '.pdf':
             return ocr_pdf(file_path)
         elif file_extension == '.docx':

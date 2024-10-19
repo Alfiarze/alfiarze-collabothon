@@ -42,12 +42,14 @@ class Contract(models.Model):
     
 class UpcomingPayment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='upcoming_payments')
     name = models.CharField(max_length=100)
     time = models.TimeField()
     date = models.DateField()
     account_id = models.CharField(max_length=100)  # Adjust max_length as needed
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=6)
+    account_number = models.CharField(max_length=26, null=True, blank=True)
 
     def __str__(self):
         return f"Payment for {self.user.username} on {self.date} at {self.time}"
