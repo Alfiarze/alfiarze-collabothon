@@ -1,4 +1,3 @@
-
 from api import settings
 import requests
 from .func import refresh_oauth_token
@@ -151,6 +150,31 @@ class ContractView(APIView):
 
     def post(self, request):
         data = request.data
+
+
+
+        prompt = """
+        Twoim zadaniem jest wyciągnąć z umowy następujące informacje i zwrócić je w formacie json jak we wzorze. Jak czegoś nie wiesz to zostawiasz puste pole. Jak będziesz zmyślał to będę miał kłopoty.
+        {
+        contract_type: "",
+        amount: "",
+        start_date: "",
+        end_date: "",
+        name: "",
+        status: "",
+        upcomingPayments: [
+        {
+        date: "",
+        time: "",
+        amount: "",
+        name: "",
+        },
+        (...)
+        ]
+        }"""
+
+        response = analyze_text(prompt, image_path=temp_full_path)
+
         contract = Contract.objects.create(
             user_id=data['user_id'],
             contract_id=data['contract_id'],
@@ -373,6 +397,7 @@ class TransactionView(APIView):
         return Response({'success': 'Transaction deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 class ReservationView(APIView):
+    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -440,8 +465,8 @@ class RecipeView(APIView):
         photo = request.FILES['photo']
         prompt = request.data.get("prompt", "")
         
-        # Create the recipe with just the photo
-        recipe = Recipe.objects.create(photo=photo)
+        # Create the recipe with the photo and user
+        recipe = Recipe.objects.create(photo=photo, user=request.user)
 
         # Save the file temporarily
         temp_path = default_storage.save('temp_recipe_photo.jpg', ContentFile(photo.read()))
@@ -469,9 +494,7 @@ class RecipeView(APIView):
 
         try:
             analysis_result = analyze_text(prompt, image_path=temp_full_path)
-            recipe_data = json.loads(analysis_result["choices"][0]["message"]["content"])
-
-            print(analysis_result)
+            recipe_data = json.loads(analysis_result)
 
             # Update the recipe with extracted data
             recipe.date = recipe_data.get('date')
@@ -482,16 +505,12 @@ class RecipeView(APIView):
 
             # Create recipe items
             for ingredient in recipe_data.get('ingredients', []):
-                try:
-                    RecipeItem.objects.create(
-                        recipe=recipe,
-                        name=ingredient.get('name', ''),
-                        unit_price=Decimal(ingredient.get('unit_price', 0)),
-                        quantity=Decimal(ingredient.get('quantity', 0))
-                    )
-                except InvalidOperation:
-                    # Handle cases where Decimal conversion fails
-                    continue
+                RecipeItem.objects.create(
+                    recipe=recipe,
+                    name=ingredient.get('name', ''),
+                    unit_price=Decimal(ingredient.get('unit_price', 0)),
+                    quantity=Decimal(ingredient.get('quantity', 0))
+                )
 
             return Response({
                 'success': 'Recipe analyzed and created successfully',
@@ -503,9 +522,12 @@ class RecipeView(APIView):
             recipe.delete()
             return Response({'error': 'Failed to parse AI response'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as e:
-            # If an error occurs, delete the partially created recipe
             recipe.delete()
             return Response({'error': f'An error occurred during analysis: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        finally:
+            # Clean up the temporary file
+            if os.path.exists(temp_full_path):
+                os.remove(temp_full_path)
 
 class LoanOffersView(APIView):
     permission_classes = [IsAuthenticated]
@@ -674,6 +696,8 @@ class GenerateQRCodeView(APIView):
             'success': 'QR code created successfully',
             'code': qr_code.code
         }, status=status.HTTP_201_CREATED)
+
+
 
 
 
