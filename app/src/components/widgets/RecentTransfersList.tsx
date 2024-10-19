@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { List, ListItem, ListItemText, ListItemAvatar, Typography } from '@mui/material';
+import { List, ListItem, ListItemText, ListItemAvatar, Typography, Link, IconButton, Box } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import axiosPrivate from '../../ctx/axiosPrivate';
+import AddIcon from '@mui/icons-material/Add';
+import { Link as RouterLink } from 'react-router-dom';
+
 
 // Define the Transfer interface directly in this file for now
 interface Transfer {
@@ -38,9 +41,16 @@ const RecentTransfersList: React.FC = () => {
 
   return (
     <div>
-      <Typography variant="h5" component="h2" gutterBottom>
-        Recent Transfers
-      </Typography>
+      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+        <Typography variant="h5" component="h2">
+          Recent Transfers
+        </Typography>
+        <RouterLink to="/transfer-form">
+          <IconButton color="primary" aria-label="add transfer">
+            <AddIcon />
+          </IconButton>
+        </RouterLink>
+      </Box>
       
       <List>
         {transfers.map((transfer) => (

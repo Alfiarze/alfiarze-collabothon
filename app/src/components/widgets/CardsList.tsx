@@ -53,46 +53,47 @@ const CardsList: React.FC = () => {
     fetchCards();
   }, []);
 
-  return (
-    <div>
-      <Typography variant="h5" component="h2" gutterBottom>
-        Your Credit Cards
-      </Typography>
-      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        {cards.map((card, index) => (
-          <React.Fragment key={card.id}>
-            <ListItem alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar>
-                  <CreditCardIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={card.card_name}
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      sx={{ color: 'text.primary', display: 'block' }}
-                    >
-                      {card.card_type}
-                    </Typography>
-                    {`**** **** **** ${card.lastFour}`}
-                    <br />
-                    {`CVV: ${card.cvv}`}
-                    <br />
-                    {`Expires: ${card.date_of_expiry}`}
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-            {index < cards.length - 1 && <Divider variant="inset" component="li" />}
-          </React.Fragment>
-        ))}
-      </List>
-    </div>
-  );
-};
+// ... rest of the component ...
+
+    return (
+        <div>
+                    <Typography variant="h5" component="h2" gutterBottom>
+                    Your Credit Cards        </Typography>
+            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                {cards.map((card, index) => (
+                    <React.Fragment key={card.id}>
+                        <ListItem alignItems="flex-start">
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <CreditCardIcon />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={card.card_name}
+                                secondary={
+                                    <React.Fragment>
+                                        <Typography
+                                            component="span"
+                                            variant="body2"
+                                            sx={{ color: 'text.primary', display: 'block' }}
+                                        >
+                                            {card.card_type}
+                                        </Typography>
+                                        {`**** **** **** ${card.lastFour}`}
+                                        <br />
+                                        {`${card.cvv}`}
+                                        <br />
+                                        {`Expires: ${card.date_of_expiry}`}
+                                    </React.Fragment>
+                                }
+                            />
+                        </ListItem>
+                        {index < cards.length - 1 && <Divider variant="inset" component="li" />}
+                    </React.Fragment>
+                ))}
+            </List>
+        </div>
+    )
+}
 
 export default CardsList;

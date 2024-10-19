@@ -15,6 +15,7 @@ import UpcomingPayment from "../components/widgets/UpcomingPayment";
 import OtherAccounts from "../components/widgets/OtherAccounts";
 import ReceiptWidget from "../components/widgets/ReceiptWidget";
 import ShowQRCode from "../components/widgets/ShowQRCode";
+import BankBalance from "../components/widgets/BankBalance";
 
 // Define a mapping of widget IDs to their components
 const widgetComponents: { [key: string]: React.ComponentType } = {
@@ -28,6 +29,7 @@ const widgetComponents: { [key: string]: React.ComponentType } = {
   h: OtherAccounts,
   i: ReceiptWidget,
   j: ShowQRCode,
+  k: BankBalance,
 };
 
 const originalItems = Object.keys(widgetComponents);
@@ -43,7 +45,8 @@ const initialLayouts = {
     { i: "g", x: 2, y: 2, w: 1, h: 2 },
     { i: "h", x: 3, y: 2, w: 1, h: 2 },
     { i: "i", x: 0, y: 4, w: 1, h: 2 },
-    { i: "j", x: 1, y: 4, w: 1, h: 2 }
+    { i: "j", x: 1, y: 4, w: 1, h: 2 },
+    { i: "k", x: 2, y: 4, w: 1, h: 2 }
   ],
   md: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -55,7 +58,8 @@ const initialLayouts = {
     { i: "g", x: 0, y: 4, w: 1, h: 2 },
     { i: "h", x: 1, y: 4, w: 1, h: 2 },
     { i: "i", x: 2, y: 4, w: 1, h: 2 },
-    { i: "j", x: 0, y: 6, w: 1, h: 2 }
+    { i: "j", x: 0, y: 6, w: 1, h: 2 },
+    { i: "k", x: 1, y: 6, w: 1, h: 2 }
   ],
   sm: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -67,7 +71,8 @@ const initialLayouts = {
     { i: "g", x: 0, y: 6, w: 1, h: 2 },
     { i: "h", x: 1, y: 6, w: 1, h: 2 },
     { i: "i", x: 0, y: 8, w: 1, h: 2 },
-    { i: "j", x: 1, y: 8, w: 1, h: 2 }
+    { i: "j", x: 1, y: 8, w: 1, h: 2 },
+    { i: "k", x: 0, y: 10, w: 1, h: 2 }
   ],
   xs: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -79,7 +84,8 @@ const initialLayouts = {
     { i: "g", x: 0, y: 12, w: 1, h: 2 },
     { i: "h", x: 0, y: 14, w: 1, h: 2 },
     { i: "i", x: 0, y: 16, w: 1, h: 2 },
-    { i: "j", x: 0, y: 18, w: 1, h: 2 }
+    { i: "j", x: 0, y: 18, w: 1, h: 2 },
+    { i: "k", x: 0, y: 20, w: 1, h: 2 }
   ]
 };
 

@@ -24,6 +24,7 @@ import Exchange from './pages/Exchange';
 import Chat from './pages/Chat';
 import Loading from './components/Loading';
 import AddContract from './pages/AddContract';
+import TransferForm from './components/TransferForm';
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
@@ -98,6 +99,7 @@ function App() {
             <Switch>
               <Route path="/actions" component={Actions} />
               <Route path="/add-contract" component={AddContract} />
+              <Route path="/transfer-form" component={TransferForm} />
               <Route path="/contracts" component={Contracts} />
               <Route path="/exchange" component={Exchange} />
               <Route path="/matitest" component={MatiTest} />
