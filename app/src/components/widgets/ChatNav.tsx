@@ -1,7 +1,7 @@
 import { Box, TextField, IconButton } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import { useState } from "react";
-import axiosPrivate from "../../ctx/axiosPrivate";
+import axiosPublic from "../../ctx/axiosPublic";
 
 // Define the response type
 interface AIResponse {
@@ -19,7 +19,7 @@ const ChatNav = () => {
     };
 
     const sendMessage = () => {
-        axiosPrivate.post<AIResponse>('api/ai-navigator/', { prompt: message }).then((response) => {
+        axiosPublic.post<AIResponse>('api/ai-navigator/', { prompt: message }).then((response) => {
             if(response.status === 200) {
                 let d = response.data;
                 console.log(d);
@@ -34,10 +34,7 @@ const ChatNav = () => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-            {/* Chat messages would go here */}
-                <Box sx={{ flexGrow: 1 }}></Box>
-            
-            {/* Input area */}
+            <Box sx={{ flexGrow: 1 }}></Box>
             <Box sx={{ display: 'flex', padding: 2, alignItems: 'center' }}>
                 <TextField
                     fullWidth
