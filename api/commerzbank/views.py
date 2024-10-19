@@ -173,8 +173,8 @@ class AccountView(APIView):
             )
         
 class UpcomingPaymentView(APIView):
-    authentication_classes = []
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
 
         upcoming_payments = UpcomingPayment.objects.all()
@@ -196,14 +196,28 @@ class UpcomingPaymentView(APIView):
         
     def post(self, request):
         data = request.data
-        upcoming_payment = UpcomingPayment.objects.create(
-            user=data['user'],
-            name=data['name'],
-            time=data['time'],
-            date=data['date'],
-            account_id=data['account_id']
-        )
-        return Response({'success': 'Upcoming payment created successfully'})
+        try:
+            upcoming_payment = UpcomingPayment.objects.create(
+                user=request.user,
+                name=data['name'],
+                time=data['time'],
+                date=data['date'],
+                account_id=data['account_id']
+            )
+            return Response(
+                {'success': 'Upcoming payment created successfully', 'id': upcoming_payment.id},
+                status=status.HTTP_201_CREATED
+            )
+        except KeyError as e:
+            return Response(
+                {'error': f'Missing required field: {str(e)}'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to create upcoming payment: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
     
 class CreditCardView(APIView):
     authentication_classes = []
@@ -599,3 +613,4 @@ class LoyalProgramView(APIView):
         )
         return Response({'success': 'Loyal program created successfully'}, status=status.HTTP_201_CREATED)
         
+
