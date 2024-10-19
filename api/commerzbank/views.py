@@ -641,7 +641,7 @@ class AINavigatorView(APIView):
 
         prompt = final_prompt + prompt
 
-        response = analyze_text(prompt, endpoint="https://alfiarzepl.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-15-preview")
+        response = analyze_text(prompt)
 
         return Response(response["choices"][0]["message"]["content"], status=status.HTTP_200_OK)
 
