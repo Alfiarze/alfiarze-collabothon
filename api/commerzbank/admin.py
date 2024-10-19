@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from .models import Contract, CreditCard, LoanOffer, LoyalProgram, QRCode, Recipe, RecipeItem, Reservation, Transaction, UpcomingPayment, UserLayer
 
 

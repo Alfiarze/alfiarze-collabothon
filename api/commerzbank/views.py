@@ -613,7 +613,7 @@ class LoyalProgramView(APIView):
         return Response({'success': 'Loyal program created successfully'}, status=status.HTTP_201_CREATED)
         
 class AINavigatorView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def post(self, request):
         prompt = request.data["prompt"]
@@ -623,10 +623,10 @@ class AINavigatorView(APIView):
         final_prompt = """
         To jest struktrua url w naszej aplikacji bankowej:
         Offer: '/offer',
-        Actions: '/Actions', 
-        Contracts: '/Contracts', 
-        Support: '/Support', 
-        Transfers: '/Transfers'
+        Actions: '/actions', 
+        Contracts: '/contracts', 
+        Support: '/support', 
+        Transfers: '/transfers'
         Na podstawie pytania użytkownika określ potrzebę użytkownika. Jeżeli nie wiesz co odpowiedzić jasno o tym powiedz. Na końcu zwróć json w podanym formacie {
         "action": "redirect",
         "path": right_path,
@@ -640,12 +640,20 @@ class AINavigatorView(APIView):
         "action": "none"
         }
         Additional info uzupełniasz tylko jak jesteś w stanie uzupełnić dane na bazie informacji z zapytania  w przeciwnym wypadku zostaw puste pole. Odpowiadaj tylko json.
-
         """
 
         response = analyze_text(text=prompt, prompt=final_prompt)
 
-        return Response(response["choices"][0]["message"]["content"], status=status.HTTP_200_OK)
+        print(response)  # Keep this for debugging
+
+        try:
+            # Parse the JSON string from the response
+            parsed_response = json.loads(response)
+            return Response(parsed_response, status=status.HTTP_200_OK)
+        except json.JSONDecodeError:
+            return Response({"error": "Failed to parse AI response"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except KeyError:
+            return Response({"error": "Unexpected AI response format"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GenerateQRCodeView(APIView):
     permission_classes = [IsAuthenticated]
@@ -670,5 +678,6 @@ class GenerateQRCodeView(APIView):
             'success': 'QR code created successfully',
             'code': qr_code.code
         }, status=status.HTTP_201_CREATED)
+
 
 
