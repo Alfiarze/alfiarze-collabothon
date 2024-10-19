@@ -19,8 +19,13 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
+RUN pip install python-dotenv
+
 # Copy the project files into the container
 COPY . /app/
+
+# Ensure .env file is copied (if it exists)
+COPY .env /app/.env
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
