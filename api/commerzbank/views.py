@@ -21,8 +21,8 @@ from decimal import Decimal
 
 
 class UserLayoutProvider(APIView):
-    #authentication_classes = []
-    #permission_classes = []
+    authentication_classes = []
+    permission_classes = []
 
     def get(self, request):
         users = request.user
@@ -95,8 +95,8 @@ class RegisterView(APIView):
         pass
 
 class ContractView(APIView):
-    #authentication_classes = []
-    #permission_classes = []
+    authentication_classes = []
+    permission_classes = []
 
     def get(self, request):
         contracts = Contract.objects.all()
@@ -157,8 +157,8 @@ class AccountView(APIView):
             )
         
 class UpcomingPaymentView(APIView):
-    #authentication_classes = []
-    #permission_classes = []
+    authentication_classes = []
+    permission_classes = []
     def get(self, request):
 
         upcoming_payments = UpcomingPayment.objects.all()
@@ -190,8 +190,8 @@ class UpcomingPaymentView(APIView):
         return Response({'success': 'Upcoming payment created successfully'})
     
 class CreditCardView(APIView):
-    #authentication_classes = []
-    #permission_classes = []
+    authentication_classes = []
+    permission_classes = []
     def get(self, request):
         credit_cards = CreditCard.objects.all()
         if credit_cards.exists():
@@ -223,7 +223,7 @@ class CreditCardView(APIView):
         return Response({'success': 'Credit card created successfully'})
 
 class OAuthView(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         return Response({"message": "OAuth view"})
@@ -251,8 +251,8 @@ class OAuthView(APIView):
 
 
 class TransactionView(APIView):
-    #authentication_classes = [SessionAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         transactions = Transaction.objects.all()
@@ -331,8 +331,8 @@ class TransactionView(APIView):
         return Response({'success': 'Transaction deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 class ReservationView(APIView):
-    #authentication_classes = [SessionAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         reservations = Reservation.objects.all()
@@ -364,8 +364,8 @@ class ReservationView(APIView):
         return Response({'success': 'Reservation created successfully'})
 
 class RecipeView(APIView):
-    #authentication_classes = [SessionAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         recipes = Recipe.objects.all()
@@ -481,8 +481,8 @@ class RecipeView(APIView):
 
 
 class LoanOffersView(APIView):
-    #authentication_classes = [SessionAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         loan_offers = LoanOffer.objects.all()
@@ -555,8 +555,8 @@ class TestAIView(APIView):
 #             )
 
 class LoyalProgramView(APIView):
-    #authentication_classes = [SessionAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         loyal_program = LoyalProgram.objects.all()
