@@ -22,7 +22,7 @@ const AddUpcomingPayment: React.FC = () => {
   const handleSubmit = async (values: any, { setSubmitting, resetForm }: any) => {
     try {
       const userId = 1; // Replace with your auth system's user ID retrieval logic
-      const response = await axiosPrivate.post('/api/upcoming-payments/', {
+      const response = await axiosPrivate.post('api/upcoming-payments/', {
         ...values,
         user: userId,
         date: values.date ? values.date.format('YYYY-MM-DD') : null,
