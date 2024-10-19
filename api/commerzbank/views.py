@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import Contract, CreditCard, LoanOffer, Reservation, UpcomingPayment, UserLayer, Transaction, TransactionCategory, Recipe, RecipeItem
+from .models import Contract, CreditCard, LoanOffer, LoyalProgram, Reservation, UpcomingPayment, UserLayer, Transaction, TransactionCategory, Recipe, RecipeItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.db import transaction
@@ -540,3 +540,32 @@ class TestAIView(APIView):
 #                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
 #             )
 
+class LoyalProgramView(APIView):
+    #authentication_classes = [SessionAuthentication]
+    #permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        loyal_program = LoyalProgram.objects.all()
+        if loyal_program.exists():
+            loyal_program_json = []
+            for program in loyal_program:
+                loyal_program_data = {
+                    "id": program.id,
+                    "name": program.name,
+                    "description": program.description,
+                    "points": program.points
+                }
+                loyal_program_json.append(loyal_program_data)
+            return Response(loyal_program_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No loyal programs exist"}, status=status.HTTP_404_NOT_FOUND)
+    
+    def post(self, request):
+        data = request.data
+        loyal_program = LoyalProgram.objects.create(
+            name=data['name'],
+            description=data['description'],
+            points=data['points']
+        )
+        return Response({'success': 'Loyal program created successfully'}, status=status.HTTP_201_CREATED)
+        

@@ -119,3 +119,13 @@ class LoanOffer(models.Model):
 
     def __str__(self):
         return f"Loan Offer {self.id}: {self.loan_amount} - {self.interest_rate}"
+
+class LoyalProgram(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    points = models.IntegerField()
+
+    def __str__(self):
+        return f"Loyal Program {self.id}: {self.name}"
+    
