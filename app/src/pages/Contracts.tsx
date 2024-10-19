@@ -6,7 +6,6 @@ const Contracts = () => {
       <div>
         <h1>Contracts</h1>
         <ContractsWidget/>
-        <ReceiptWidget/>
       </div>
     )
   }
