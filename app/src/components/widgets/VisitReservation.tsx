@@ -59,12 +59,14 @@ const VisitReservation = () => {
         return (
             <Container maxWidth="sm">
                 <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-                    <Typography variant="h5" component="h2" gutterBottom>
-                        Consultation Confirmed
-                    </Typography>
-                    <Typography variant="body1">
-                        A consultant will call you on {formattedDate} at {formattedTime}.
-                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                        <Typography variant="h5" component="h2" gutterBottom>
+                            Consultation Confirmed
+                        </Typography>
+                        <Typography variant="body1">
+                            A consultant will call you on {formattedDate} at {formattedTime}.
+                        </Typography>
+                    </Box>
                 </Paper>
             </Container>
         );
@@ -119,34 +121,36 @@ const VisitReservation = () => {
                         </Button>
                     </Box>
                 ) : (
-                    <Box>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Typography variant="h5" component="h2" gutterBottom>
                             Choose Consultation Time
                         </Typography>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                                label="Date"
-                                value={selectedDate}
-                                onChange={(newValue) => setSelectedDate(newValue)}
-                                disablePast
-                                shouldDisableDate={(date) => !isDateValid(date)}
-                            />
-                            <TimePicker
-                                label="Time"
-                                value={selectedTime}
-                                onChange={(newValue) => setSelectedTime(newValue)}
-                                disabled={!selectedDate}
-                                shouldDisableTime={(time, view) => 
-                                    view === 'hours' && !isTimeValid(time)
-                                }
-                            />
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', maxWidth: '300px' }}>
+                                <DatePicker
+                                    label="Date"
+                                    value={selectedDate}
+                                    onChange={(newValue) => setSelectedDate(newValue)}
+                                    disablePast
+                                    shouldDisableDate={(date) => !isDateValid(date)}
+                                />
+                                <TimePicker
+                                    label="Time"
+                                    value={selectedTime}
+                                    onChange={(newValue) => setSelectedTime(newValue)}
+                                    disabled={!selectedDate}
+                                    shouldDisableTime={(time, view) => 
+                                        view === 'hours' && !isTimeValid(time)
+                                    }
+                                />
+                            </Box>
                         </LocalizationProvider>
                         <Button 
                             onClick={handleFinalSubmit} 
                             variant="contained" 
                             color="primary" 
                             fullWidth 
-                            sx={{ mt: 2 }}
+                            sx={{ mt: 2, maxWidth: '300px' }}
                             disabled={!selectedDate || !selectedTime}
                         >
                             Confirm
