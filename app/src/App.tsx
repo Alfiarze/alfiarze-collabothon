@@ -23,6 +23,7 @@ import axiosPrivate from './ctx/axiosPrivate';
 import Exchange from './pages/Exchange';
 import Chat from './pages/Chat';
 import Loading from './components/Loading';
+import AddContract from './pages/AddContract';
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
@@ -51,26 +52,26 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [showSurvey, setShowSurvey] = useState(false);
 
-  useEffect(() => {
-    setShowSurvey(false);
-    setLoading(true);
-    axiosPrivate.get('/api/userLayout/').then((res) => {
-      console.log(res);
-      setLoading(false);
-    }).catch((error) => {
-      console.error(error);
-      setLoading(false);
-      setShowSurvey(true);
-    });
-  }, []);
+  // useEffect(() => {
+  //   setShowSurvey(false);
+  //   setLoading(true);
+  //   axiosPrivate.get('/api/userLayout/').then((res) => {
+  //     console.log(res);
+  //     setLoading(false);
+  //   }).catch((error) => {
+  //     console.error(error);
+  //     setLoading(false);
+  //     setShowSurvey(true);
+  //   });
+  // }, []);
 
-  if (loading) {
-    return <Loading />;
-  }
+  // if (loading) {
+  //   return <Loading />;
+  // }
 
-  if (showSurvey && user) {
-    return <Survey />;
-  }
+  // if (showSurvey && user) {
+  //   return <Survey />;
+  // }
 
   if (!user) {
     return (
@@ -96,6 +97,7 @@ function App() {
           <Container maxWidth="lg" sx={{ width: '100%', maxWidth: '1340px !important', flexGrow: 1, my: 2 }}>
             <Switch>
               <Route path="/actions" component={Actions} />
+              <Route path="/add-contract" component={AddContract} />
               <Route path="/contracts" component={Contracts} />
               <Route path="/exchange" component={Exchange} />
               <Route path="/matitest" component={MatiTest} />
