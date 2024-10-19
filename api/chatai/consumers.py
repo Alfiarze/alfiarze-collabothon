@@ -13,7 +13,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
 
-        # Send the message to Azure OpenAI
+        # Send the message to Azure OpenAI and await the response
         response = await self.send_to_azure_openai(message)
 
         # Send the response back to the WebSocket
@@ -23,5 +23,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def send_to_azure_openai(self, message):
         # Use the existing function from func.py
-        return send_prompt_to_azure_openai(message)
-
+        response = await send_prompt_to_azure_openai(message)
+        # Ensure the response is a string or JSON serializable object
+        return str(response)

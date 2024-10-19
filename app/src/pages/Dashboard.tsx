@@ -7,6 +7,7 @@ import CardsList from "../components/widgets/CardsList";
 import Contracts from "../components/widgets/Contracts";
 import Credit from "../components/widgets/Credit";
 import ContractsEnding from "../components/widgets/ContractsEnding";
+import TopBar from "../components/TopBar";
 // Define a mapping of widget IDs to their components
 const widgetComponents: { [key: string]: React.ComponentType } = {
   a: CardsList,
@@ -61,10 +62,16 @@ function Content({ size }: { size: { width: number | null } }) {
     setItems(items.filter((i) => i !== itemId));
   };
 
+  const [editMode, setEditMode] = useState(false);
+
+  const toggleEditMode = () => {
+    setEditMode(!editMode);
+  };
 
 
   return (
     <>
+    <TopBar editMode={editMode} toggleEditMode={toggleEditMode} />
       {size.width && (
         <ResponsiveGridLayout
           className="layout"
@@ -78,6 +85,7 @@ function Content({ size }: { size: { width: number | null } }) {
           {items.map((key) => (
             <div key={key} className="widget">
               <Widget
+                editMode={editMode}
                 id={key}
                 onRemoveItem={onRemoveItem}
                 component={widgetComponents[key]}
@@ -96,15 +104,15 @@ interface WidgetProps {
   component: React.ComponentType;
 }
 
-const Widget: React.FC<WidgetProps> = ({ id, onRemoveItem, component: Component }) => {
+const Widget: React.FC<WidgetProps & { editMode: boolean }> = ({ id, onRemoveItem, component: Component, editMode }) => {
   return (
     <Card>
-      <Component />
-      <div>
+      {editMode && (
         <IconButton aria-label="delete" onClick={() => onRemoveItem(id)}>
           <CloseIcon fontSize="small" />
         </IconButton>
-      </div>
+      )}
+      <Component />
     </Card>
   );
 };

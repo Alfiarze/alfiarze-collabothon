@@ -13,7 +13,7 @@ import { Typography,  Container, Box } from '@mui/material';
 import MatiTest from './pages/MatiTest';
 import Nav from './components/Nav';
 import { useUser } from './context/UserContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Dashboard from './pages/Dashboard';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -22,6 +22,7 @@ import axiosPrivate from './ctx/axiosPrivate';
 
 import Exchange from './pages/Exchange';
 import Chat from './pages/Chat';
+import Loading from './components/Loading';
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
@@ -47,10 +48,16 @@ const theme = createTheme({
 
 function App() {
   const { user } = useUser();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     axiosPrivate.get('/api/userLayout/').then((res) => {
       console.log(res);
+      setLoading(false);
+    }).catch((error) => {
+      console.error(error);
+      setLoading(false);
     });
     
   }, []);
@@ -58,6 +65,10 @@ function App() {
   useEffect(() => {
     console.log('user', user);
   }, [user]);
+
+  if(loading){
+    return <Loading />;
+  }
 
   if(!user){
     return (
@@ -82,10 +93,7 @@ function App() {
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Nav />
 
-      <Container maxWidth="lg" sx={{ width: '100%', maxWidth: '1340px !important', flexGrow: 1 }}>
-      <Box>
-          {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
+      <Container maxWidth="lg" sx={{ width: '100%', maxWidth: '1340px !important', flexGrow: 1, my: 2 }}>
           <Switch>
             <Route path="/actions" component={Actions} />
             <Route path="/contracts" component={Contracts} />
@@ -102,7 +110,6 @@ function App() {
             <Route path="/chat" component={Chat} />
             <Route path="/" component={Dashboard} />
           </Switch>
-        </Box>
         </Container>
         <Box component="footer" sx={{ py: 3, px: 2, backgroundColor: 'primary.main' }}>
           <Typography variant="body2" color="white" align="center">
