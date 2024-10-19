@@ -14,8 +14,7 @@ from django.db import transaction
 import base64
 from django.conf import settings
 from openai import AzureOpenAI
-from chatai.func import send_prompt_to_azure_openai
-import json
+from chatai.func import analyze_text
 from decimal import Decimal
 
 
@@ -282,7 +281,6 @@ class OAuthView(APIView):
             print(f"Exception occurred: {str(e)}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 class TransactionView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -457,24 +455,7 @@ class RecipeView(APIView):
         """
 
         try:
-            # Initialize the Azure OpenAI client
-            client = AzureOpenAI(
-                api_key=settings.AZURE_OPENAI_API_KEY,
-                api_version=settings.AZURE_OPENAI_API_VERSION,
-                azure_endpoint=settings.AZURE_OPENAI_ENDPOINT
-            )
-
-            # Call the Azure OpenAI API
-            response = client.chat.completions.create(
-                model=settings.AZURE_OPENAI_MODEL,
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant that analyzes recipe images."},
-                    {"role": "user", "content": [
-                        {"type": "text", "text": prompt},
-                        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_base64}"}}
-                    ]}
-                ]
-            )
+            response = analyze_text(prompt, photo.path)
 
             # Extract the analysis result from the API response
             analysis_result = response.choices[0].message.content
@@ -512,7 +493,6 @@ class RecipeView(APIView):
             recipe.delete()
             return Response({'error': f'An error occurred during analysis: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 class LoanOffersView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -548,8 +528,11 @@ class LoanOffersView(APIView):
     
 
 class TestAIView(APIView):
+    permission_classes = []
+    authentication_classes = []
+
     def get(self, request):
-        result = send_prompt_to_azure_openai("Tell me a joke about programming.")
+        result = analyze_text("Tell me a joke about programming.")
         return Response({"message": result})
 
 
