@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Typography, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Box } from '@mui/material';
 import axiosPrivate from '../ctx/axiosPrivate';
-import { useUser } from '../context/UserContext';
 
 function Survey() {
     const [questionIndex, setQuestionIndex] = useState(0);

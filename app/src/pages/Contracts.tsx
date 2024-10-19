@@ -1,5 +1,4 @@
 import ContractsWidget from "../components/widgets/ContractsWidget"
-import ReceiptWidget from "../components/widgets/ReceiptWidget"
 
 const Contracts = () => {
     return (
