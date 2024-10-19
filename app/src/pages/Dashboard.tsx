@@ -4,7 +4,7 @@ import { SizeMe } from "react-sizeme";
 import { Card,  IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import CardsList from "../components/widgets/CardsList";
-import Contracts from "../components/widgets/Contracts";
+import Contracts from "../components/widgets/ContractsWidget";
 import Credit from "../components/widgets/Credit";
 import ContractsEnding from "../components/widgets/ContractsEnding";
 import TopBar from "../components/TopBar";
