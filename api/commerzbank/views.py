@@ -1,4 +1,3 @@
-
 from api import settings
 import requests
 from .func import refresh_oauth_token
@@ -34,7 +33,7 @@ class UserLayoutProvider(APIView):
                 userLayer = UserLayer.objects.filter(user=user).first()
                 try:    
                     user_data = {
-                        "answer_1": userLayer.answer_1,
+                    "answer_1": userLayer.answer_1,
                     "answer_2": userLayer.answer_2,
                     "answer_3": userLayer.answer_3,
                     "answer_4": userLayer.answer_4,
@@ -168,7 +167,7 @@ class AccountView(APIView):
         headers = {
             "Accept": "application/json",
             "X-Api-Key": settings.COMMERZBANK_API_KEY,
-            "X-Secret-Key": settings.COMMERCZBANK_CLIENT_SECRET
+            "X-Secret-Key": settings.COMMERZBANK_SECRET_KEY
         }
 
         try:
@@ -295,6 +294,8 @@ class OAuthView(APIView):
 
 
 class TransactionView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         transactions = Transaction.objects.all()
@@ -509,6 +510,7 @@ class RecipeView(APIView):
             return Response({'error': f'An error occurred during analysis: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class LoanOffersView(APIView):
+    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -542,12 +544,8 @@ class LoanOffersView(APIView):
     
 
 class TestAIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-
     def get(self, request):
-        result = analyze_text(text="Tell me a joke about programming.", prompt="You are an AI assistant for a banking application. Analyze user queries and provide appropriate responses.")
-        print(result)
+        result = send_prompt_to_azure_openai("Tell me a joke about programming.")
         return Response({"message": result})
 
 
@@ -582,6 +580,7 @@ class CommerzbankBranchesView(APIView):
 
 
 class LoyalProgramView(APIView):
+    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -640,7 +639,9 @@ class AINavigatorView(APIView):
 
         """
 
-        response = analyze_text(text=prompt, prompt=final_prompt)
+        prompt = final_prompt + prompt
+
+        response = analyze_text(prompt, endpoint="https://alfiarzepl.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-15-preview")
 
         return Response(response["choices"][0]["message"]["content"], status=status.HTTP_200_OK)
 
@@ -667,3 +668,5 @@ class GenerateQRCodeView(APIView):
             'success': 'QR code created successfully',
             'code': qr_code.code
         }, status=status.HTTP_201_CREATED)
+
+
