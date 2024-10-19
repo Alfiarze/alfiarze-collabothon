@@ -25,20 +25,18 @@ class UserLayoutProvider(APIView):
     permission_classes = []
 
     def get(self, request):
-        users = request.user
-        if users.exists():
-            users_json = []
-            for user in users:
-                user_data = {
-                    "answer_1": user.answer_1,
-                    "answer_2": user.answer_2,
-                    "answer_3": user.answer_3,
-                    "answer_4": user.answer_4,
-                    "result": user.result,
-                    "layout": user.layout.name if user.layout else None,
-                    "datetime": user.datetime
-                }
-                users_json.append(user_data)
+        user = request.user
+        if user:
+            userLayer = UserLayer.objects.filter(user=user).first()
+            user_data = {
+                "answer_1": userLayer.answer_1,
+                "answer_2": userLayer.answer_2,
+                "answer_3": userLayer.answer_3,
+                "answer_4": userLayer.answer_4,
+                "result": userLayer.result,
+                "layout": userLayer.layout,
+                "datetime": userLayer.datetime
+            }
             return Response(users_json, status=status.HTTP_200_OK)
         else:
             return Response({"message": "No users exist"}, status=status.HTTP_404_NOT_FOUND)
