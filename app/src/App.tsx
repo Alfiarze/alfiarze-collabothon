@@ -60,7 +60,7 @@ function App() {
     }).catch((error) => {
       console.error(error);
       setLoading(false);
- //     setShowSurvey(true);
+      setShowSurvey(true);
     });
     
   }, []);
@@ -73,9 +73,9 @@ function App() {
     return <Loading />;
   }
 
-  // if(showSurvey && user){
-  //   return <Survey />;
-  // }
+  if(showSurvey && user){
+     return <Survey />;
+  }
 
   if(!user){
     return (

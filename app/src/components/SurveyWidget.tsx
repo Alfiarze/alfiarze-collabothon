@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
 import { Button, Typography, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Box } from '@mui/material';
+import axiosPrivate from '../ctx/axiosPrivate';
+import { useUser } from '../context/UserContext';
 
 function Survey() {
     const [questionIndex, setQuestionIndex] = useState(0);
     const [answers, setAnswers] = useState<string[]>(['', '', '', '']);
     const [isCompleted, setIsCompleted] = useState(false);
+    const [formData, setFormData] = useState({
+        answer_1: '',
+        answer_2: '',
+        answer_3: '',
+        answer_4: '',
+        result: "kmk",
+        layout: '',
+    });
+
+    const { user } = useUser();
 
     const questions = [
         {
@@ -41,6 +53,7 @@ function Survey() {
     };
 
     if (isCompleted) {
+        axiosPrivate.post('/api/userLayout/', formData);
         return (
             <Box sx={{
                 border: '1px solid #e0e0e0',
