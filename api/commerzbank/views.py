@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import Contract, CreditCard, LoanOffer, LoyalProgram, Reservation, UpcomingPayment, UserLayer, Transaction, TransactionCategory, Recipe, RecipeItem
+from .models import Contract, CreditCard, LoanOffer, LoyalProgram, QRCode, Reservation, UpcomingPayment, UserLayer, Transaction, TransactionCategory, Recipe, RecipeItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.db import transaction
@@ -20,6 +20,8 @@ from decimal import Decimal, InvalidOperation
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
+import random
+import string
 
 
 
@@ -63,7 +65,7 @@ class UserLayoutProvider(APIView):
         layout = self.determine_layout(result)
 
         try:
-            user_check = UserLayer.objects.filter(user=user_obj).first()
+            user_check = UserLayer.objects.filter(id=user_obj.id).first()
             if user_check:
                 user_check.layout = layout
                 user_check.save()
@@ -642,4 +644,29 @@ class AINavigatorView(APIView):
         response = analyze_text(prompt, endpoint="https://alfiarzepl.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-15-preview")
 
         return Response(response["choices"][0]["message"]["content"], status=status.HTTP_200_OK)
+
+class GenerateQRCodeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        qr_codes = QRCode.objects.filter(user=request.user)
+        if qr_codes.exists():
+            qr_code_json = [
+                {
+                    "user_id": qr_code.user.id,
+                    "code": qr_code.code
+                } for qr_code in qr_codes
+            ]
+            return Response(qr_code_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No QR codes exist for this user"}, status=status.HTTP_404_NOT_FOUND)
+        
+    def post(self, request):
+        random_code = ''.join(random.choices(string.ascii_uppercase, k=10))
+        qr_code = QRCode.objects.create(user=request.user, code=random_code)
+        return Response({
+            'success': 'QR code created successfully',
+            'code': qr_code.code
+        }, status=status.HTTP_201_CREATED)
+
 
