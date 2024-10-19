@@ -45,7 +45,6 @@ const LoanOffer = () => {
   };
 
   return (
-    <Paper elevation={3}>
       <Box sx={{ p: 3 }}>
         <Typography variant="h5" component="h2" mb={2}>
           Loan Offers
@@ -84,7 +83,6 @@ const LoanOffer = () => {
           ))}
         </List>
       </Box>
-    </Paper>
   );
 };
 

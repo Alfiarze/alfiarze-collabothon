@@ -39,7 +39,6 @@ const ReceiptWidget = () => {
     };
 
     return (
-        <StyledCard>
             <CardContent>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                     <Typography variant="h5" component="div">
@@ -77,7 +76,6 @@ const ReceiptWidget = () => {
                     NIP: {receiptData.nip}
                 </Typography>
             </CardContent>
-        </StyledCard>
     );
 };
 

@@ -68,7 +68,6 @@ const ContractsEnding = () => {
   };
 
   return (
-    <Paper elevation={3}>
       <Box sx={{ p: 3 }}>
         <Typography variant="h5" component="h2" gutterBottom>
           Contracts and Bills Ending Soon
@@ -106,7 +105,6 @@ const ContractsEnding = () => {
           ))}
         </List>
       </Box>
-    </Paper>
   );
 };
 

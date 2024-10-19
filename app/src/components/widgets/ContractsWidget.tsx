@@ -24,7 +24,7 @@ const Contracts = () => {
     }, []);
 
     return (
-        <Paper elevation={3} sx={{ padding: 2, maxWidth: 400, margin: 'auto' }}>
+        <>
             <Typography variant="h4" gutterBottom sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 Contracts
                 <Link to="/add-contract">
@@ -55,7 +55,7 @@ const Contracts = () => {
                     </ListItem>
                 ))}
             </List>
-        </Paper>
+        </>
     );
 };
 
