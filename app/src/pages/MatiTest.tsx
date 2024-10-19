@@ -3,6 +3,8 @@ import Table from '../components/Table';
 import AddContractPhoto from '../components/widgets/AddContractPhoto';
 import AddRecipe from '../components/widgets/AddRecipe';
 import AddUpcomingPayment from '../components/widgets/AddUpcomingPayment';
+import BlackJack from '../components/widgets/BlackJack';
+import SlotMachine from '../components/widgets/SlotMachine';
 import UpcomingPayment from '../components/widgets/UpcomingPayment';
 import AddContract from './AddContract';
 
@@ -16,7 +18,8 @@ const MatiTest = () => {
     <AddUpcomingPayment/>
     <AddRecipe/>
     <AddContractPhoto/>
-    
+    <SlotMachine/>
+    <BlackJack/>
     </>
   );
 };
