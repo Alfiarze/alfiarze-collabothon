@@ -3,6 +3,12 @@ import SendIcon from '@mui/icons-material/Send';
 import { useState } from "react";
 import axiosPrivate from "../../ctx/axiosPrivate";
 
+// Define the response type
+interface AIResponse {
+    action: string;
+    path?: string;
+}
+
 const ChatNav = () => {
     const [messages, setMessages] = useState<string[]>([]);
     const [message, setMessage] = useState<string>('');
@@ -13,11 +19,11 @@ const ChatNav = () => {
     };
 
     const sendMessage = () => {
-        axiosPrivate.post('api/ai-navigator/', { prompt: message }).then((response) => {
+        axiosPrivate.post<AIResponse>('api/ai-navigator/', { prompt: message }).then((response) => {
             if(response.status === 200) {
                 let d = response.data;
                 console.log(d);
-                if(d.action === "redirect") {
+                if(d.action === "redirect" && d.path) {
                     window.location.href = d.path;
                 }
             }

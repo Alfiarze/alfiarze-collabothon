@@ -8,6 +8,7 @@ import {
   Avatar,
   Typography,
 } from '@mui/material';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 import axiosPrivate from '../../ctx/axiosPrivate';
 
 interface CardData {

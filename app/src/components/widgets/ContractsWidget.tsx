@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import axiosPrivate from '../../ctx/axiosPrivate';
 import { Link } from 'react-router-dom';
-import { Paper, Typography, List, ListItem, ListItemText, IconButton, CircularProgress } from '@mui/material';
+import {  Typography, List, ListItem, ListItemText, IconButton, CircularProgress } from '@mui/material';
 
 interface ContractResponse {
     user_id: string;

@@ -13,16 +13,13 @@ import { Typography,  Container, Box } from '@mui/material';
 import MatiTest from './pages/MatiTest';
 import Nav from './components/Nav';
 import { useUser } from './context/UserContext';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Dashboard from './pages/Dashboard';
-
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material/styles';
-import axiosPrivate from './ctx/axiosPrivate';
 
 import Exchange from './pages/Exchange';
 import Chat from './pages/Chat';
-import Loading from './components/Loading';
 import AddContract from './pages/AddContract';
 import TransferForm from './components/TransferForm';
 export const themeOptions: ThemeOptions = {
@@ -50,8 +47,7 @@ const theme = createTheme({
 
 function App() {
   const { user } = useUser();
-  const [loading, setLoading] = useState(true);
-  const [showSurvey, setShowSurvey] = useState(false);
+  const [showSurvey, _setShowSurvey] = useState(false);
 
   // useEffect(() => {
   //   setShowSurvey(false);

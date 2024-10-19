@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Responsive as ResponsiveGridLayout, Layout } from "react-grid-layout";
 import { SizeMe } from "react-sizeme";
 import { Card,  IconButton, Box, useTheme, useMediaQuery } from "@mui/material";
@@ -19,6 +19,11 @@ import ChatNav from "../components/widgets/ChatNav";
 import BankBalance from "../components/widgets/BankBalance";
 import CurrencyBar from "../components/widgets/CurrencyBar";
 
+// Move this type definition to the top of the file, after the imports
+type BreakpointLayouts = {
+  [key in 'lg' | 'md' | 'sm' | 'xs']: Layout[];
+};
+
 // Define a mapping of widget IDs to their components
 const widgetComponents: { [key: string]: React.ComponentType<any> } = {
   a: CardsList,
@@ -37,10 +42,6 @@ const widgetComponents: { [key: string]: React.ComponentType<any> } = {
 const originalItems = Object.keys(widgetComponents);
 
 // At the top of the file, add this type definition
-type BreakpointLayouts = {
-  [key in 'lg' | 'md' | 'sm' | 'xs']: { i: string; x: number; y: number; w: number; h: number; }[];
-};
-
 const initialLayouts: BreakpointLayouts = {
   lg: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -116,49 +117,36 @@ function Content({ size }: { size: { width: number | null } }) {
 
   const [items, setItems] = useState<string[]>(originalItems);
   const [layouts, setLayouts] = useState<BreakpointLayouts>(initialLayouts);
-  const [currentBreakpoint, setCurrentBreakpoint] = useState<string>("lg");
+  const [currentBreakpoint, setCurrentBreakpoint] = useState<keyof BreakpointLayouts>("lg");
 
-  // Add this useEffect to update layouts when the screen size changes
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
-      let newBreakpoint = "lg";
+      let newBreakpoint: keyof BreakpointLayouts = "lg";
       if (width < 480) newBreakpoint = "xs";
       else if (width < 768) newBreakpoint = "sm";
       else if (width < 996) newBreakpoint = "md";
 
       if (newBreakpoint !== currentBreakpoint) {
         setCurrentBreakpoint(newBreakpoint);
-<<<<<<< HEAD
-        setLayouts((prevLayouts: BreakpointLayouts) => ({
-=======
-        setLayouts((prevLayouts: { [key: string]: any }) => ({
->>>>>>> bedc83dea2bd09847b26a8c656e82969a20cb193
+        setLayouts((prevLayouts) => ({
           ...prevLayouts,
-          [newBreakpoint as keyof BreakpointLayouts]: prevLayouts[newBreakpoint as keyof BreakpointLayouts] || initialLayouts[newBreakpoint as keyof BreakpointLayouts],
+          [newBreakpoint]: prevLayouts[newBreakpoint] || initialLayouts[newBreakpoint],
         }));
       }
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Call once to set initial state
+    handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
   }, [currentBreakpoint]);
 
-<<<<<<< HEAD
-  const onLayoutChange = useCallback((currentLayout: Layout[], allLayouts: BreakpointLayouts) => {
-=======
-  const onLayoutChange = useCallback(( allLayouts: any) => {
->>>>>>> bedc83dea2bd09847b26a8c656e82969a20cb193
-    console.log("Layout changed. New layouts:", allLayouts);
-    setLayouts(allLayouts);
-  }, []);
-
-  // Remove this function as it's no longer needed
-  // const onLayoutSave = () => {
-  //   saveToLS("layouts", layouts);
-  // };
+  // Move this function outside of Content for better performance
+  // const onLayoutChange = useCallback((allLayouts: BreakpointLayouts) => {
+  //   console.log("Layout changed. New layouts:", allLayouts);
+  //   setLayouts(allLayouts);
+  // }, []);
 
   const onRemoveItem = (itemId: string) => {
     setItems(items.filter((i) => i !== itemId));
@@ -169,7 +157,6 @@ function Content({ size }: { size: { width: number | null } }) {
   const toggleEditMode = () => {
     setEditMode(!editMode);
   };
-
 
   return (
     <>
@@ -184,8 +171,8 @@ function Content({ size }: { size: { width: number | null } }) {
           cols={{ lg: 4, md: 3, sm: 2, xs: 1, xxs: 1 }}
           rowHeight={rowHeight}
           width={size.width}
-          onLayoutChange={onLayoutChange}
-          onBreakpointChange={(newBreakpoint) => setCurrentBreakpoint(newBreakpoint)}
+          // onLayoutChange={onLayoutChange}
+          onBreakpointChange={(newBreakpoint) => setCurrentBreakpoint(newBreakpoint as keyof BreakpointLayouts)}
           isDraggable={editMode}
           isResizable={editMode}
           compactType="vertical"
@@ -208,13 +195,15 @@ function Content({ size }: { size: { width: number | null } }) {
   );
 }
 
+// Move this interface outside of the main component
 interface WidgetProps {
   id: string;
   onRemoveItem: (itemId: string) => void;
   component: React.ComponentType;
+  editMode: boolean;
 }
 
-const Widget: React.FC<WidgetProps & { editMode: boolean }> = ({ id, onRemoveItem, component: Component, editMode }) => {
+const Widget: React.FC<WidgetProps> = ({ id, onRemoveItem, component: Component, editMode }) => {
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {editMode && (

@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
 import { Button, Typography, Paper, Grid, Chip, LinearProgress, Fade } from '@mui/material';
-=======
-import { Button,  Typography, Paper, Grid, Chip, LinearProgress, Fade } from '@mui/material';
->>>>>>> bedc83dea2bd09847b26a8c656e82969a20cb193
+
 import CasinoIcon from '@mui/icons-material/Casino';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 

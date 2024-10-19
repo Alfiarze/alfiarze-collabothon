@@ -7,6 +7,10 @@ interface ExchangeRate {
   rate: number;
 }
 
+interface ExchangeRateResponse {
+  rates: Record<string, number>;
+}
+
 const scroll = keyframes`
   0% {
     transform: translateX(0);
@@ -55,7 +59,7 @@ const CurrencyBar: React.FC = () => {
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const response = await axios.get('https://api.exchangerate-api.com/v4/latest/USD');
+        const response = await axios.get<ExchangeRateResponse>('https://api.exchangerate-api.com/v4/latest/USD');
         const data = response.data.rates;
         
         const selectedCurrencies = ['EUR', 'PLN', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'SEK', 'NZD', 'MXN'];
