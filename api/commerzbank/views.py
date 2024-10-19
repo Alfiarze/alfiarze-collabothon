@@ -14,7 +14,7 @@ from django.db import transaction
 import base64
 from django.conf import settings
 from openai import AzureOpenAI
-from chatai.func import analyze_text, send_prompt_to_azure_openai
+from chatai.func import analyze_text 
 import json
 from decimal import Decimal, InvalidOperation
 
@@ -430,12 +430,13 @@ class RecipeView(APIView):
             return Response({'error': 'No photo provided'}, status=status.HTTP_400_BAD_REQUEST)
 
         photo = request.FILES['photo']
+        prompt = request.data.get("prompt", "")
         
         # Create the recipe with just the photo
         recipe = Recipe.objects.create(photo=photo)
 
         # Prepare the prompt for the AI service
-        prompt = """
+        final_prompt = """
         Analyze the recipe in this photo and provide the following information in JSON format:
         {
             "date": "YYYY-MM-DD",
@@ -452,13 +453,11 @@ class RecipeView(APIView):
         }
         If any information is not visible or cannot be determined, use null for that field.
         """
+        prompt = final_prompt + prompt
 
         try:
-            # Call analyze_text function
             analysis_result = analyze_text(prompt, image_path=photo.path)
-
-            # Extract the content from the API response
-            recipe_data = json.loads(analysis_result['choices'][0]['message']['content'])
+            recipe_data = json.loads(analysis_result["choices"][0]["message"]["content"])
 
             # Update the recipe with extracted data
             recipe.date = recipe_data.get('date')
@@ -593,6 +592,39 @@ class LoyalProgramView(APIView):
         )
         return Response({'success': 'Loyal program created successfully'}, status=status.HTTP_201_CREATED)
         
+class AINavigatorView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def post(self, request):
+        prompt = request.data["prompt"]
+        if not prompt:
+            return Response({"error": "No prompt provided"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        final_prompt = """
+        To jest struktrua url w naszej aplikacji bankowej:
+        Offer: '/offer',
+        Actions: '/Actions', 
+        Contracts: '/Contracts', 
+        Support: '/Support', 
+        Transfers: '/Transfers'
+        Na podstawie pytania użytkownika określ potrzebę użytkownika. Jeżeli nie wiesz co odpowiedzić jasno o tym powiedz. Na końcu zwróć json w podanym formacie {
+        "action": "redirect",
+        "path": right_path,
+        "additional_info": {
+        "account_id": "",
+        "transaction_name": "",
+        "to_account": ""
+        }
+        }
+        Jeżeli nie znasz odpowiedź, zwróc json w formacie: {
+        "action": "none"
+        }
+        Additional info uzupełniasz tylko jak jesteś w stanie uzupełnić dane na bazie informacji z zapytania  w przeciwnym wypadku zostaw puste pole. Odpowiadaj tylko json.
 
+        """
 
+        prompt = final_prompt + prompt
+
+        response = analyze_text(prompt, endpoint="https://alfiarzepl.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-15-preview")
+
+        return Response(response["choices"][0]["message"]["content"], status=status.HTTP_200_OK)

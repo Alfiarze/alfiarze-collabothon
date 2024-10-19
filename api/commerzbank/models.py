@@ -106,97 +106,9 @@ class Recipe(models.Model):
     store = models.CharField(max_length=255, blank=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     nip = models.CharField(max_length=20, blank=True)
-    ai_analyzed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Recipe {self.id}"
-    
-    def save(self, *args, **kwargs):
-        if not self.date:
-            self.date = datetime.now().date()
-        
-        try:
-            with transaction.atomic():
-                super().save(*args, **kwargs)
-                if not self.ai_analyzed and self.photo:
-                    self.analyze_recipe()
-        except Exception as e:
-            # Log the error
-            print(f"Error saving recipe: {str(e)}")
-            # Re-raise the exception to be handled by the caller
-            raise
-
-    def analyze_recipe(self):
-        try:
-            # Initialize the Azure OpenAI client
-            client = AzureOpenAI(
-                api_key=settings.AZURE_OPENAI_API_KEY,
-                api_version=settings.AZURE_OPENAI_API_VERSION,
-                azure_endpoint=settings.AZURE_OPENAI_API_ENDPOINT
-            )
-
-            # Convert the image to base64
-            with self.photo.open('rb') as image_file:
-                image_base64 = base64.b64encode(image_file.read()).decode('utf-8')
-
-            # Prepare the prompt
-            prompt = """
-            Analyze the recipe in this photo and provide the following information in JSON format:
-            {
-                "date": "YYYY-MM-DD",
-                "store": "Store name",
-                "total_price": 0.00,
-                "nip": "NIP number",
-                "ingredients": [
-                    {
-                        "name": "Ingredient name",
-                        "unit_price": 0.00,
-                        "quantity": 0.00
-                    }
-                ]
-            }
-            If any information is not visible or cannot be determined, use null for that field.
-            """
-
-            # Call the Azure OpenAI API
-            response = client.chat.completions.create(
-                model=settings.AZURE_OPENAI_MODEL,
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant that analyzes recipe images."},
-                    {"role": "user", "content": [
-                        {"type": "text", "text": prompt},
-                        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_base64}"}}
-                    ]}
-                ]
-            )
-
-            # Extract and process the analysis result
-            analysis_result = response.choices[0].message.content
-            recipe_data = json.loads(analysis_result)
-
-            # Update recipe fields
-            self.date = recipe_data.get('date') or self.date
-            self.store = recipe_data.get('store', '') or self.store
-            self.total_price = Decimal(recipe_data.get('total_price', 0)) or self.total_price
-            self.nip = recipe_data.get('nip', '') or self.nip
-
-            # Create recipe items
-            for ingredient in recipe_data.get('ingredients', []):
-                RecipeItem.objects.create(
-                    recipe=self,
-                    name=ingredient.get('name', ''),
-                    unit_price=Decimal(ingredient.get('unit_price', 0)),
-                    quantity=Decimal(ingredient.get('quantity', 0))
-                )
-
-            self.ai_analyzed = True
-            self.save()
-
-        except Exception as e:
-            print(f"An error occurred during recipe analysis: {str(e)}")
-            # Optionally, you can set a flag or add a field to indicate analysis failure
-            self.ai_analyzed = False
-            self.save()
 
 class RecipeItem(models.Model):
     recipe = models.ForeignKey(Recipe, related_name='items', on_delete=models.CASCADE)
