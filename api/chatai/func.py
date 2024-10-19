@@ -2,6 +2,9 @@ import os
 import requests
 import base64
 from django.conf import settings
+import time
+import random
+from requests.exceptions import RequestException
 
 # Configuration
 API_KEY = settings.AZURE_OPENAI_API_KEY
