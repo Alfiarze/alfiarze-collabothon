@@ -556,21 +556,22 @@ class TestAIView(APIView):
 class CommerzbankBranchesView(APIView):
     def get(self, request):
         # Define the base URL and headers required for Commerzbank API
-        url = 'https://developer-api-sandbox.commerzbank.com/branches/v1/'
+        base_url = 'https://api-sandbox.commerzbank.com/branches-api/1/v1/geosearch/city_street'
         headers = {
             'Accept': 'application/json',
-            'Authorization': 'Bearer ' + settings.COMMERZBANK_API_KEY, 
+            'keyid': settings.COMMERZBANK_API_KEY,
         }
         
-        # You can pass additional query parameters to the API if needed
+        # Get query parameters from the request, with defaults
         params = {
-            'city': request.query_params.get('city', 'Berlin'),  # Example parameter
-            'limit': request.query_params.get('limit', 10),
+            'city': request.query_params.get('city', 'Hamburg'),
+            'street': request.query_params.get('street', 'Mönckebergstraße'),
+            'type': request.query_params.get('type', 'P'),
         }
 
         try:
             # Make the GET request to the Commerzbank API
-            response = requests.get(url, headers=headers, params=params)
+            response = requests.get(base_url, headers=headers, params=params)
             response.raise_for_status()  # Raise an error for bad status codes
 
             # Parse the JSON response and return it to the client
@@ -611,4 +612,5 @@ class LoyalProgramView(APIView):
         )
         return Response({'success': 'Loyal program created successfully'}, status=status.HTTP_201_CREATED)
         
+
 
