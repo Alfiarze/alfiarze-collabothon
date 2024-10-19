@@ -444,3 +444,36 @@ class LoanOffersView(APIView):
     
 
         
+
+class BranchView(APIView):
+    def get(self, request):
+        url = "https://api-sandbox.commerzbank.com/branches/v1/branches"
+        headers = {
+            "Accept": "application/json",
+            "X-Api-Key": settings.COMMERZBANK_API_KEY,
+            "X-Secret-Key": settings.COMMERZBANK_SECRET_KEY
+        }
+
+        # Get query parameters
+        latitude = request.query_params.get('latitude')
+        longitude = request.query_params.get('longitude')
+        radius = request.query_params.get('radius')
+
+        # Add query parameters to the URL if provided
+        if latitude and longitude and radius:
+            url += f"?latitude={latitude}&longitude={longitude}&radius={radius}"
+
+        try:
+            response = requests.get(url, headers=headers)
+            if response.status_code == 200:
+                return Response(response.json(), status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"error": "Request to Commerzbank Branches API failed", "status_code": response.status_code},
+                    status=response.status_code
+                )
+        except requests.RequestException as e:
+            return Response(
+                {"error": f"Request to Commerzbank Branches API failed: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
