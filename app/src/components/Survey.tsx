@@ -8,20 +8,20 @@ function Survey() {
 
     const questions = [
         {
-            question: "What is your favorite color?",
-            options: ["Red", "Blue", "Green", "Yellow"]
+            question: "What type of client are you?",
+            options: ["Individual", "Company", "Organization"]
         },
         {
-            question: "How old are you?",
-            options: ["Under 18", "18-30", "31-50", "Over 50"]
+            question: "Do you use different currencies for your transactions?",
+            options: ["Yes", "No"]
         },
         {
-            question: "What's your favorite hobby?",
-            options: ["Reading", "Sports", "Music", "Gaming"]
+            question: "Do you use the stock exchange?",
+            options: ["Yes", "No"]
         },
         {
-            question: "Where would you like to travel next?",
-            options: ["Europe", "Asia", "Africa", "Americas"]
+            question: "Are you using different types of accounts?",
+            options: ["No", "Savings", "Joint account", "Other"]
         }
     ];
 
