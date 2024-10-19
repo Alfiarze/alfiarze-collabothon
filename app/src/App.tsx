@@ -22,6 +22,7 @@ import { ThemeOptions } from '@mui/material/styles';
 import axiosPrivate from './ctx/axiosPrivate';
 
 import Exchange from './pages/Exchange';
+import Chat from './pages/Chat';
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
@@ -100,6 +101,7 @@ function App() {
             <Route path="/support" component={Support} />
             <Route path="/Survey" component={Survey} />
             <Route path="/transfers" component={Transfers} />
+            <Route path="/chat" component={Chat} />
             <Route path="/" component={Dashboard} />
           </Switch>
         </Box>

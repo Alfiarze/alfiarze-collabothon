@@ -1,21 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, List, ListItem, ListItemText, Paper, Chip } from '@mui/material';
+import axiosPrivate from '../../ctx/axiosPrivate';
 
-interface LoanOffer {
+const LoanOffer = () => {
+  const [loanOffers, setLoanOffers] = useState([
+    { id: 1, loan_amount: 10000, interest_rate: 5, period: 12, description: "Personal loan with low interest rate", type: 'personal' },
+    { id: 2, loan_amount: 25000, interest_rate: 7, period: 24, description: "Home improvement loan with flexible terms", type: 'home' },
+    { id: 3, loan_amount: 5000, interest_rate: 10, period: 6, description: "Quick cash loan for emergencies", type: 'emergency' },
+  ]);
+
+  useEffect(() => {
+    axiosPrivate.get('api/loan-offers/').then((res) => {
+        console.log(res.data);
+        setLoanOffers(res.data.map((loanOffer: any) => ({
+            id: loanOffer.id,
+            loan_amount: loanOffer.loan_amount,
+            interest_rate: loanOffer.interest_rate,
+            period: loanOffer.period,
+            description: loanOffer.description,
+            type: loanOffer.type
+
+        })));
+    });
+}, []);
+
+  interface LoanOffer {
   id: number;
-  amount: number;
-  instalment: number;
+  loan_amount: number;
+  interest_rate: number;
+  period: number;
   description: string;
   type: 'personal' | 'home' | 'emergency';
 }
 
-const loanOffers: LoanOffer[] = [
-  { id: 1, amount: 10000, instalment: 500, description: "Personal loan with low interest rate", type: 'personal' },
-  { id: 2, amount: 25000, instalment: 1000, description: "Home improvement loan with flexible terms", type: 'home' },
-  { id: 3, amount: 5000, instalment: 250, description: "Quick cash loan for emergencies", type: 'emergency' },
-];
-
-const Credit: React.FC = () => {
   const getLoanTypeColor = (type: LoanOffer['type']): string => {
     switch (type) {
       case 'personal': return '#4caf50';
@@ -39,7 +56,7 @@ const Credit: React.FC = () => {
                   <Box display="flex" alignItems="center" justifyContent="space-between">
                     <Box display="flex" alignItems="center">
                       <Typography variant="subtitle1" component="span" mr={1}>
-                        ${offer.amount.toLocaleString()}
+                        ${offer.loan_amount.toLocaleString()}
                       </Typography>
                       <Chip
                         label={offer.type}
@@ -55,7 +72,7 @@ const Credit: React.FC = () => {
                 secondary={
                   <Box>
                     <Typography component="span" variant="body2" color="text.primary">
-                      ${offer.instalment}/month
+                      Interest Rate: {offer.interest_rate}% | Period: {offer.period} months
                     </Typography>
                     {` — ${offer.description}`}
                   </Box>
@@ -69,4 +86,4 @@ const Credit: React.FC = () => {
   );
 };
 
-export default Credit;
+export default LoanOffer;
