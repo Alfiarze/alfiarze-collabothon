@@ -8,10 +8,11 @@ import Contracts from "../components/widgets/ContractsWidget";
 import Credit from "../components/widgets/Credit";
 import ContractsEnding from "../components/widgets/ContractsEnding";
 import RecentTransfersList from "../components/widgets/RecentTransfersList";
-import LoyaltyPrograms from "../components/widgets/LoyaltyPrograms";
+import LoyaltyProgram from "../components/widgets/LoyaltyPrograms";
 import UpcomingPayment from "../components/widgets/UpcomingPayment";
 import OtherAccounts from "../components/widgets/OtherAccounts";
 import TopBar from "../components/TopBar";
+import ReceiptWidget from "../components/widgets/ReceiptWidget";
 // Define a mapping of widget IDs to their components
 const widgetComponents: { [key: string]: React.ComponentType } = {
   a: CardsList,
@@ -19,9 +20,10 @@ const widgetComponents: { [key: string]: React.ComponentType } = {
   c: Credit,
   d: ContractsEnding,
   e: RecentTransfersList,
-  f: LoyaltyPrograms,
+  f: LoyaltyProgram,
   g: UpcomingPayment,
-  h: OtherAccounts
+  h: OtherAccounts,
+  i: ReceiptWidget
 };
 
 const originalItems = Object.keys(widgetComponents);
@@ -35,7 +37,8 @@ const initialLayouts = {
     { i: "e", x: 4, y: 0, w: 1, h: 2 },
     { i: "f", x: 5, y: 0, w: 1, h: 2 },
     { i: "g", x: 6, y: 0, w: 1, h: 2 },
-    { i: "h", x: 7, y: 0, w: 1, h: 2 }
+    { i: "h", x: 7, y: 0, w: 1, h: 2 },
+    { i: "i", x: 8, y: 0, w: 1, h: 2 }
   ]
 };
 
