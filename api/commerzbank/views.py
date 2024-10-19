@@ -14,7 +14,7 @@ from django.db import transaction
 import base64
 from django.conf import settings
 from openai import AzureOpenAI
-from chatai.func import analyze_text 
+from chatai.func import analyze_text, extract_text_from_docx, ocr_image, ocr_pdf, ocr_text_from_file 
 import json
 from decimal import Decimal, InvalidOperation
 from django.core.files.storage import default_storage
@@ -432,7 +432,6 @@ class ReservationView(APIView):
 class RecipeView(APIView):
     permission_classes = [IsAuthenticated]
 
-
     def get(self, request):
         recipes = Recipe.objects.all()
         if recipes.exists():
@@ -463,17 +462,18 @@ class RecipeView(APIView):
             return Response({'error': 'No photo provided'}, status=status.HTTP_400_BAD_REQUEST)
 
         photo = request.FILES['photo']
-        prompt = request.data.get("prompt", "")
-        
-        # Create the recipe with the photo and user
-        recipe = Recipe.objects.create(photo=photo, user=request.user)
 
-        # Save the file temporarily
+        print(photo)
+        
+        print(request.user)
+
+
         temp_path = default_storage.save('temp_recipe_photo.jpg', ContentFile(photo.read()))
         temp_full_path = os.path.join(settings.MEDIA_ROOT, temp_path)
 
-        # Prepare the prompt for the AI service
-        final_prompt = """
+        print(temp_full_path)
+
+        prompt = """
         Analyze the recipe in this photo and provide the following information in JSON format:
         {
             "date": "YYYY-MM-DD",
@@ -490,44 +490,51 @@ class RecipeView(APIView):
         }
         If any information is not visible or cannot be determined, use null for that field.
         """
-        prompt = final_prompt + prompt
+
+        text = ocr_text_from_file(temp_full_path)
+
+        print(text)
 
         try:
-            analysis_result = analyze_text(prompt, image_path=temp_full_path)
+            analysis_result = analyze_text(text=text, prompt=prompt, model="gpt-3.5-turbo-0125", image_path=temp_full_path)
             recipe_data = json.loads(analysis_result)
 
-            # Update the recipe with extracted data
-            recipe.date = recipe_data.get('date')
-            recipe.store = recipe_data.get('store', '')
-            recipe.total_price = Decimal(recipe_data.get('total_price', 0))
-            recipe.nip = recipe_data.get('nip', '')
-            recipe.save()
+            print(recipe_data)
 
-            # Create recipe items
-            for ingredient in recipe_data.get('ingredients', []):
-                RecipeItem.objects.create(
-                    recipe=recipe,
-                    name=ingredient.get('name', ''),
-                    unit_price=Decimal(ingredient.get('unit_price', 0)),
-                    quantity=Decimal(ingredient.get('quantity', 0))
-                )
+            recipe = Recipe.objects.create(
+                user=request.user,  # Change this line
+                date=recipe_data.get('date'),
+                store=recipe_data.get('store', ''),
+                total_price=Decimal(recipe_data.get('total_price', 0)),
+                nip=recipe_data.get('nip', ''),
+            )
+
+            # # Update the recipe with extracted data
+            # recipe.date = recipe_data.get('date')
+            # recipe.store = recipe_data.get('store', '')
+            # recipe.total_price = Decimal(recipe_data.get('total_price', 0))
+            # recipe.nip = recipe_data.get('nip', '')
+            # recipe.save()
+
+            # # Create recipe items
+            # for ingredient in recipe_data.get('ingredients', []):
+            #     RecipeItem.objects.create(
+            #         recipe=recipe,
+            #         name=ingredient.get('name', ''),
+            #         unit_price=Decimal(ingredient.get('unit_price', 0)),
+            #         quantity=Decimal(ingredient.get('quantity', 0))
+            #     )
 
             return Response({
                 'success': 'Recipe analyzed and created successfully',
-                'recipe_id': recipe.id,
                 'analysis_result': recipe_data
             }, status=status.HTTP_201_CREATED)
-
-        except json.JSONDecodeError:
-            recipe.delete()
-            return Response({'error': 'Failed to parse AI response'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as e:
-            recipe.delete()
-            return Response({'error': f'An error occurred during analysis: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        finally:
-            # Clean up the temporary file
-            if os.path.exists(temp_full_path):
-                os.remove(temp_full_path)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        
+        
+
 
 class LoanOffersView(APIView):
     permission_classes = [IsAuthenticated]
@@ -696,8 +703,4 @@ class GenerateQRCodeView(APIView):
             'success': 'QR code created successfully',
             'code': qr_code.code
         }, status=status.HTTP_201_CREATED)
-
-
-
-
 
