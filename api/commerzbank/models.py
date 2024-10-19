@@ -54,7 +54,17 @@ class CreditCard(models.Model):
 
     def __str__(self):
         return f"{self.card_name} - {self.card_number}"
-    
+
+class TransactionCategory(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Transaction Categories"
+      
 class Transaction(models.Model):
     id = models.AutoField(primary_key=True)
     account_id = models.IntegerField()
@@ -62,6 +72,7 @@ class Transaction(models.Model):
     from_account = models.IntegerField()
     to_account = models.IntegerField()
     amount = models.IntegerField()
+    categories = models.ManyToManyField(TransactionCategory, related_name='transactions' , blank=True)
 
     def __str__(self):
         return f"Transaction {self.id}: {self.transaction_name}"
@@ -78,3 +89,33 @@ class Reservation(models.Model):
     def __str__(self):
         return f"Reservation {self.id}: {self.name}"
     
+
+class Recipe(models.Model):
+    date = models.DateField()
+    store = models.CharField(max_length=255)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    nip = models.CharField(max_length=20)
+    photo = models.ImageField(upload_to='recipes/', null=True, blank=True)
+
+    def __str__(self):
+        return f"Recipe {self.id} - {self.store} on {self.date}"
+
+class RecipeItem(models.Model):
+    recipe = models.ForeignKey(Recipe, related_name='items', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.name} - {self.quantity} x {self.unit_price}"
+
+class LoanOffer(models.Model):
+    id = models.AutoField(primary_key=True)
+    loan_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    interest_rate = models.DecimalField(max_digits=10, decimal_places=2)
+    period = models.IntegerField()
+    description = models.TextField()
+    type = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"Loan Offer {self.id}: {self.loan_amount} - {self.interest_rate}"

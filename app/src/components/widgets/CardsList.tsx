@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -7,13 +7,29 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
+import axiosPrivate from '../../ctx/axiosPrivate';
 
 const CardsList = () => {
     const [cards, setCards] = useState([
-        { id: 1, name: 'Visa Rewards', lastFour: '1234', expiryDate: '12/25', cardType: 'Visa' },
-        { id: 2, name: 'Mastercard Gold', lastFour: '5678', expiryDate: '06/24', cardType: 'Mastercard' },
-        { id: 3, name: 'Amex Platinum', lastFour: '9012', expiryDate: '09/26', cardType: 'American Express' },
+        { id: 1, card_name: 'Visa Rewards', lastFour: '1234', date_of_expiry: '12/25', card_type: 'Visa' },
+        { id: 2, card_name: 'Mastercard Gold', lastFour: '5678', date_of_expiry: '06/24', card_type: 'Mastercard' },
+        { id: 3, card_name: 'Amex Platinum', lastFour: '9012', date_of_expiry: '09/26', card_type: 'American Express' },
     ]);
+
+    useEffect(() => {
+        axiosPrivate.get('api/credit-cards/').then((res) => {
+            console.log(res.data);
+            setCards(res.data.map((card: any) => ({
+                id: card.id,
+                card_type: card.card_type,
+                card_name: card.card_name,
+                lastFour: card.card_number.slice(-4),
+                cvv: card.cvv,
+                date_of_expiry: card.date_of_expiry,
+
+            })));
+        });
+    }, []);
 
     return (
         <div>
@@ -28,7 +44,7 @@ const CardsList = () => {
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText
-                                primary={card.name}
+                                primary={card.card_name}
                                 secondary={
                                     <React.Fragment>
                                         <Typography
@@ -36,11 +52,13 @@ const CardsList = () => {
                                             variant="body2"
                                             sx={{ color: 'text.primary', display: 'block' }}
                                         >
-                                            {card.cardType}
+                                            {card.card_type}
                                         </Typography>
                                         {`**** **** **** ${card.lastFour}`}
                                         <br />
-                                        {`Expires: ${card.expiryDate}`}
+                                        {`${card.cvv}`}
+                                        <br />
+                                        {`Expires: ${card.date_of_expiry}`}
                                     </React.Fragment>
                                 }
                             />

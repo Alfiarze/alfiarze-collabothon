@@ -7,9 +7,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import Contract, CreditCard, Reservation, UpcomingPayment, UserLayer, Transaction
+from .models import Contract, CreditCard, LoanOffer, Reservation, UpcomingPayment, UserLayer, Transaction, TransactionCategory, Recipe, RecipeItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 
 
 
@@ -251,7 +252,8 @@ class TransactionView(APIView):
                     "transaction_name": transaction.transaction_name,
                     "from_account": transaction.from_account,
                     "to_account": transaction.to_account,
-                    "amount": transaction.amount
+                    "amount": str(transaction.amount),
+                    "categories": [category.name for category in transaction.categories.all()]
                 }
                 transactions_json.append(transaction_data)
             return Response(transactions_json, status=status.HTTP_200_OK)
@@ -268,9 +270,17 @@ class TransactionView(APIView):
                 to_account=data['to_account'],
                 amount=data['amount']
             )
+            
+            # Handle categories
+            category_names = data.get('categories', [])
+            for category_name in category_names:
+                category, created = TransactionCategory.objects.get_or_create(name=category_name)
+                transaction.categories.add(category)
+            
             return Response({
                 'success': 'Transaction created successfully',
-                'transaction_id': transaction.id
+                'transaction_id': transaction.id,
+                'categories': [category.name for category in transaction.categories.all()]
             }, status=status.HTTP_201_CREATED)
         except KeyError as e:
             return Response({'error': f'Missing required field: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
@@ -286,8 +296,19 @@ class TransactionView(APIView):
             transaction.from_account = data.get('from_account', transaction.from_account)
             transaction.to_account = data.get('to_account', transaction.to_account)
             transaction.amount = data.get('amount', transaction.amount)
+            
+            # Update categories
+            if 'categories' in data:
+                transaction.categories.clear()
+                for category_name in data['categories']:
+                    category, created = TransactionCategory.objects.get_or_create(name=category_name)
+                    transaction.categories.add(category)
+            
             transaction.save()
-            return Response({'success': 'Transaction updated successfully'}, status=status.HTTP_200_OK)
+            return Response({
+                'success': 'Transaction updated successfully',
+                'categories': [category.name for category in transaction.categories.all()]
+            }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -297,6 +318,9 @@ class TransactionView(APIView):
         return Response({'success': 'Transaction deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 class ReservationView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         reservations = Reservation.objects.all()
         if reservations.exists():
@@ -314,7 +338,111 @@ class ReservationView(APIView):
             return Response(reservations_json, status=status.HTTP_200_OK)
         else:
             return Response({"message": "No reservations exist"}, status=status.HTTP_404_NOT_FOUND)
+        
+    def post(self, request):
+        data = request.data
+        reservation = Reservation.objects.create(
+            user=data['user'],
+            name=data['name'],
+            time=data['time'],
+            date=data['date'],
+            status=data['status']
+        )
+        return Response({'success': 'Reservation created successfully'})
 
+class RecipeView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        recipes = Recipe.objects.all()
+        if recipes.exists():
+            recipes_json = []
+            for recipe in recipes:
+                recipe_data = {
+                    "id": recipe.id,
+                    "data": recipe.date.strftime("%Y-%m-%d"),
+                    "sklep": recipe.store,
+                    "cena_laczna": str(recipe.total_price),
+                    "produkty": [
+                        {
+                            "nazwa": item.name,
+                            "cena_jednostkowa": str(item.unit_price),
+                            "ilosc": item.quantity
+                        } for item in recipe.items.all()
+                    ],
+                    "NIP": recipe.nip,
+                    "photo": recipe.photo.url if recipe.photo else None
+                }
+                recipes_json.append(recipe_data)
+            return Response(recipes_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No recipes exist"}, status=status.HTTP_404_NOT_FOUND)
 
+    @transaction.atomic
+    def post(self, request):
+        data = request.data
+        try:
+            recipe = Recipe.objects.create(
+                date=data['data'],
+                store=data['sklep'],
+                total_price=data['cena_laczna'],
+                nip=data['NIP'],
+                photo=data['photo']
+            )
+            
+            for product in data['produkty']:
+                RecipeItem.objects.create(
+                    recipe=recipe,
+                    name=product['nazwa'],
+                    unit_price=product['cena_jednostkowa'],
+                    quantity=product['ilosc']
+                )
+            
+            return Response({
+                'success': 'Recipe created successfully',
+                'recipe_id': recipe.id
+            }, status=status.HTTP_201_CREATED)
+        except KeyError as e:
+            return Response({'error': f'Missing required field: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    # You can add put and delete methods here if needed
+
+class LoanOffersView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        loan_offers = LoanOffer.objects.all()
+        if loan_offers.exists():
+            loan_offers_json = []
+            for loan_offer in loan_offers:
+                loan_offer_data = {
+                    "id": loan_offer.id,
+                    "loan_amount": loan_offer.loan_amount,
+                    "interest_rate": loan_offer.interest_rate,
+                    "period": loan_offer.period,
+                    "description": loan_offer.description,
+                    "type": loan_offer.type
+                    }
+                loan_offers_json.append(loan_offer_data)
+            return Response(loan_offers_json, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "No loan offers exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request):
+        data = request.data
+        loan_offer = LoanOffer.objects.create(
+            id=data['id'],
+            loan_amount=data['loan_amount'],
+            interest_rate=data['interest_rate'],
+            period=data['period'],
+            description=data['description'],
+            type=data['type']
+        )
+        return Response({'success': 'Loan offer created successfully'})
+    
+
+        
