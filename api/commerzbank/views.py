@@ -15,8 +15,8 @@ from django.db import transaction
 
 
 class UserLayoutProvider(APIView):
-    authentication_classes = []
-    permission_classes = []
+    #authentication_classes = []
+    #permission_classes = []
 
     def get(self, request):
         users = UserLayer.objects.all()
@@ -61,8 +61,6 @@ class UserLayoutProvider(APIView):
 
 
 class RegisterView(APIView):
-    authentication_classes = []
-    permission_classes = []
 
     def post(self, request):
         username = request.data.get('username')
@@ -82,8 +80,8 @@ class RegisterView(APIView):
         pass
 
 class ContractView(APIView):
-    authentication_classes = []
-    permission_classes = []
+    #authentication_classes = []
+    #permission_classes = []
 
     def get(self, request):
         contracts = Contract.objects.all()
@@ -144,9 +142,9 @@ class AccountView(APIView):
             )
         
 class UpcomingPaymentView(APIView):
+    #authentication_classes = []
+    #permission_classes = []
     def get(self, request):
-        authentication_classes = []
-        permission_classes = []
 
         upcoming_payments = UpcomingPayment.objects.all()
         if upcoming_payments.exists():
@@ -177,8 +175,8 @@ class UpcomingPaymentView(APIView):
         return Response({'success': 'Upcoming payment created successfully'})
     
 class CreditCardView(APIView):
-    authentication_classes = []
-    permission_classes = []
+    #authentication_classes = []
+    #permission_classes = []
     def get(self, request):
         credit_cards = CreditCard.objects.all()
         if credit_cards.exists():
@@ -238,8 +236,8 @@ class OAuthView(APIView):
 
 
 class TransactionView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [SessionAuthentication]
+    #permission_classes = [IsAuthenticated]
 
     def get(self, request):
         transactions = Transaction.objects.all()
@@ -318,8 +316,8 @@ class TransactionView(APIView):
         return Response({'success': 'Transaction deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 class ReservationView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [SessionAuthentication]
+    #permission_classes = [IsAuthenticated]
 
     def get(self, request):
         reservations = Reservation.objects.all()
@@ -351,8 +349,8 @@ class ReservationView(APIView):
         return Response({'success': 'Reservation created successfully'})
 
 class RecipeView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [SessionAuthentication]
+    #permission_classes = [IsAuthenticated]
 
     def get(self, request):
         recipes = Recipe.objects.all()
@@ -411,8 +409,8 @@ class RecipeView(APIView):
     # You can add put and delete methods here if needed
 
 class LoanOffersView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [SessionAuthentication]
+    #permission_classes = [IsAuthenticated]
 
     def get(self, request):
         loan_offers = LoanOffer.objects.all()
