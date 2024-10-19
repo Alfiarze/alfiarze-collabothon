@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, Box, Container } from '@mui/material';
+import { Typography, Box, Container } from '@mui/material';
 
 interface ShowQRCodeProps {
   qrCodeUrl: string;

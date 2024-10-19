@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography, List, ListItem, ListItemText, Paper, Chip } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemText, Chip } from '@mui/material';
 import axiosPrivate from '../../ctx/axiosPrivate';
 
 interface LoanOffer {
@@ -20,20 +20,19 @@ const LoanOffer = () => {
 
   useEffect(() => {
     axiosPrivate.get('api/loan-offers/').then((res) => {
-        console.log(res.data);
-        if (Array.isArray(res.data)) {
-            setLoanOffers(res.data.map((loanOffer: LoanOffer) => ({
-                id: loanOffer.id,
-                loan_amount: loanOffer.loan_amount,
-                interest_rate: loanOffer.interest_rate,
-                period: loanOffer.period,
-                description: loanOffer.description,
-                type: loanOffer.type
-            })));
-        }
+      console.log(res.data);
+      if (Array.isArray(res.data)) {
+        setLoanOffers(res.data.map((loanOffer: LoanOffer) => ({
+          id: loanOffer.id,
+          loan_amount: loanOffer.loan_amount,
+          interest_rate: loanOffer.interest_rate,
+          period: loanOffer.period,
+          description: loanOffer.description,
+          type: loanOffer.type
+        })));
+      }
     });
-}, []);
-
+  }, []);
 
   const getLoanTypeColor = (type: string): string => {
     switch (type) {
@@ -45,44 +44,44 @@ const LoanOffer = () => {
   };
 
   return (
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h5" component="h2" mb={2}>
-          Loan Offers
-        </Typography>
-        <List>
-          {loanOffers.map((offer) => (
-            <ListItem key={offer.id}>
-              <ListItemText
-                primary={
-                  <Box display="flex" alignItems="center" justifyContent="space-between">
-                    <Box display="flex" alignItems="center">
-                      <Typography variant="subtitle1" component="span" mr={1}>
-                        ${offer.loan_amount.toLocaleString()}
-                      </Typography>
-                      <Chip
-                        label={offer.type}
-                        size="small"
-                        sx={{ backgroundColor: getLoanTypeColor(offer.type), color: 'white' }}
-                      />
-                    </Box>
-                    <Typography variant="subtitle1" component="span">
-                      {offer.type.charAt(0).toUpperCase() + offer.type.slice(1)} Loan
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h5" component="h2" gutterBottom>
+        Loan Offers
+      </Typography>
+      <List>
+        {loanOffers.map((offer) => (
+          <ListItem key={offer.id}>
+            <ListItemText
+              primary={
+                <Box display="flex" alignItems="center" justifyContent="space-between">
+                  <Box display="flex" alignItems="center">
+                    <Typography variant="subtitle1" component="span" mr={1}>
+                      ${offer.loan_amount.toLocaleString()}
                     </Typography>
+                    <Chip
+                      label={offer.type}
+                      size="small"
+                      sx={{ backgroundColor: getLoanTypeColor(offer.type), color: 'white' }}
+                    />
                   </Box>
-                }
-                secondary={
-                  <Box>
-                    <Typography component="span" variant="body2" color="text.primary">
-                      Interest Rate: {offer.interest_rate}% | Period: {offer.period} months
-                    </Typography>
-                    {` — ${offer.description}`}
-                  </Box>
-                }
-              />
-            </ListItem>
-          ))}
-        </List>
-      </Box>
+                  <Typography variant="subtitle1" component="span">
+                    {offer.type.charAt(0).toUpperCase() + offer.type.slice(1)} Loan
+                  </Typography>
+                </Box>
+              }
+              secondary={
+                <Box>
+                  <Typography component="span" variant="body2" color="text.primary">
+                    Interest Rate: {offer.interest_rate}% | Period: {offer.period} months
+                  </Typography>
+                  {` — ${offer.description}`}
+                </Box>
+              }
+            />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
   );
 };
 

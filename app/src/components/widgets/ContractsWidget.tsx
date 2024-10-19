@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import axiosPrivate from '../../ctx/axiosPrivate';
 import { Link } from 'react-router-dom';
-import { Paper, Typography, List, ListItem, ListItemText, IconButton } from '@mui/material';
+import { Paper, Typography, List, ListItem, ListItemText, IconButton, CircularProgress } from '@mui/material';
 
 interface ContractResponse {
     user_id: string;
@@ -14,21 +14,54 @@ interface ContractResponse {
     status: string;
 }
 
-const Contracts = () => {
+const ContractsWidget = () => {
     const [contracts, setContracts] = useState<ContractResponse[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        axiosPrivate.get<ContractResponse[]>('api/contracts/').then((res) => {
-            setContracts(res.data);
-        });
+        fetchContracts();
     }, []);
+
+    const fetchContracts = async () => {
+        try {
+            setLoading(true);
+            const response = await axiosPrivate.get<ContractResponse[]>('api/contracts/');
+            setContracts(response.data);
+            setError(null);
+        } catch (err) {
+            setError('Failed to fetch contracts. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) {
+        return <CircularProgress />;
+    }
+
+    if (error) {
+        return <Typography color="error">{error}</Typography>;
+    }
 
     return (
         <>
-            <Typography variant="h4" gutterBottom sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography
+                variant="h5"
+                component="h2"
+                gutterBottom
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                }}
+            >
                 Contracts
                 <Link to="/add-contract">
-                    <IconButton color="primary" aria-label="add contract">
+                    <IconButton
+                        color="primary"
+                        aria-label="add contract"
+                    >
                         <AddIcon />
                     </IconButton>
                 </Link>
@@ -59,4 +92,4 @@ const Contracts = () => {
     );
 };
 
-export default Contracts;
+export default ContractsWidget;

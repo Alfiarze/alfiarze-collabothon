@@ -56,9 +56,9 @@ const OtherAccounts = () => {
   return (
       <Box sx={{ p: 3 }}>
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-          <Typography variant="h5" component="h2">
-            Other Accounts
-          </Typography>
+        <Typography variant="h5" component="h2" gutterBottom>
+        Other Accounts
+        </Typography>
           <IconButton onClick={toggleBalances} size="small">
             {showBalances ? <VisibilityIcon /> : <VisibilityOffIcon />}
           </IconButton>
