@@ -1,6 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Typography, List, ListItem, ListItemText, Paper, Chip } from '@mui/material';
 import axiosPrivate from '../../ctx/axiosPrivate';
+
+interface ContractResponse {
+  contract_id: string;
+  contract_type: string;
+  end_date: string;
+  amount: number;
+  status: 'active' | 'pending' | 'expired';
+}
 
 interface Contract {
   id: string;
@@ -15,11 +23,11 @@ const ContractsEnding = () => {
   const [contracts, setContracts] = useState<Contract[]>([]);
 
   useEffect(() => {
-    axiosPrivate.get('api/contracts/').then((res) => {
-      const allContracts = res.data.map((contract: any) => ({
+    axiosPrivate.get<ContractResponse[]>('api/contracts/').then((res) => {
+      const allContracts = res.data.map((contract) => ({
         id: contract.contract_id,
         name: contract.contract_type,
-        category: contract.contract_type.toLowerCase(),
+        category: contract.contract_type.toLowerCase() as Contract['category'],
         end_date: contract.end_date,
         amount: contract.amount,
         status: contract.status

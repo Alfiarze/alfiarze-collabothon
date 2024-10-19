@@ -2,26 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { List, ListItem, ListItemText, Typography, Paper } from '@mui/material';
 import axiosPrivate from '../../ctx/axiosPrivate';
 
+interface ContractResponse {
+    user_id: string;
+    contract_id: string;
+    contract_type: string;
+    amount: number;
+    start_date: string;
+    end_date: string;
+    status: string;
+}
+
 const Contracts = () => {
-    const [contracts, setContracts] = useState([
-        { contract_type: 'Electricity', provider: 'Power Co.', expiryDate: '2024-12-31', amount: 150 },
-        { contract_type: 'Rent', provider: 'Landlord Inc.', expiryDate: '2023-08-31', amount: 1200 },
-        { contract_type: 'Internet', provider: 'Web Connect', expiryDate: '2024-06-30', amount: 60 },
-        { contract_type: 'Water', provider: 'City Utilities', expiryDate: '2025-01-31', amount: 40 },
-    ]);
+    const [contracts, setContracts] = useState<ContractResponse[]>([]);
 
     useEffect(() => {
-        axiosPrivate.get('api/contracts/').then((res) => {
-            console.log(res.data);
-            setContracts(res.data.map((contract: any) => ({
-                user_id: contract.user_id,
-                contract_id: contract.contract_id,
-                contract_type: contract.contract_type,
-                amount: contract.amount,
-                start_date: contract.start_date,
-                end_date: contract.end_date,
-                status: contract.status
-            })));
+        axiosPrivate.get<ContractResponse[]>('api/contracts/').then((res) => {
+            setContracts(res.data);
         });
     }, []);
 

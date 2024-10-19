@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { SizeMe } from "react-sizeme";
-import { Card, Typography, IconButton } from "@mui/material";
+import { Card,  IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import CardsList from "../components/widgets/CardsList";
 import Contracts from "../components/widgets/Contracts";
 import Credit from "../components/widgets/Credit";
 import ContractsEnding from "../components/widgets/ContractsEnding";
 // Define a mapping of widget IDs to their components
-const widgetComponents = {
+const widgetComponents: { [key: string]: React.ComponentType } = {
   a: CardsList,
   b: Contracts,
   c: Credit,
@@ -46,7 +46,7 @@ function Content({ size }: { size: { width: number | null } }) {
     console.log("Current layouts:", layouts);
   }, [layouts]);
 
-  const onLayoutChange = (currentLayout: any, allLayouts: any) => {
+  const onLayoutChange = (allLayouts: any) => {
     console.log("Layout changed. New layouts:", allLayouts);
     setLayouts(allLayouts);
     saveToLS("layouts", allLayouts);
@@ -61,9 +61,7 @@ function Content({ size }: { size: { width: number | null } }) {
     setItems(items.filter((i) => i !== itemId));
   };
 
-  const onAddItem = (itemId: string) => {
-    setItems([...items, itemId]);
-  };
+
 
   return (
     <>
@@ -92,19 +90,24 @@ function Content({ size }: { size: { width: number | null } }) {
   );
 }
 
-const Widget = React.forwardRef(({ id, onRemoveItem, component: Component }, ref) => {
+interface WidgetProps {
+  id: string;
+  onRemoveItem: (itemId: string) => void;
+  component: React.ComponentType;
+}
+
+const Widget: React.FC<WidgetProps> = ({ id, onRemoveItem, component: Component }) => {
   return (
-    <Card ref={ref}>
+    <Card>
       <Component />
       <div>
         <IconButton aria-label="delete" onClick={() => onRemoveItem(id)}>
           <CloseIcon fontSize="small" />
         </IconButton>
       </div>
-      <div />
     </Card>
   );
-});
+};
 
 function getFromLS(key: string): any {
   let ls: { [key: string]: any } = {};

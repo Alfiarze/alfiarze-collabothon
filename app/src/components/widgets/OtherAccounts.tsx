@@ -12,7 +12,7 @@ interface Account {
 }
 
 const OtherAccounts: React.FC = () => {
-  const [accounts, setAccounts] = useState<Account[]>([
+  const [accounts] = useState<Account[]>([
     { id: 1, name: 'Savings Account', balance: 5000, type: 'savings', lastTransaction: '2023-05-15' },
     { id: 2, name: 'Checking Account', balance: 2500, type: 'checking', lastTransaction: '2023-05-20' },
     { id: 3, name: 'Investment Account', balance: 10000, type: 'investment', lastTransaction: '2023-05-10' },
