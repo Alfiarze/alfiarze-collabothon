@@ -16,8 +16,6 @@ function Survey() {
         layout: '',
     });
 
-    const { user } = useUser();
-
     const questions = [
         {
             question: "What type of client are you?",
@@ -49,6 +47,7 @@ function Survey() {
     const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newAnswers = [...answers];
         newAnswers[questionIndex] = e.target.value;
+        setFormData({ ...formData, [questions[questionIndex].question]: e.target.value });
         setAnswers(newAnswers);
     };
 

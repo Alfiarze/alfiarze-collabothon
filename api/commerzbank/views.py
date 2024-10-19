@@ -21,25 +21,25 @@ from decimal import Decimal
 
 
 class UserLayoutProvider(APIView):
-    authentication_classes = []
-    permission_classes = []
-
     def get(self, request):
-        user = request.user
-        if user:
-            userLayer = UserLayer.objects.filter(user=user).first()
-            user_data = {
-                "answer_1": userLayer.answer_1,
-                "answer_2": userLayer.answer_2,
-                "answer_3": userLayer.answer_3,
-                "answer_4": userLayer.answer_4,
-                "result": userLayer.result,
-                "layout": userLayer.layout,
-                "datetime": userLayer.datetime
-            }
-            return Response(user_data, status=status.HTTP_200_OK)
-        else:
-            return Response({"message": "No users exist"}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            user = request.user
+            if user:
+                userLayer = UserLayer.objects.filter(user=user).first()
+                user_data = {
+                    "answer_1": userLayer.answer_1,
+                    "answer_2": userLayer.answer_2,
+                    "answer_3": userLayer.answer_3,
+                    "answer_4": userLayer.answer_4,
+                    "result": userLayer.result,
+                    "layout": userLayer.layout,
+                    "datetime": userLayer.datetime
+                }
+                return Response(user_data, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "No users exist"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def post(self, request):
         data = request.data
