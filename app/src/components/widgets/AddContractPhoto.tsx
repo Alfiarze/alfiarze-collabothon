@@ -68,6 +68,23 @@ const AddContract: React.FC = () => {
       </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
+        <Grid item xs={12}>
+            <Button
+              variant="outlined"
+              component="label"
+              startIcon={<CloudUpload />}
+              fullWidth
+            >
+              Upload Photo
+              <input
+                type="file"
+                hidden
+                name="photo"
+                onChange={handleInputChange}
+                accept="image/*"
+              />
+            </Button>
+          </Grid>
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -112,23 +129,6 @@ const AddContract: React.FC = () => {
               InputLabelProps={{ shrink: true }}
               required
             />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              variant="outlined"
-              component="label"
-              startIcon={<CloudUpload />}
-              fullWidth
-            >
-              Upload Photo
-              <input
-                type="file"
-                hidden
-                name="photo"
-                onChange={handleInputChange}
-                accept="image/*"
-              />
-            </Button>
           </Grid>
           {previewUrl && (
             <Grid item xs={12}>

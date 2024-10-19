@@ -151,6 +151,27 @@ class ContractView(APIView):
 
     def post(self, request):
         data = request.data
+
+        prompt = """
+        Twoim zadaniem jest wyciągnąć z umowy następujące informacje i zwrócić je w formacie json jak we wzorze. Jak czegoś nie wiesz to zostawiasz puste pole. Jak będziesz zmyślał to będę miał kłopoty.
+        {
+        contract_type: "",
+        amount: "",
+        start_date: "",
+        end_date: "",
+        name: "",
+        status: "",
+        upcomingPayments: [
+        {
+        date: "",
+        time: "",
+        amount: "",
+        name: "",
+        },
+        (...)
+        ]
+        }"""
+
         contract = Contract.objects.create(
             user_id=data['user_id'],
             contract_id=data['contract_id'],
