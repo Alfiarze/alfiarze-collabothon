@@ -17,10 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from django.urls import re_path
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
-import chatai.routing
+from chatai import urls as chatai_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,16 +26,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
-# Add this new section for websocket routing
+# WebSocket URL patterns
 websocket_urlpatterns = [
-    re_path(r'ws/chat/', chatai.routing.websocket_urlpatterns),
+    re_path(r'ws/chat/', include(chatai_urls)),
 ]
-
-application = ProtocolTypeRouter({
-    'http': URLRouter(urlpatterns),
-    'websocket': AuthMiddlewareStack(
-        URLRouter(
-            websocket_urlpatterns
-        )
-    ),
-})

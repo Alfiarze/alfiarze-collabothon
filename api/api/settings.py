@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'commerzbank',
     'rest_framework',
     'corsheaders',
+    'channels',
+    'chatai',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +83,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'api.wsgi.application'
+ASGI_APPLICATION = 'api.asgi.application'
 
 
 # Database
