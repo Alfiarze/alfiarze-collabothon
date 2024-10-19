@@ -19,19 +19,19 @@ const OtherAccounts = () => {
     { id: 3, name: 'Investment Account', balance: 10000, type: 'investment', lastTransaction: '2023-05-10' },
   ]);
 
-  useEffect(() => {
-    axiosPrivate.get('api/commerzbank/accounts/').then((res) => {
-      if (Array.isArray(res.data)) {
-        setAccounts(res.data.map((account: OtherAccounts) => ({
-          id: account.id,
-          name: account.name,
-          balance: account.balance,
-          type: account.type,
-          lastTransaction: account.lastTransaction
-        })));
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   axiosPrivate.get('api/commerzbank/accounts/').then((res) => {
+  //     if (Array.isArray(res.data)) {
+  //       setAccounts(res.data.map((account: OtherAccounts) => ({
+  //         id: account.id,
+  //         name: account.name,
+  //         balance: account.balance,
+  //         type: account.type,
+  //         lastTransaction: account.lastTransaction
+  //       })));
+  //     }
+  //   });
+  // }, []);
 
   const [showBalances, setShowBalances] = useState<boolean>(false);
 

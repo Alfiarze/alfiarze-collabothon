@@ -1,3 +1,4 @@
+
 from api import settings
 import requests
 from .func import refresh_oauth_token
@@ -294,8 +295,6 @@ class OAuthView(APIView):
 
 
 class TransactionView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         transactions = Transaction.objects.all()
@@ -510,7 +509,6 @@ class RecipeView(APIView):
             return Response({'error': f'An error occurred during analysis: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class LoanOffersView(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -544,8 +542,12 @@ class LoanOffersView(APIView):
     
 
 class TestAIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+
     def get(self, request):
-        result = send_prompt_to_azure_openai("Tell me a joke about programming.")
+        result = analyze_text(text="Tell me a joke about programming.", prompt="You are an AI assistant for a banking application. Analyze user queries and provide appropriate responses.")
+        print(result)
         return Response({"message": result})
 
 
@@ -580,7 +582,6 @@ class CommerzbankBranchesView(APIView):
 
 
 class LoyalProgramView(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -639,9 +640,7 @@ class AINavigatorView(APIView):
 
         """
 
-        prompt = final_prompt + prompt
-
-        response = analyze_text(prompt)
+        response = analyze_text(text=prompt, prompt=final_prompt)
 
         return Response(response["choices"][0]["message"]["content"], status=status.HTTP_200_OK)
 
@@ -668,5 +667,3 @@ class GenerateQRCodeView(APIView):
             'success': 'QR code created successfully',
             'code': qr_code.code
         }, status=status.HTTP_201_CREATED)
-
-

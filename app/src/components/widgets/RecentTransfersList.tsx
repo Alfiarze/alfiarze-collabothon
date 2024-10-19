@@ -66,9 +66,6 @@ const RecentTransfersList: React.FC = () => {
               primary={`${transfer.transaction_name} - ${transfer.from_account}`}
               secondary={
                 <>
-                  <Typography component="span" variant="body2" color="text.primary">
-                    {transfer.categories.includes('incoming') ? '+' : '-'}${transfer.amount.toFixed(2)}
-                  </Typography>
                   {` | ${new Date(transfer.date).toLocaleDateString()}`}
                 </>
               }

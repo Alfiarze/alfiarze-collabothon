@@ -128,9 +128,11 @@ function Content({ size }: { size: { width: number | null } }) {
 
   const saveLayout = useCallback(async (layout: any) => {
     try {
-      const response = await axiosPrivate.post('api/userLayout/', {
+      const userData = {
         layout: layout
-      });
+      };
+
+      const response = await axiosPrivate.post('api/userLayout/', userData);
 
       if (response.status === 200) {
         console.log("Layout successfully saved to database");
