@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 
 const currencies = ['EUR', 'PLN', 'USD'];
 
-function Exchange() {
+function ExchangeWidget() {
   const [firstCurrency, setFirstCurrency] = useState('');
   const [secondCurrency, setSecondCurrency] = useState('');
   const [amount, setAmount] = useState('');
@@ -90,4 +90,4 @@ function Exchange() {
   );
 }
 
-export default Exchange;
+export default ExchangeWidget;
