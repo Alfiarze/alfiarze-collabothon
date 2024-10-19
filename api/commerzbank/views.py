@@ -10,10 +10,13 @@ from rest_framework import status
 from .models import Contract, CreditCard, LoanOffer, LoyalProgram, Reservation, UpcomingPayment, UserLayer, Transaction, TransactionCategory, Recipe, RecipeItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 import base64
 from django.conf import settings
-from chatai.func import analyze_text
-from decimal import Decimal
+from openai import AzureOpenAI
+from chatai.func import analyze_text 
+import json
+from decimal import Decimal, InvalidOperation
 
 
 
@@ -57,15 +60,20 @@ class UserLayoutProvider(APIView):
         layout = self.determine_layout(result)
 
         try:
-            user = UserLayer.objects.create(
-                user=user_obj,
+            user_check = UserLayer.objects.filter(user=user_obj).first()
+            if user_check:
+                user_check.layout = layout
+                user_check.save()
+            else:
+                user = UserLayer.objects.create(
+                    user=user_obj,
                 answer_1=data['answer_1'],
                 answer_2=data['answer_2'],
                 answer_3=data['answer_3'],
                 answer_4=data['answer_4'],
-                result=result,
-                layout=layout,
-            )
+                    result=result,
+                    layout=layout,
+                )
 
             user_json = {
                 "answer_1": user.answer_1,
@@ -279,6 +287,7 @@ class OAuthView(APIView):
             print(f"Exception occurred: {str(e)}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 class TransactionView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -426,15 +435,13 @@ class RecipeView(APIView):
             return Response({'error': 'No photo provided'}, status=status.HTTP_400_BAD_REQUEST)
 
         photo = request.FILES['photo']
+        prompt = request.data.get("prompt", "")
         
         # Create the recipe with just the photo
         recipe = Recipe.objects.create(photo=photo)
 
-        # Convert the image to base64
-        image_base64 = base64.b64encode(photo.read()).decode('utf-8')
-
         # Prepare the prompt for the AI service
-        prompt = """
+        final_prompt = """
         Analyze the recipe in this photo and provide the following information in JSON format:
         {
             "date": "YYYY-MM-DD",
@@ -451,13 +458,11 @@ class RecipeView(APIView):
         }
         If any information is not visible or cannot be determined, use null for that field.
         """
+        prompt = final_prompt + prompt
 
         try:
-            response = analyze_text(prompt, photo.path)
-
-            analysis_result = response.choices[0].message.content
-
-            recipe_data = json.loads(analysis_result)
+            analysis_result = analyze_text(prompt, image_path=photo.path)
+            recipe_data = json.loads(analysis_result["choices"][0]["message"]["content"])
 
             # Update the recipe with extracted data
             recipe.date = recipe_data.get('date')
@@ -468,13 +473,17 @@ class RecipeView(APIView):
 
             # Create recipe items
             for ingredient in recipe_data.get('ingredients', []):
-                RecipeItem.objects.create(
-                    recipe=recipe,
-                    name=ingredient.get('name', ''),
-                    unit_price=Decimal(ingredient.get('unit_price', 0)),
-                    quantity=Decimal(ingredient.get('quantity', 0))
-                )
-            
+                try:
+                    RecipeItem.objects.create(
+                        recipe=recipe,
+                        name=ingredient.get('name', ''),
+                        unit_price=Decimal(ingredient.get('unit_price', 0)),
+                        quantity=Decimal(ingredient.get('quantity', 0))
+                    )
+                except InvalidOperation:
+                    # Handle cases where Decimal conversion fails
+                    continue
+
             return Response({
                 'success': 'Recipe analyzed and created successfully',
                 'recipe_id': recipe.id,
@@ -524,11 +533,8 @@ class LoanOffersView(APIView):
     
 
 class TestAIView(APIView):
-    permission_classes = []
-    authentication_classes = []
-
     def get(self, request):
-        result = analyze_text("Tell me a joke about programming.")
+        result = send_prompt_to_azure_openai("Tell me a joke about programming.")
         return Response({"message": result})
 
 
@@ -627,4 +633,3 @@ class AINavigatorView(APIView):
         response = analyze_text(prompt, endpoint="https://alfiarzepl.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-15-preview")
 
         return Response(response["choices"][0]["message"]["content"], status=status.HTTP_200_OK)
-

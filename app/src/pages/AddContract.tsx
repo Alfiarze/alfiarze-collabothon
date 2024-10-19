@@ -31,10 +31,18 @@ const ContractForm = () => {
 
   const onSubmit = async (values: typeof initialValues, { resetForm }: any) => {
     try {
+<<<<<<< HEAD
       // Remove the 'response' variable declaration
       await axiosPrivate.post('api/contracts/', values);
       setSnackbar({ open: true, message: 'Contract added successfully!' });
       resetForm();
+=======
+      // Ensure axiosPrivate is correctly imported and used
+      await axiosPrivate.post('api/contracts/', values).then((_response) => {
+        setSnackbar({ open: true, message: 'Contract added successfully!' });
+        resetForm();
+      });
+>>>>>>> bedc83dea2bd09847b26a8c656e82969a20cb193
     } catch (error: unknown) {
       console.error('Error adding contract:', error);
       if (error instanceof Error) {

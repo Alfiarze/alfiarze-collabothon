@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography, Box, Container } from '@mui/material';
 
 interface ShowQRCodeProps {
-  qrCodeUrl: string;
   altText?: string;
 }
 
