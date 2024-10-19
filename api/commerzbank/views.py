@@ -23,7 +23,7 @@ class UserLayoutProvider(APIView):
     #permission_classes = []
 
     def get(self, request):
-        users = UserLayer.objects.all()
+        users = request.user
         if users.exists():
             users_json = []
             for user in users:
@@ -43,22 +43,31 @@ class UserLayoutProvider(APIView):
     
     def post(self, request):
         data = request.data
+        user_obj = User.objects.get(id=request.user.id)
+
+        result = "Test"
+        layout = "Test"
+
         user = UserLayer.objects.create(
+            user=user_obj,
             answer_1=data['answer_1'],
             answer_2=data['answer_2'],
             answer_3=data['answer_3'],
             answer_4=data['answer_4'],
-            result=data['result'],
-            layout=data['layout'],
-            datetime=data['datetime']
+            result=result,
+            layout=layout,
         )
+
+        
+        
+
         user_json = {
             "answer_1": user.answer_1,
             "answer_2": user.answer_2,
             "answer_3": user.answer_3,
             "answer_4": user.answer_4,
             "result": user.result,
-            "layout": user.layout.name,
+            "layout": user.layout,
             "datetime": user.datetime
         }
         return Response(user_json, status=status.HTTP_201_CREATED)
