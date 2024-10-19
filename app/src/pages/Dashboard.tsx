@@ -86,7 +86,7 @@ function Content({ size }: { size: { width: number | null } }) {
 
   return (
     <>
-    <TopBar editMode={editMode} toggleEditMode={toggleEditMode} />
+      <TopBar editMode={editMode} toggleEditMode={toggleEditMode} />
       {size.width && (
         <ResponsiveGridLayout
           className="layout"
@@ -96,6 +96,8 @@ function Content({ size }: { size: { width: number | null } }) {
           rowHeight={150}
           width={size.width}
           onLayoutChange={onLayoutChange}
+          isDraggable={editMode}
+          isResizable={editMode}
         >
           {items.map((key) => (
             <div key={key} className="widget">
