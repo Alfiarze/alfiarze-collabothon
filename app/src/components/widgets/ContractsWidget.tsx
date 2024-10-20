@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import axiosPrivate from '../../ctx/axiosPrivate';
 import { Link } from 'react-router-dom';
-import {  Typography, List, ListItem, ListItemText, IconButton, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, Box } from '@mui/material';
+import {  Typography, List, ListItem, ListItemText, IconButton, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { API_URL } from '../../ctx/conf';
 
 interface ContractResponse {
+    upcoming_payments: any[];
+    account_number: string;
     user_id: string;
     contract_id: string;
     contract_type: string;
@@ -18,7 +20,47 @@ interface ContractResponse {
 }
 
 const ContractsWidget = () => {
-    const [contracts, setContracts] = useState<ContractResponse[]>([]);
+    const [contracts, setContracts] = useState<ContractResponse[]>([
+        {
+            upcoming_payments: [],
+            account_number: "ACC123456",
+            user_id: "user1",
+            contract_id: "contract1",
+            contract_type: "Rental Agreement",
+            name: "Apartment Lease",
+            amount: 1200,
+            start_date: "2023-06-01",
+            end_date: "2024-10-21",
+            status: "Active",
+            file: "/contracts/rental_agreement.jpg"
+          },
+          {
+            upcoming_payments: [],
+            account_number: "ACC234567",
+            user_id: "user1",
+            contract_id: "contract2",
+            contract_type: "Employment Contract",
+            name: "Software Developer Position",
+            amount: 5000,
+            start_date: "2023-01-15",
+            end_date: "2025-01-14",
+            status: "Active",
+            file: "/contracts/employment_contract.jpg"
+          },
+          {
+            upcoming_payments: [],
+            account_number: "ACC345678",
+            user_id: "user1",
+            contract_id: "contract3",
+            contract_type: "Service Agreement",
+            name: "Web Hosting Service",
+            amount: 50,
+            start_date: "2023-03-01",
+            end_date: "2025-02-29",
+            status: "Active",
+            file: "/contracts/service_agreement.jpg"
+          }
+    ]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedContract, setSelectedContract] = useState<ContractResponse | null>(null);
@@ -30,9 +72,10 @@ const ContractsWidget = () => {
     const fetchContracts = async () => {
         try {
             setLoading(true);
-            const response = await axiosPrivate.get<ContractResponse[]>('api/contracts/');
-            console.log(response.data);
-            setContracts(response.data);
+            // Comment out the API call for now
+            // const response = await axiosPrivate.get<ContractResponse[]>('api/contracts/');
+            // console.log(response.data);
+            // setContracts(response.data);
             setError(null);
         } catch (err) {
             setError('Failed to fetch contracts. Please try again later.');
@@ -94,7 +137,7 @@ const ContractsWidget = () => {
                         sx={{ cursor: 'pointer' }}
                     >
                         <ListItemText
-                            primary={`${contract.contract_type} - $${contract.amount}`}
+                            primary={`${contract.name} - $${contract.amount}`}
                             secondary={
                                 <React.Fragment>
                                     <Typography
@@ -128,13 +171,35 @@ const ContractsWidget = () => {
                             <Box sx={{ flexBasis: '50%' }}>
                                 <Typography variant="h6">{selectedContract.contract_type}</Typography>
                                 <Typography>Name: {selectedContract.name}</Typography>
-                                <Typography>Amount: ${selectedContract.amount}</Typography>
+                                <Typography>Amount: {selectedContract.amount}</Typography>
                                 <Typography>Start Date: {selectedContract.start_date}</Typography>
                                 <Typography>End Date: {selectedContract.end_date}</Typography>
-                                <Typography>Status: {selectedContract.status}</Typography>
-                                <Typography>Contract ID: {selectedContract.contract_id}</Typography>
-                                <Typography>User ID: {selectedContract.user_id}</Typography>
+                                <Typography>Status: {selectedContract.status}</Typography><br/>
+                                <Typography>Płatności dotyczące umowy:</Typography>
+                                <TableContainer component={Paper}>
+                                    <Table size="small" aria-label="upcoming payments">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>LP</TableCell>
+                                                <TableCell>Nazwa</TableCell>
+                                                <TableCell>Kwota</TableCell>
+                                                <TableCell>Data</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {selectedContract.upcoming_payments && selectedContract.upcoming_payments.map((payment: any, index: number) => (
+                                                <TableRow key={index}>
+                                                    <TableCell>{index + 1}</TableCell>
+                                                    <TableCell>{payment.name}</TableCell>
+                                                    <TableCell>{payment.amount}</TableCell>
+                                                    <TableCell>{payment.date}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
                             </Box>
+                            
                             <Box sx={{ flexBasis: '50%' }}>
                                 {selectedContract.file ? (
                                     <img 

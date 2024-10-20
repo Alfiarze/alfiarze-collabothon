@@ -40,20 +40,30 @@ const UpcomingPayments = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const loadPayments = async () => {
-      try {
-        const data = await fetchUpcomingPayments();
-        console.log('Fetched payments:', data); // Debugging line
-        setPayments(Array.isArray(data) ? data : []);
-      } catch (error) {
-        setError((error as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Example data
+  const examplePayments = [
+    { id: '1', user: 'John Doe', name: 'Rent', time: '09:00', date: '2023-05-01', account_id: 'ACC001' },
+    { id: '2', user: 'Jane Smith', name: 'Utilities', time: '14:30', date: '2023-05-03', account_id: 'ACC002' },
+    { id: '3', user: 'Bob Johnson', name: 'Car Payment', time: '10:00', date: '2023-05-05', account_id: 'ACC003' },
+  ];
 
-    loadPayments();
+  // For demonstration, replace the useEffect hook with this:
+  useEffect(() => {
+    //     const loadPayments = async () => {
+    //   try {
+    //     const data = await fetchUpcomingPayments();
+    //     console.log('Fetched payments:', data); // Debugging line
+    //     setPayments(Array.isArray(data) ? data : []);
+    //   } catch (error) {
+    //     setError((error as Error).message);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
+
+    // loadPayments();
+    setPayments(examplePayments);
+    setLoading(false);
   }, []);
 
   if (loading) {

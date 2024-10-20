@@ -15,7 +15,6 @@ import LoyaltyProgram from "../components/widgets/LoyaltyPrograms";
 import UpcomingPayment from "../components/widgets/UpcomingPayment";
 import OtherAccounts from "../components/widgets/OtherAccounts";
 import ReceiptWidget from "../components/widgets/ReceiptWidget";
-import ShowQRCode from "../components/widgets/ShowQRCode";
 import ChatNav from "../components/widgets/ChatNav";
 import BankBalance from "../components/widgets/BankBalance";
 import CurrencyBar from "../components/widgets/CurrencyBar";
@@ -38,10 +37,9 @@ const widgetComponents: { [key: string]: React.ComponentType<any> } = {
   g: LoyaltyProgram,
   h: OtherAccounts,
   i: ReceiptWidget,
-  j: ShowQRCode,
-  k: BankBalance,
-  l: FullCalendar,
-  m: BanksMap,
+  j: BankBalance,
+  k: FullCalendar,
+  l: BanksMap,
 };
 
 const originalItems = Object.keys(widgetComponents);
@@ -61,7 +59,6 @@ const initialLayouts: BreakpointLayouts = {
     { i: "j", x: 1, y: 4, w: 1, h: 2 },
     { i: "k", x: 2, y: 4, w: 1, h: 2 },
     { i: "l", x: 3, y: 4, w: 1, h: 2 },
-    { i: "m", x: 0, y: 6, w: 1, h: 2 }
   ],
   md: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -76,7 +73,6 @@ const initialLayouts: BreakpointLayouts = {
     { i: "j", x: 0, y: 6, w: 1, h: 2 },
     { i: "k", x: 1, y: 6, w: 1, h: 2 },
     { i: "l", x: 2, y: 6, w: 1, h: 2 },
-    { i: "m", x: 0, y: 8, w: 1, h: 2 }
   ],
   sm: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -91,7 +87,6 @@ const initialLayouts: BreakpointLayouts = {
     { i: "j", x: 1, y: 8, w: 1, h: 2 },
     { i: "k", x: 0, y: 10, w: 1, h: 2 },
     { i: "l", x: 1, y: 10, w: 1, h: 2 },
-    { i: "m", x: 0, y: 12, w: 1, h: 2 }
   ],
   xs: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -106,7 +101,6 @@ const initialLayouts: BreakpointLayouts = {
     { i: "j", x: 0, y: 18, w: 1, h: 2 },
     { i: "k", x: 0, y: 20, w: 1, h: 2 },
     { i: "l", x: 0, y: 22, w: 1, h: 2 },
-    { i: "m", x: 0, y: 24, w: 1, h: 2 }
   ]
 };
 

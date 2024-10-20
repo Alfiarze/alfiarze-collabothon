@@ -22,6 +22,7 @@ import random
 import string
 from datetime import datetime
 import logging
+from django.http import FileResponse, Http404
 
 logger = logging.getLogger(__name__)
 
@@ -193,7 +194,7 @@ class ContractView(APIView):
 
             text = ocr_text_from_file(temp_full_path)
 
-            response = analyze_text(text=text, prompt=prompt, model="gpt-4")
+            response = analyze_text(text=text, prompt=prompt, model="gpt-4", temperature=0.2, max_tokens=1000)
 
             logger.info(f"AI Response: {response}")
 
@@ -785,6 +786,14 @@ class GenerateQRCodeView(APIView):
             'success': 'QR code created successfully',
             'code': qr_code.code
         }, status=status.HTTP_201_CREATED)
+
+def serve_contract_image(request, filename):
+    image_path = os.path.join(settings.BASE_DIR, '@contracts', filename)
+    if os.path.exists(image_path):
+        return FileResponse(open(image_path, 'rb'), content_type='image/jpeg')
+    raise Http404("Image not found")
+
+
 
 
 
