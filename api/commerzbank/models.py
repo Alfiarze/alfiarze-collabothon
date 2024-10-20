@@ -19,7 +19,7 @@ class UserLayer(models.Model):
     layout = models.CharField(max_length=1000)
 
     def __str__(self):
-        return f"{self.user.username} - {self.layer.name}"
+        return f"{self.user.username}"
     
 class Contract(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
