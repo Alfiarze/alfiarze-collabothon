@@ -133,7 +133,7 @@ function Content({ size }: { size: { width: number | null } }) {
     // Fetch layout data when component mounts
     const fetchLayout = async () => {
       try {
-        const response = await axiosPrivate.get('api/userLayout/');
+        const response = await axiosPrivate.get<{ layout: BreakpointLayouts }>('api/userLayout/');
         if (response.status === 200 && response.data.layout) {
           setLayouts(response.data.layout);
         }
@@ -146,6 +146,7 @@ function Content({ size }: { size: { width: number | null } }) {
   }, []);
 
   const onLayoutChange = useCallback((currentLayout: any, allLayouts: any) => {
+    console.log("Current layout:", currentLayout);
     console.log("Layout changed. New layouts:", allLayouts);
     setLayouts(allLayouts);
   }, []);
@@ -171,7 +172,7 @@ function Content({ size }: { size: { width: number | null } }) {
   const toggleEditMode = useCallback(() => {
     setEditMode((prevEditMode) => {
       if (prevEditMode) {
-        saveLayout(layouts[currentBreakpoint]);
+        saveLayout(layouts[currentBreakpoint as keyof BreakpointLayouts]);
       }
       return !prevEditMode;
     });

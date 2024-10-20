@@ -55,9 +55,9 @@ function App() {
   useEffect(() => {
     setShowSurvey(false);
     setLoading(true);
-    axiosPrivate.get('/api/userLayout/').then((res) => {
+    axiosPrivate.get('/api/userLayout/').then(() => {
       setLoading(false);
-    }).catch((error) => {
+    }).catch(() => {
       setLoading(false);
       setShowSurvey(true);
     });

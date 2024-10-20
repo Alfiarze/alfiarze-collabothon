@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  Card,
   CardContent,
   Typography,
   List,
@@ -11,11 +10,6 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import PhotoIcon from '@mui/icons-material/Photo';
-
-const StyledCard = styled(Card)({
-  maxWidth: 400,
-  margin: 'auto',
-});
 
 const PhotoPlaceholder = styled(Box)({
   width: '100%',

@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Box, Typography, List, ListItem, ListItemText, Chip, IconButton } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import axiosPrivate from '../../ctx/axiosPrivate';
 
 interface OtherAccounts {
   id: number;
@@ -13,7 +12,7 @@ interface OtherAccounts {
 }
 
 const OtherAccounts = () => {
-  const [accounts, setAccounts] = useState<OtherAccounts[]>([
+  const [accounts, _setAccounts] = useState<OtherAccounts[]>([
     { id: 1, name: 'Savings Account', balance: 5000, type: 'savings', lastTransaction: '2023-05-15' },
     { id: 2, name: 'Checking Account', balance: 2500, type: 'checking', lastTransaction: '2023-05-20' },
     { id: 3, name: 'Investment Account', balance: 10000, type: 'investment', lastTransaction: '2023-05-10' },

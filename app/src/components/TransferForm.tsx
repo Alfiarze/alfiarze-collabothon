@@ -1,9 +1,9 @@
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, Typography, Container, Snackbar, FormControlLabel, Checkbox } from '@mui/material';
-import { useState, useEffect } from 'react';
-import { Formik, Form,  useField } from 'formik';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, Typography, Container, Snackbar} from '@mui/material';
+import { useState } from 'react';
+import { Formik, Form,  useField, FieldAttributes } from 'formik';
 import * as Yup from 'yup';
 import axiosPrivate from '../ctx/axiosPrivate';
-import { useParams, useSearchParams, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const TransferForm = () => {
     const [snackbar, setSnackbar] = useState({ open: false, message: '' });
@@ -17,10 +17,6 @@ const TransferForm = () => {
         const searchParams = new URLSearchParams(location.search);
         return searchParams.get(param) || '';
     };
-
-    // Remove the formData state and useEffect
-    // const [formData, setFormData] = useState({ ... });
-    // useEffect(() => { ... }, [params]);
 
     // Instead, create an initial values object based on URL params
     const initialValues = {
@@ -48,7 +44,7 @@ const TransferForm = () => {
     ];
 
     // Custom input component for all text fields
-    const CustomTextField = ({ ...props }) => {
+    const CustomTextField = ({ ...props }: FieldAttributes<any>) => {
         const [field, meta] = useField(props);
         
         return (
@@ -80,8 +76,8 @@ const TransferForm = () => {
     };
 
     // Custom input component for account number
-    const AccountNumberInput = ({ ...props }) => {
-        const [field, meta, helpers] = useField(props);
+    const AccountNumberInput = ({ ...props }: { name: string; [key: string]: any }) => {
+        const [field, meta, helpers] = useField(props.name);
         
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.value.replace(/\D/g, '').slice(0, 26);

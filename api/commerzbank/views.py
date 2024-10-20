@@ -713,28 +713,41 @@ class AINavigatorView(APIView):
             return Response({"error": "No prompt provided"}, status=status.HTTP_400_BAD_REQUEST)
         
         final_prompt = """
-        To jest struktrua url w naszej aplikacji bankowej:
-        Offer: '/offer',
-        Actions: '/actions', 
-        Contracts: '/contracts', 
-        Support: '/support', 
-        Transfers: '/transfers'
-        Make a transfer: '/transfer-form'
-        Na podstawie pytania użytkownika określ potrzebę użytkownika. Jeżeli nie wiesz co odpowiedzić jasno o tym powiedz. Na końcu zwróć json w podanym formacie {
-        "action": "redirect",
-        "path": right_path,
-        "additional_info": {
-            "title": '',
-            "receiver": '',
-            "receiver_address": '',
-            "account_number": '',
-            "amount": ''
+        You are an AI assistant for a banking application. Analyze the user's query and determine the most appropriate action based on the following URL structure:
+
+        - Offer: '/offer'
+        - Actions: '/actions'
+        - Contracts: '/contracts'
+        - Support: '/support'
+        - Transfers: '/transfers'
+        - Make a transfer: '/transfer-form'
+
+        Respond with a JSON object in one of these two formats:
+
+        1. If you can determine the user's need:
+        {
+            "action": "redirect",
+            "path": "<appropriate_path>",
+            "additional_info": {
+                "title": "<transfer_title>",
+                "receiver": "<receiver_name>",
+                "receiver_address": "<receiver_address>",
+                "account_number": "<account_number>",
+                "amount": "<transfer_amount>"
+            }
         }
+
+        2. If you cannot determine the user's need or the query is unclear:
+        {
+            "action": "none",
+            "message": "<brief explanation>"
         }
-        Jeżeli nie znasz odpowiedź, zwróc json w formacie: {
-        "action": "none"
-        }
-        Additional info uzupełniasz tylko jak jesteś w stanie uzupełnić dane na bazie informacji z zapytania  w przeciwnym wypadku zostaw puste pole. Odpowiadaj tylko json.
+
+        Guidelines:
+        - Only fill in the "additional_info" fields if you can extract this information from the user's query. Otherwise, leave them as empty strings.
+        - For the "path" field, use the most appropriate URL from the given structure.
+        - If the query is about making a transfer, use '/transfer-form' and fill in as much of the additional_info as possible.
+        - Respond only with the JSON object, no additional text.
         """
 
         response = analyze_text(text=prompt, prompt=final_prompt)
@@ -773,6 +786,7 @@ class GenerateQRCodeView(APIView):
             'success': 'QR code created successfully',
             'code': qr_code.code
         }, status=status.HTTP_201_CREATED)
+
 
 
 
