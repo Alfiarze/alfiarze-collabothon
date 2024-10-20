@@ -17,10 +17,6 @@ class UserLayer(models.Model):
     answer_4 = models.CharField(max_length=100)
     result = models.CharField(max_length=100)
     layout = models.CharField(max_length=1000)
-    datetime = models.DateTimeField(auto_now_add=True)
-    access_token = models.CharField(max_length=100, null=True, blank=True)
-    refresh_token = models.CharField(max_length=100, null=True, blank=True)
-    expires_in = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.layer.name}"

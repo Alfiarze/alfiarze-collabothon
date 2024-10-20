@@ -36,12 +36,12 @@ class UserLayoutProvider(APIView):
                 try:    
                     user_data = {
                         "answer_1": userLayer.answer_1,
-                    "answer_2": userLayer.answer_2,
-                    "answer_3": userLayer.answer_3,
-                    "answer_4": userLayer.answer_4,
-                    "result": userLayer.result,
-                    "layout": userLayer.layout,
-                    "datetime": userLayer.datetime
+                        "answer_2": userLayer.answer_2,
+                        "answer_3": userLayer.answer_3,
+                        "answer_4": userLayer.answer_4,
+                        "result": userLayer.result,
+                        "layout": userLayer.layout,
+                        "datetime": userLayer.datetime
                     }
                     return Response(user_data, status=status.HTTP_200_OK)
                 except:
@@ -67,10 +67,10 @@ class UserLayoutProvider(APIView):
             else:
                 user = UserLayer.objects.create(
                     user=user_obj,
-                answer_1=data['answer_1'],
-                answer_2=data['answer_2'],
-                answer_3=data['answer_3'],
-                answer_4=data['answer_4'],
+                    answer_1=data['answer_1'],
+                    answer_2=data['answer_2'],
+                    answer_3=data['answer_3'],
+                    answer_4=data['answer_4'],
                     result=result,
                     layout=layout,
                 )
