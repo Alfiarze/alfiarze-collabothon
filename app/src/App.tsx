@@ -22,7 +22,6 @@ import Exchange from './pages/Exchange';
 import Chat from './pages/Chat';
 import AddContract from './pages/AddContract';
 import TransferForm from './components/TransferForm';
-import axiosPrivate from './ctx/axiosPrivate';
 import Loading from './components/Loading';
 export const themeOptions: ThemeOptions = {
   palette: {
