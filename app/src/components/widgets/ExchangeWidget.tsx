@@ -6,8 +6,29 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
-const currencies = ['EUR', 'PLN', 'USD'];
+const currencies = ['EUR', 'PLN', 'USD', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'SEK', 'NZD', 'MXN', 'SGD', 'HKD', 'NOK'];
+
+// Static exchange rates (base currency: EUR)
+const exchangeRates: { [key: string]: number } = {
+  EUR: 1,
+  PLN: 4.45,
+  USD: 1.18,
+  GBP: 0.86,
+  JPY: 130.24,
+  CAD: 1.48,
+  AUD: 1.59,
+  CHF: 1.08,
+  CNY: 7.63,
+  SEK: 10.15,
+  NZD: 1.68,
+  MXN: 23.66,
+  SGD: 1.59,
+  HKD: 9.19,
+  NOK: 10.08
+};
 
 function ExchangeWidget() {
   const [firstCurrency, setFirstCurrency] = useState('');
@@ -15,77 +36,88 @@ function ExchangeWidget() {
   const [amount, setAmount] = useState('');
   const [result, setResult] = useState('');
 
-  const handleFirstCurrencyChange = (event: SelectChangeEvent) => {
-    setFirstCurrency(event.target.value);
-  };
-
-  const handleSecondCurrencyChange = (event: SelectChangeEvent) => {
-    setSecondCurrency(event.target.value);
-  };
-
-  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(event.target.value);
+  const calculateExchangeRate = (from: string, to: string): number => {
+    return exchangeRates[to] / exchangeRates[from];
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Here you would typically call an API to get the exchange rate and calculate the result
-    // For now, we'll just set a placeholder result
-    setResult(`${amount} ${firstCurrency} = X ${secondCurrency}`);
+    if (firstCurrency && secondCurrency && amount) {
+      const rate = calculateExchangeRate(firstCurrency, secondCurrency);
+      const convertedAmount = parseFloat(amount) * rate;
+      setResult(`${amount} ${firstCurrency} = ${convertedAmount.toFixed(2)} ${secondCurrency}`);
+    }
   };
 
   return (
     <div>
       <h1>Currency Exchange</h1>
       <form onSubmit={handleSubmit}>
-        <FormControl sx={{ m: 1, width: 300 }}>
-          <InputLabel id="first-currency-label">From Currency</InputLabel>
-          <Select
-            labelId="first-currency-label"
-            id="first-currency"
-            value={firstCurrency}
-            onChange={handleFirstCurrencyChange}
-            input={<OutlinedInput label="From Currency" />}
-          >
-            {currencies.map((currency) => (
-              <MenuItem key={currency} value={currency}>
-                {currency}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Grid container spacing={2} alignItems="flex-start">
+          <Grid item xs={12}>
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel id="first-currency-label">From Currency</InputLabel>
+              <Select
+                labelId="first-currency-label"
+                id="first-currency"
+                value={firstCurrency}
+                onChange={(event: SelectChangeEvent) => setFirstCurrency(event.target.value)}
+                input={<OutlinedInput label="From Currency" />}
+              >
+                {currencies.map((currency) => (
+                  <MenuItem key={currency} value={currency}>
+                    {currency}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-        <FormControl sx={{ m: 1, width: 300 }}>
-          <InputLabel id="second-currency-label">To Currency</InputLabel>
-          <Select
-            labelId="second-currency-label"
-            id="second-currency"
-            value={secondCurrency}
-            onChange={handleSecondCurrencyChange}
-            input={<OutlinedInput label="To Currency" />}
-          >
-            {currencies.map((currency) => (
-              <MenuItem key={currency} value={currency}>
-                {currency}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel id="second-currency-label">To Currency</InputLabel>
+              <Select
+                labelId="second-currency-label"
+                id="second-currency"
+                value={secondCurrency}
+                onChange={(event: SelectChangeEvent) => setSecondCurrency(event.target.value)}
+                input={<OutlinedInput label="To Currency" />}
+              >
+                {currencies.map((currency) => (
+                  <MenuItem key={currency} value={currency}>
+                    {currency}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-        <TextField
-          sx={{ m: 1, width: 300 }}
-          label="Amount"
-          type="number"
-          value={amount}
-          onChange={handleAmountChange}
-        />
+            <TextField
+              fullWidth
+              sx={{ mb: 2 }}
+              label="Amount"
+              type="number"
+              value={amount}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setAmount(event.target.value)}
+            />
+          </Grid>
+        </Grid>
 
-        <Button sx={{ m: 1 }} type="submit" variant="contained">
+        <Button fullWidth type="submit" variant="contained" sx={{ mt: 2 }}>
           Convert
         </Button>
       </form>
 
-      {result && <p>{result}</p>}
+      {result && (
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            mt: 2, 
+            textAlign: 'center', 
+            fontWeight: 'bold',
+            fontSize: '2rem'
+          }}
+        >
+          {result}
+        </Typography>
+      )}
     </div>
   );
 }

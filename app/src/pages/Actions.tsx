@@ -1,16 +1,11 @@
-import Roulette from "../components/widgets/Roulette"
-import BanksMap from "../components/widgets/BanksMap"
-import FullCalendar from "../components/widgets/FullCalendar"
+import ExchangeWidget from "../components/widgets/ExchangeWidget"
 import StockExchange from "../components/widgets/StockExchange"
 
 const Actions = () => {
   return (
     <div>
-      <h1>Actions</h1>
+      <ExchangeWidget />
       <StockExchange />
-      <Roulette />
-      <BanksMap />
-      <FullCalendar />
     </div>
   )
 }

@@ -19,6 +19,8 @@ import ShowQRCode from "../components/widgets/ShowQRCode";
 import ChatNav from "../components/widgets/ChatNav";
 import BankBalance from "../components/widgets/BankBalance";
 import CurrencyBar from "../components/widgets/CurrencyBar";
+import FullCalendar from "../components/widgets/FullCalendar";
+import BanksMap from "../components/widgets/BanksMap";
 
 // Move this type definition to the top of the file, after the imports
 type BreakpointLayouts = {
@@ -38,6 +40,8 @@ const widgetComponents: { [key: string]: React.ComponentType<any> } = {
   i: ReceiptWidget,
   j: ShowQRCode,
   k: BankBalance,
+  l: FullCalendar,
+  m: BanksMap,
 };
 
 const originalItems = Object.keys(widgetComponents);
@@ -55,7 +59,9 @@ const initialLayouts: BreakpointLayouts = {
     { i: "h", x: 3, y: 2, w: 1, h: 2 },
     { i: "i", x: 0, y: 4, w: 1, h: 2 },
     { i: "j", x: 1, y: 4, w: 1, h: 2 },
-    { i: "k", x: 2, y: 4, w: 1, h: 2 }
+    { i: "k", x: 2, y: 4, w: 1, h: 2 },
+    { i: "l", x: 3, y: 4, w: 1, h: 2 },
+    { i: "m", x: 0, y: 6, w: 1, h: 2 }
   ],
   md: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -68,7 +74,9 @@ const initialLayouts: BreakpointLayouts = {
     { i: "h", x: 1, y: 4, w: 1, h: 2 },
     { i: "i", x: 2, y: 4, w: 1, h: 2 },
     { i: "j", x: 0, y: 6, w: 1, h: 2 },
-    { i: "k", x: 1, y: 6, w: 1, h: 2 }
+    { i: "k", x: 1, y: 6, w: 1, h: 2 },
+    { i: "l", x: 2, y: 6, w: 1, h: 2 },
+    { i: "m", x: 0, y: 8, w: 1, h: 2 }
   ],
   sm: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -81,7 +89,9 @@ const initialLayouts: BreakpointLayouts = {
     { i: "h", x: 1, y: 6, w: 1, h: 2 },
     { i: "i", x: 0, y: 8, w: 1, h: 2 },
     { i: "j", x: 1, y: 8, w: 1, h: 2 },
-    { i: "k", x: 0, y: 10, w: 1, h: 2 }
+    { i: "k", x: 0, y: 10, w: 1, h: 2 },
+    { i: "l", x: 1, y: 10, w: 1, h: 2 },
+    { i: "m", x: 0, y: 12, w: 1, h: 2 }
   ],
   xs: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -94,7 +104,9 @@ const initialLayouts: BreakpointLayouts = {
     { i: "h", x: 0, y: 14, w: 1, h: 2 },
     { i: "i", x: 0, y: 16, w: 1, h: 2 },
     { i: "j", x: 0, y: 18, w: 1, h: 2 },
-    { i: "k", x: 0, y: 20, w: 1, h: 2 }
+    { i: "k", x: 0, y: 20, w: 1, h: 2 },
+    { i: "l", x: 0, y: 22, w: 1, h: 2 },
+    { i: "m", x: 0, y: 24, w: 1, h: 2 }
   ]
 };
 

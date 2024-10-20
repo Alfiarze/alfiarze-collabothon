@@ -37,18 +37,21 @@ const FullCalendar = () => {
     }, []);
 
     return (
-        <Paper elevation={3} sx={{ padding: 2, maxWidth: 600, margin: 'auto' }}>
+        <div style={{ height: '300px', width: '100%' }}>
             <FullCalendarLib
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView="dayGridMonth"
                 events={events}
                 dateClick={handleDateClick}
                 headerToolbar={{
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,dayGridWeek,dayGridDay'
+                    left: 'title',
+                    right: 'prev,next',
                 }}
-                height={400}
+                height="100%"
+                contentHeight="auto"
+                aspectRatio={1.35}
+                dayMaxEvents={2}
+                eventDisplay="block"
             />
             <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
                 <DialogTitle>Add New Event</DialogTitle>
@@ -67,7 +70,7 @@ const FullCalendar = () => {
                     <Button onClick={handleAddEvent}>Add</Button>
                 </DialogActions>
             </Dialog>
-        </Paper>
+        </div>
     );
 };
 
