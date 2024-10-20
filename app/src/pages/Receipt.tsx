@@ -4,7 +4,7 @@ const Receipt = () => {
   return (
     <div>
       <h1>Receipt</h1>
-      <AddRecipe />  // Add the AddRecipe component here
+      <AddRecipe />
     </div>
   );
 };

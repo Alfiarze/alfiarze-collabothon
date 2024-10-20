@@ -5,6 +5,7 @@ from commerzbank import views
 urlpatterns = [
     path('userLayout/', views.UserLayoutProvider.as_view(), name='userLayout'),
     path('contracts/', views.ContractView.as_view(), name='contracts'),
+    path('contracts/<int:contract_id>/', views.ContractView.as_view(), name='contract-detail'),
     path('register/', views.RegisterView.as_view(), name='register'),
     path('commerzbank/accounts/', views.AccountView.as_view(), name='accounts'),
     path('commerzbank/oauth/', views.OAuthView.as_view(), name='oauth'),
@@ -20,4 +21,5 @@ urlpatterns = [
     path('loyal-programs/', views.LoyalProgramView.as_view(), name='loyal-programs'),
     path('ai-navigator/', views.AINavigatorView.as_view(), name='ai-navigator'),
     path('qr-codes/', views.GenerateQRCodeView.as_view(), name='qr-codes'),
+    path('contracts/images/<str:filename>', views.serve_contract_image, name='contract-image'),
 ]
