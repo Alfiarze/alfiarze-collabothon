@@ -11,14 +11,15 @@ import {
   Typography 
 } from '@mui/material';
 
-const ShowRecipes: React.FC = () => {
+const ShowReceipt: React.FC = () => {
   const [recipes, setRecipes] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await axios.get<any[]>('/api/recipes/'); // Explicitly type the response data
+        const response = await axios.get<any[]>('/api/recipes/');
+        console.log(response.data); // Log the response to check the data
         setRecipes(response.data);
       } catch (err) {
         setError('Failed to fetch recipes');
@@ -45,7 +46,7 @@ const ShowRecipes: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {recipes.map((recipe, index) => (
+          {Array.isArray(recipes) ? recipes.map((recipe, index) => (
             <TableRow key={index}>
               <TableCell>{recipe.date || 'N/A'}</TableCell>
               <TableCell>{recipe.sklep || 'N/A'}</TableCell>
@@ -59,11 +60,11 @@ const ShowRecipes: React.FC = () => {
                 ))}
               </TableCell>
             </TableRow>
-          ))}
+          )) : <TableRow><TableCell colSpan={5}>No data available</TableCell></TableRow>}
         </TableBody>
       </Table>
     </TableContainer>
   );
 };
 
-export default ShowRecipes;
+export default ShowReceipt;

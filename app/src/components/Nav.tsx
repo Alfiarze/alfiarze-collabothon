@@ -17,7 +17,7 @@ const Nav = () => {
   
     const menuItems = [
       { to: '/offer', label: 'Offer' },
-      { to: '/Actions', label: 'Actions' },
+      { to: '/Actions', label: 'Stocks' },
       { to: '/Contracts', label: 'Contracts' },
       { to: '/Support', label: 'Support' },
       { to: '/Transfers', label: 'Transfers' },

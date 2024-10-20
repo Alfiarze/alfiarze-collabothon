@@ -24,6 +24,8 @@ import AddContract from './pages/AddContract';
 import TransferForm from './components/TransferForm';
 import axiosPrivate from './ctx/axiosPrivate';
 import Loading from './components/Loading';
+import Receipt from './pages/Receipt'; // Add this line to import the Receipt component
+
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
@@ -52,7 +54,6 @@ function App() {
   const [showSurvey, setShowSurvey] = useState(false);
   const [loading, setLoading] = useState(false);
 
-<<<<<<< HEAD
 //   useEffect(() => {
 //     setShowSurvey(false);
 //     setLoading(true);
@@ -66,12 +67,10 @@ function App() {
 
   useEffect(() => {
     setShowSurvey(false);
-    setLoading(true);
-=======
+   // setLoading(true);
   // useEffect(() => {
   //   setShowSurvey(false);
   //   setLoading(true);
->>>>>>> e5c9152fea38620617b3de6ab7a1f1aa77286ecc
     
   //   if (localStorage.getItem('surveyCompleted') !== 'true') {
   //     setShowSurvey(true);
@@ -80,11 +79,8 @@ function App() {
   //     setLoading(false);
   //   }
 
-<<<<<<< HEAD
   }, []);
-=======
   // }, []);
->>>>>>> e5c9152fea38620617b3de6ab7a1f1aa77286ecc
 
   if (loading) {
     return <Loading />;
@@ -131,6 +127,7 @@ function App() {
               <Route path="/support" component={Support} />
               <Route path="/Survey" component={Survey} />
               <Route path="/transfers" component={Transfers} />
+              <Route path="/receipt" component={Receipt} />
               <Route path="/chat" component={Chat} />
               <Route 
                 exact 
