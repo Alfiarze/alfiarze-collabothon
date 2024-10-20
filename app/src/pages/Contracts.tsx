@@ -1,6 +1,5 @@
 import AddContractPhoto from "../components/widgets/AddContractPhoto"
 import ContractsWidget from "../components/widgets/ContractsWidget"
-import ShowQRCode from "../components/widgets/ShowQRCode"
 
 const Contracts = () => {
 
@@ -9,7 +8,6 @@ const Contracts = () => {
         <h1>Contracts</h1>
         <AddContractPhoto/>
         <ContractsWidget/>
-        <ShowQRCode/>
       </div>
     )
   }

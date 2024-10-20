@@ -56,7 +56,7 @@ const OtherAccounts = () => {
   };
 
   return (
-      <Box sx={{ p: 3 }}>
+      <Box>
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
         <Typography variant="h5" component="h2" gutterBottom>
         Other Accounts

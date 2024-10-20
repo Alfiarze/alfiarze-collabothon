@@ -8,7 +8,6 @@ import {
   CircularProgress,
   Snackbar,
   IconButton,
-  TextField
 } from '@mui/material';
 import { Close, CloudUpload } from '@mui/icons-material';
 import axiosPrivate from '../../ctx/axiosPrivate';
@@ -81,11 +80,11 @@ const AddContract: React.FC = () => {
                 hidden
                 name="photo"
                 onChange={handleInputChange}
-                accept="image/*"
+                accept="png,jpg,jpeg,docx,pdf"
               />
             </Button>
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <TextField
               fullWidth
               label="Contract Title"
@@ -129,7 +128,7 @@ const AddContract: React.FC = () => {
               InputLabelProps={{ shrink: true }}
               required
             />
-          </Grid>
+          </Grid> */}
           {previewUrl && (
             <Grid item xs={12}>
               <Box sx={{ mt: 2, textAlign: 'center' }}>

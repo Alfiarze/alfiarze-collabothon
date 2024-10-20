@@ -102,10 +102,18 @@ function Dashboard() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // Add a key to force re-render when navigating back
+  const [key, setKey] = useState(0);
+
+  useEffect(() => {
+    // This effect will run every time the component mounts
+    setKey(prevKey => prevKey + 1);
+  }, []);
+
   return (
     <Box sx={{ p: isMobile ? 1 : 2 }}>
       <SizeMe>
-        {({ size }) => <Content size={size} />}
+        {({ size }) => <Content key={key} size={size} />}
       </SizeMe>
     </Box>
   );
@@ -117,9 +125,25 @@ function Content({ size }: { size: { width: number | null } }) {
   const rowHeight = isMobile ? 200 : 150;
 
   const [items, setItems] = useState<string[]>(originalItems);
-  const [layouts, setLayouts] = useState<any>(initialLayouts);
+  const [layouts, setLayouts] = useState<BreakpointLayouts>(initialLayouts);
   const [currentBreakpoint, setCurrentBreakpoint] = useState<string>("lg");
   const [editMode, setEditMode] = useState(false);
+
+  useEffect(() => {
+    // Fetch layout data when component mounts
+    const fetchLayout = async () => {
+      try {
+        const response = await axiosPrivate.get('api/userLayout/');
+        if (response.status === 200 && response.data.layout) {
+          setLayouts(response.data.layout);
+        }
+      } catch (error) {
+        console.error("Error fetching layout from database:", error);
+      }
+    };
+
+    fetchLayout();
+  }, []);
 
   const onLayoutChange = useCallback((currentLayout: any, allLayouts: any) => {
     console.log("Layout changed. New layouts:", allLayouts);
@@ -176,7 +200,7 @@ function Content({ size }: { size: { width: number | null } }) {
           isResizable={editMode}
           compactType="vertical"
           preventCollision={true}
-          margin={[16, 16]}
+          margin={[0, 0]}
         >
           {items.map((key) => (
             <div key={key} className="widget">
@@ -223,4 +247,4 @@ const Widget: React.FC<WidgetProps> = ({ id, onRemoveItem, component: Component,
 // function getFromLS(key: string): any { ... }
 // function saveToLS(key: string, value: any) { ... }
 
-export default Dashboard;
+export default React.memo(Dashboard);

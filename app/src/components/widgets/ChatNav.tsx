@@ -2,9 +2,12 @@ import { Box, TextField, IconButton } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import { useState } from "react";
 import axiosPublic from "../../ctx/axiosPublic";
+import { useHistory } from 'react-router-dom';
+
 
 // Define the response type
 interface AIResponse {
+    additional_info: object;
     action: string;
     path?: string;
 }
@@ -18,13 +21,28 @@ const ChatNav = () => {
         sendMessage();
     };
 
+    const history = useHistory();
+
     const sendMessage = () => {
         axiosPublic.post<AIResponse>('api/ai-navigator/', { prompt: message }).then((response) => {
             if(response.status === 200) {
                 let d = response.data;
                 console.log(d);
-                if(d.action === "redirect" && d.path) {
-                    window.location.href = d.path;
+                if(d.additional_info && d.path){
+                    // Create URLSearchParams object
+                    const queryParams = new URLSearchParams();
+                    
+                    // Iterate through additional_info properties
+                    for (const [key, value] of Object.entries(d.additional_info)) {
+                        if (value !== '') {
+                            queryParams.append(key, value.toString());
+                        }
+                    }
+                    
+                    const fullPath = `${d.path}?${queryParams.toString()}`;
+                    history.push(fullPath);
+                } else if(d.action === "redirect" && d.path) {
+                    history.push(d.path);
                 }
             }
         }).catch((error) => {

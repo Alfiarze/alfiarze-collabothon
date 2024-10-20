@@ -81,7 +81,7 @@ const ContractsEnding = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       <Typography variant="h5" component="h2" gutterBottom>
         Contracts and Bills Ending Soon
       </Typography>

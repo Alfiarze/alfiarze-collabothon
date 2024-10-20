@@ -13,7 +13,7 @@ import { Typography,  Container, Box } from '@mui/material';
 import MatiTest from './pages/MatiTest';
 import Nav from './components/Nav';
 import { useUser } from './context/UserContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Dashboard from './pages/Dashboard';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material/styles';
@@ -22,6 +22,8 @@ import Exchange from './pages/Exchange';
 import Chat from './pages/Chat';
 import AddContract from './pages/AddContract';
 import TransferForm from './components/TransferForm';
+import axiosPrivate from './ctx/axiosPrivate';
+import Loading from './components/Loading';
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
@@ -47,24 +49,23 @@ const theme = createTheme({
 
 function App() {
   const { user } = useUser();
-  const [showSurvey, _setShowSurvey] = useState(false);
+  const [showSurvey, setShowSurvey] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   setShowSurvey(false);
-  //   setLoading(true);
-  //   axiosPrivate.get('/api/userLayout/').then((res) => {
-  //     console.log(res);
-  //     setLoading(false);
-  //   }).catch((error) => {
-  //     console.error(error);
-  //     setLoading(false);
-  //     setShowSurvey(true);
-  //   });
-  // }, []);
+  useEffect(() => {
+    setShowSurvey(false);
+    setLoading(true);
+    axiosPrivate.get('/api/userLayout/').then((res) => {
+      setLoading(false);
+    }).catch((error) => {
+      setLoading(false);
+      setShowSurvey(true);
+    });
+  }, []);
 
-  // // if (loading) {
-  // //   return <Loading />;
-  // // }
+  if (loading) {
+    return <Loading />;
+  }
 
   if (showSurvey && user) {
     return <Survey />;
@@ -108,7 +109,12 @@ function App() {
               <Route path="/Survey" component={Survey} />
               <Route path="/transfers" component={Transfers} />
               <Route path="/chat" component={Chat} />
-              <Route path="/" component={Dashboard} />
+              <Route 
+                exact 
+                path="/" 
+                render={(props) => <Dashboard key={Date.now()} {...props} />} 
+              />
+              <Route component={Dashboard} />
             </Switch>
           </Container>
           <Box component="footer" sx={{ py: 3, px: 2, backgroundColor: 'primary.main' }}>

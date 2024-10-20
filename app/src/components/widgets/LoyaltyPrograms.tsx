@@ -40,7 +40,7 @@ const LoyaltyProgram: React.FC = () => {
   }, []);
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       <Typography variant="h5" component="h2" gutterBottom>
         Loyalty Program Benefits
       </Typography>
