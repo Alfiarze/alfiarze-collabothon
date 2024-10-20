@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Responsive as ResponsiveGridLayout, Layout } from "react-grid-layout";
 import { SizeMe } from "react-sizeme";
-import { Card,  IconButton, Box, useTheme, useMediaQuery } from "@mui/material";
+import { IconButton, Box, useTheme, useMediaQuery, Paper } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import TopBar from "../components/TopBar";
 import axiosPrivate from '../ctx/axiosPrivate';
+import { styled } from '@mui/material/styles';
 
 import CardsList from "../components/widgets/CardsList";
 import Contracts from "../components/widgets/ContractsWidget";
@@ -20,6 +21,11 @@ import BankBalance from "../components/widgets/BankBalance";
 import CurrencyBar from "../components/widgets/CurrencyBar";
 import FullCalendar from "../components/widgets/FullCalendar";
 import BanksMap from "../components/widgets/BanksMap";
+import LayoutUser from "../components/LayoutUser";
+import LayoutSmallCom from "../components/LayoutSmallCom";
+import LayoutBigCom from "../components/LayoutBigCom";
+import AddContractPhoto from "../components/widgets/AddContractPhoto";
+import Roulette from "../components/widgets/Roulette";
 
 // Move this type definition to the top of the file, after the imports
 type BreakpointLayouts = {
@@ -40,6 +46,7 @@ const widgetComponents: { [key: string]: React.ComponentType<any> } = {
   j: BankBalance,
   k: FullCalendar,
   l: BanksMap,
+  m: AddContractPhoto,
 };
 
 const originalItems = Object.keys(widgetComponents);
@@ -59,6 +66,7 @@ const initialLayouts: BreakpointLayouts = {
     { i: "j", x: 1, y: 4, w: 1, h: 2 },
     { i: "k", x: 2, y: 4, w: 1, h: 2 },
     { i: "l", x: 3, y: 4, w: 1, h: 2 },
+    { i: "m", x: 0, y: 6, w: 1, h: 2 },
   ],
   md: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -73,6 +81,7 @@ const initialLayouts: BreakpointLayouts = {
     { i: "j", x: 0, y: 6, w: 1, h: 2 },
     { i: "k", x: 1, y: 6, w: 1, h: 2 },
     { i: "l", x: 2, y: 6, w: 1, h: 2 },
+    { i: "m", x: 0, y: 8, w: 1, h: 2 },
   ],
   sm: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -87,6 +96,7 @@ const initialLayouts: BreakpointLayouts = {
     { i: "j", x: 1, y: 8, w: 1, h: 2 },
     { i: "k", x: 0, y: 10, w: 1, h: 2 },
     { i: "l", x: 1, y: 10, w: 1, h: 2 },
+    { i: "m", x: 0, y: 12, w: 1, h: 2 },
   ],
   xs: [
     { i: "a", x: 0, y: 0, w: 1, h: 2 },
@@ -101,8 +111,19 @@ const initialLayouts: BreakpointLayouts = {
     { i: "j", x: 0, y: 18, w: 1, h: 2 },
     { i: "k", x: 0, y: 20, w: 1, h: 2 },
     { i: "l", x: 0, y: 22, w: 1, h: 2 },
+    { i: "m", x: 0, y: 24, w: 1, h: 2 },
   ]
 };
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  color: theme.palette.text.primary,
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+}));
 
 function Dashboard() {
   const theme = useTheme();
@@ -116,8 +137,10 @@ function Dashboard() {
     setKey(prevKey => prevKey + 1);
   }, []);
 
+  
+
   return (
-    <Box sx={{ p: isMobile ? 1 : 2 }}>
+    <Box sx={{ p: isMobile ? 1 : 3, backgroundColor: theme.palette.background.default, minHeight: '100vh' }}>
       <SizeMe>
         {({ size }) => <Content key={key} size={size} />}
       </SizeMe>
@@ -128,12 +151,19 @@ function Dashboard() {
 function Content({ size }: { size: { width: number | null } }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const rowHeight = isMobile ? 200 : 150;
+  const rowHeight = isMobile ? 250 : 200;
 
   const [items, setItems] = useState<string[]>(originalItems);
   const [layouts, setLayouts] = useState<BreakpointLayouts>(initialLayouts);
   const [currentBreakpoint, setCurrentBreakpoint] = useState<string>("lg");
   const [editMode, setEditMode] = useState(false);
+
+  const [resultSurvey, setResultSurvey] = useState<any>(null);
+
+  useEffect(() => {
+    setResultSurvey(JSON.parse(localStorage.getItem('surveyData') || '{}'));
+    console.log(resultSurvey);
+  }, []);
 
   useEffect(() => {
     // Fetch layout data when component mounts
@@ -190,9 +220,12 @@ function Content({ size }: { size: { width: number | null } }) {
 
   return (
     <>
-      <CurrencyBar />
+      {resultSurvey && resultSurvey.currency === "true" && <CurrencyBar />}
       <TopBar editMode={editMode} toggleEditMode={toggleEditMode} />
       <ChatNav />
+      {resultSurvey && resultSurvey.layout === "1" && <LayoutUser />}
+      {resultSurvey && resultSurvey.layout === "2" && <LayoutSmallCom />}
+      {resultSurvey && resultSurvey.layout === "3" && <LayoutBigCom />}
       {size.width && (
         <ResponsiveGridLayout
           className="layout"
@@ -207,7 +240,8 @@ function Content({ size }: { size: { width: number | null } }) {
           isResizable={editMode}
           compactType="vertical"
           preventCollision={true}
-          margin={[0, 0]}
+          margin={[16, 16]}
+          containerPadding={[16, 16]}
         >
           {items.map((key) => (
             <div key={key} className="widget">
@@ -235,18 +269,18 @@ interface WidgetProps {
 
 const Widget: React.FC<WidgetProps> = ({ id, onRemoveItem, component: Component, editMode }) => {
   return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <StyledPaper elevation={3}>
       {editMode && (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
           <IconButton aria-label="delete" onClick={() => onRemoveItem(id)} size="small">
             <CloseIcon fontSize="small" />
           </IconButton>
         </Box>
       )}
-      <Box sx={{ flexGrow: 1, overflow: 'auto', p: 2 }}>
+      <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
         <Component />
       </Box>
-    </Card>
+    </StyledPaper>
   );
 };
 

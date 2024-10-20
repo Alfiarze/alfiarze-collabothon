@@ -1,50 +1,12 @@
-# React + TypeScript + Vite
+Alfiarze Team
+Project: [Collabothon 2024](https://www.collabothon.eu/)
+Project Description: 
+Our project introduces revolutionary innovations to Commerzbank, redefining the way customers interact with banking services. From the very beginning, every new user—whether during registration or the first login—completes a specially designed survey. Its purpose is to fully tailor the dashboard to the customer’s individual preferences. For example, a business client will have completely different needs compared to an individual customer. Thanks to our survey, each user receives a customized widget layout that immediately addresses their requirements. Everything they need is at their fingertips—automatically configured widgets can display upcoming payments, current currency exchange rates, stock prices of the world’s biggest companies, as well as personalized loyalty programs and loan offers, tailored for both individual and business clients.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+One of the most innovative features is our AI module, which processes and analyzes your receipts in real time. All you have to do is upload a receipt photo, and our intelligent assistant will not only remember your expenses but also create intuitive charts and reports. Based on this data, the AI will suggest how to optimize your spending, offering advice on where you can save money or which investment opportunities might benefit you. This feature also includes document uploads—our AI automatically analyzes contracts, extracts key information, and sets up scheduled payments based on them, ensuring you never miss an important transaction.
 
-Currently, two official plugins are available:
+Another major innovation is the appointment scheduling feature. Instead of wasting time in queues, you can easily schedule a meeting at the bank with our AI assistant. When you need to book an appointment, the assistant will guide you to the reservation page, allowing you to choose a convenient time with just one click. This feature integrates seamlessly with all aspects of the bank, from everyday tasks to more complex operations.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+However, the true strength of our solution lies in how our intelligent AI assistant simplifies every banking process. For example, if you want to transfer 2500 PLN to your grandmother for her birthday, all you have to do is issue a command, and our assistant will automatically take you to the transfer page, pre-filling the necessary details. This not only speeds up the transaction but also makes the banking experience more intuitive, especially for new users and seniors.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+[colla](https://www.collabothon.eu/)

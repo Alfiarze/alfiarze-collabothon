@@ -4,3 +4,4 @@
 /api/recipes/
 .env
 /node_modules/
+/api/media/
