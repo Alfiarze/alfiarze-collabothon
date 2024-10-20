@@ -134,7 +134,8 @@ class ContractView(APIView):
                     "status": contract.status,
                     "name": contract.name,
                     "currency": contract.currency,
-                    "account_number": contract.account_number
+                    "account_number": contract.account_number,
+                    "file": contract.file.url if contract.file else None
                 }
                 upcoming_payments = UpcomingPayment.objects.filter(contract=contract)
                 if upcoming_payments.exists():

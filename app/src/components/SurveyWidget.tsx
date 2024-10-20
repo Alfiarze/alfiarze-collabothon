@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Typography, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Box } from '@mui/material';
-import axiosPrivate from '../ctx/axiosPrivate';
 
 function Survey() {
     const [questionIndex, setQuestionIndex] = useState(0);
@@ -53,6 +52,7 @@ function Survey() {
     useEffect(() => {
         if (isCompleted) {
             localStorage.setItem('surveyCompleted', 'true');
+            localStorage.setItem('surveyData', JSON.stringify(formData));
             window.location.href = '/';
         }
     }, [isCompleted]);
