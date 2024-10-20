@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { List, ListItem, ListItemText, ListItemAvatar, Typography,  IconButton, Box } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import axiosPrivate from '../../ctx/axiosPrivate';
 import AddIcon from '@mui/icons-material/Add';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -20,7 +19,7 @@ interface Transfer {
 }
 
 const RecentTransfersList: React.FC = () => {
-  const [transfers, setTransfers] = useState<Transfer[]>([
+  const [transfers, _setTransfers] = useState<Transfer[]>([
     { id: 1, account_id: 'ACC001', transaction_name: 'Salary Deposit', from_account: 'ACME Corp', to_account: 'My Checking', amount: 3500, categories: ['incoming', 'salary'], date: '2023-04-15' },
     { id: 2, account_id: 'ACC001', transaction_name: 'Rent Payment', from_account: 'My Checking', to_account: 'Landlord LLC', amount: 1200, categories: ['outgoing', 'housing'], date: '2023-04-02' },
     { id: 3, account_id: 'ACC002', transaction_name: 'Grocery Shopping', from_account: 'My Credit Card', to_account: 'Supermarket', amount: 85.50, categories: ['outgoing', 'food'], date: '2023-04-10' },

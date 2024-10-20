@@ -34,11 +34,11 @@ const Nav = () => {
     const drawerContent = (
       <List>
         {menuItems.map((item) => (
-          <ListItem button key={item.to} component={Link} to={item.to} onClick={toggleDrawer(false)}>
+          <ListItem disablePadding key={item.to} component={Link} to={item.to} onClick={toggleDrawer(false)}>
             <ListItemText primary={item.label} />
           </ListItem>
         ))}
-        <ListItem button onClick={handleLogout}>
+        <ListItem onClick={handleLogout}>
           <ListItemText primary="Logout" />
         </ListItem>
       </List>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Box, Typography, List, ListItem, ListItemText, Chip } from '@mui/material';
-import axiosPrivate from '../../ctx/axiosPrivate';
 
 interface ContractResponse {
   user_id: string;

@@ -6,7 +6,7 @@ import CustomerService from "../components/widgets/CustomerService";
 import LoyaltyPrograms from "../components/widgets/LoyaltyPrograms";
 import OtherAccounts from "../components/widgets/OtherAccounts";
 import RecentTransfersList from "../components/widgets/RecentTransfersList";
-import StockMarket from "../components/widgets/StockMarket";
+// import StockMarket from "../components/widgets/StockMarket";
 import UpcomingPayment from "../components/widgets/UpcomingPayment";
 import VisitReservation from "../components/widgets/VisitReservation";
 
@@ -16,7 +16,7 @@ const Widgets = () => {
             <h1>Widgets</h1>
             <CardsList/>
             <RecentTransfersList/>
-            <StockMarket/>
+            {/* <StockMarket/> */}
             <Contracts/>
             <CustomerService/>
             <ContractsEnding/>

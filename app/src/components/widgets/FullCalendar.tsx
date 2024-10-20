@@ -2,7 +2,7 @@ import  { useState, useEffect } from 'react';
 import FullCalendarLib from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Paper, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from '@mui/material';
 
 const FullCalendar = () => {
     const [events, setEvents] = useState([

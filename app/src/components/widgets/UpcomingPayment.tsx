@@ -10,7 +10,6 @@ import {
   Alert,
 } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import axiosPrivate from '../../ctx/axiosPrivate';
 
 interface Payment {
   id: string;
@@ -26,19 +25,19 @@ const formatPaymentData = (payment: Payment) => ({
   secondary: `Date: ${payment.date} - Time: ${payment.time}`,
 });
 
-const fetchUpcomingPayments = async (): Promise<Payment[]> => {
-  try {
-    const response = await axiosPrivate.get('api/upcoming-payments/');
-    return response.data as Payment[];
-  } catch (error) {
-    throw new Error((error as Error).message);
-  }
-};
+// const fetchUpcomingPayments = async (): Promise<Payment[]> => {
+//   try {
+//     const response = await axiosPrivate.get('api/upcoming-payments/');
+//     return response.data as Payment[];
+//   } catch (error) {
+//     throw new Error((error as Error).message);
+//   }
+// };
 
 const UpcomingPayments = () => {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, _setError] = useState<string | null>(null);
 
   // Example data
   const examplePayments = [

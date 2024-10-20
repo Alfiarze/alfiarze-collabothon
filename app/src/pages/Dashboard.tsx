@@ -25,7 +25,6 @@ import LayoutUser from "../components/LayoutUser";
 import LayoutSmallCom from "../components/LayoutSmallCom";
 import LayoutBigCom from "../components/LayoutBigCom";
 import AddContractPhoto from "../components/widgets/AddContractPhoto";
-import Roulette from "../components/widgets/Roulette";
 
 // Move this type definition to the top of the file, after the imports
 type BreakpointLayouts = {
