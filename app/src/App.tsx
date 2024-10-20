@@ -55,12 +55,14 @@ function App() {
   useEffect(() => {
     setShowSurvey(false);
     setLoading(true);
-    axiosPrivate.get('/api/userLayout/').then(() => {
-      setLoading(false);
-    }).catch(() => {
-      setLoading(false);
+    
+    if (localStorage.getItem('surveyCompleted') !== 'true') {
       setShowSurvey(true);
-    });
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+
   }, []);
 
   if (loading) {

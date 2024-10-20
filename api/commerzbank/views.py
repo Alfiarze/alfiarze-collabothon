@@ -11,10 +11,8 @@ from .models import Contract, CreditCard, LoanOffer, LoyalProgram, QRCode, Reser
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.db import transaction
-import base64
 from django.conf import settings
-from openai import AzureOpenAI
-from chatai.func import analyze_text, extract_text_from_docx, ocr_image, ocr_pdf, ocr_text_from_file 
+from chatai.func import analyze_text, ocr_text_from_file
 import json
 from decimal import Decimal, InvalidOperation
 from django.core.files.storage import default_storage

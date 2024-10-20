@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Typography, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Box } from '@mui/material';
 import axiosPrivate from '../ctx/axiosPrivate';
 
@@ -50,12 +50,18 @@ function Survey() {
         setAnswers(newAnswers);
     };
 
-    if (isCompleted) {
-        axiosPrivate.post('/api/userLayout/', formData).then(() => {
+    useEffect(() => {
+        if (isCompleted) {
+            localStorage.setItem('surveyCompleted', 'true');
             window.location.href = '/';
-        }).catch((error) => {
-            console.error('Error submitting survey:', error);
-        });
+        }
+    }, [isCompleted]);
+
+    if (isCompleted) {
+        localStorage.setItem('surveyCompleted', 'true');
+        window.location.href = '/';
+
+
         return (
             <Box sx={{
                 border: '1px solid #e0e0e0',
