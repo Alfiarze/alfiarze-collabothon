@@ -16,7 +16,7 @@ class UserLayer(models.Model):
     answer_3 = models.CharField(max_length=100)
     answer_4 = models.CharField(max_length=100)
     result = models.CharField(max_length=100)
-    layout = models.CharField(max_length=100)
+    layout = models.CharField(max_length=1000)
     datetime = models.DateTimeField(auto_now_add=True)
     access_token = models.CharField(max_length=100, null=True, blank=True)
     refresh_token = models.CharField(max_length=100, null=True, blank=True)
