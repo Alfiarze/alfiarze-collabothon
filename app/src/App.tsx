@@ -22,7 +22,6 @@ import Exchange from './pages/Exchange';
 import Chat from './pages/Chat';
 import AddContract from './pages/AddContract';
 import TransferForm from './components/TransferForm';
-import axiosPrivate from './ctx/axiosPrivate';
 import Loading from './components/Loading';
 import Receipt from './pages/Receipt'; // Add this line to import the Receipt component
 
@@ -54,34 +53,21 @@ function App() {
   const [showSurvey, setShowSurvey] = useState(false);
   const [loading, setLoading] = useState(false);
 
-//   useEffect(() => {
-//     setShowSurvey(false);
-//     setLoading(true);
-//     axiosPrivate.get('/api/userLayout/').then(() => {
-//       setLoading(false);
-//     }).catch(() => {
-//       setLoading(false);
-//       setShowSurvey(true);
-//     });
-//   }, []);
 
-  // useEffect(() => {
-  //   setShowSurvey(false);
-   // setLoading(true);
+  
 
-  // useEffect(() => {
-  //   setShowSurvey(false);
-  //   setLoading(true);
+  useEffect(() => {
+    setShowSurvey(false);
+    setLoading(true);
     
-  //   if (localStorage.getItem('surveyCompleted') !== 'true') {
-  //     setShowSurvey(true);
-  //     setLoading(false);
-  //   } else {
-  //     setLoading(false);
-  //   }
+    if (localStorage.getItem('surveyCompleted') !== 'true') {
+      setShowSurvey(true);
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
 
-  // }, []);
-  // }, []);
+  }, []);
 
   if (loading) {
     return <Loading />;
