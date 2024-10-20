@@ -27,6 +27,7 @@ const ContractsWidget = () => {
         try {
             setLoading(true);
             const response = await axiosPrivate.get<ContractResponse[]>('api/contracts/');
+            console.log(response.data);
             setContracts(response.data);
             setError(null);
         } catch (err) {
