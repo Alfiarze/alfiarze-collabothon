@@ -21,6 +21,7 @@ const Nav = () => {
       { to: '/Contracts', label: 'Contracts' },
       { to: '/Support', label: 'Support' },
       { to: '/Transfers', label: 'Transfers' },
+      { to: '/Receipt', label: 'Receipt' },
     ];
   return (
     <AppBar position="static">
