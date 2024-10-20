@@ -27,15 +27,15 @@ class UserLayer(models.Model):
     
 class Contract(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    contract_id = models.CharField(max_length=100)
     contract_type = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(null=True, blank=True, default=datetime.now)
+    end_date = models.DateField(null=True, blank=True)
     file = models.FileField(upload_to='contracts/', null=True, blank=True)
     status = models.CharField(max_length=100)
     name = models.CharField(max_length=100)  # Example field
     currency = models.CharField(max_length=6)
+    account_number = models.CharField(max_length=26, null=True, blank=True)
 
     def __str__(self):
         return self.name  # or any other appropriate string representation
@@ -44,18 +44,13 @@ class UpcomingPayment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='upcoming_payments')
     name = models.CharField(max_length=100)
-    time = models.TimeField()
-    date = models.DateField()
+    date = models.DateField(null=True, blank=True)
     account_id = models.CharField(max_length=100)  # Adjust max_length as needed
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    currency = models.CharField(max_length=6)
     account_number = models.CharField(max_length=26, null=True, blank=True)
 
     def __str__(self):
-        return f"Payment for {self.user.username} on {self.date} at {self.time}"
-
-    class Meta:
-        ordering = ['date', 'time']  # Optional: orders payments by date and time
+        return f"Payment for {self.user.username} on {self.date}"
 
 class CreditCard(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -79,16 +74,14 @@ class TransactionCategory(models.Model):
         verbose_name_plural = "Transaction Categories"
       
 class Transaction(models.Model):
-    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=250)
-    reciver_id = models.IntegerField()
-    reciver_address = models.CharField(max_length=250)
-    bank_account_number = models.CharField(max_length=26)
-    amount = models.IntegerField()
-    categories = models.ManyToManyField(TransactionCategory, related_name='transactions' , blank=True)
+    receiver = models.CharField(max_length=250)  # Changed from reciver_id
+    receiver_address = models.CharField(max_length=250)  # Changed from reciver_address
+    account_number = models.CharField(max_length=26)  # Changed from bank_account_number
+    amount = models.DecimalField(max_digits=10, decimal_places=2)  # Changed from IntegerField
 
     def __str__(self):
-        return f"Transaction {self.id}: {self.title}"
+        return f"{self.title}: {self.amount} to {self.receiver}"
     
     
 class Reservation(models.Model):

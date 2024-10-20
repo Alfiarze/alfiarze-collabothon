@@ -1,6 +1,5 @@
 import AddContractPhoto from "../components/widgets/AddContractPhoto"
 import ContractsWidget from "../components/widgets/ContractsWidget"
-
 const Contracts = () => {
 
     return (

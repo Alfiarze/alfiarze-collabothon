@@ -22,8 +22,10 @@ from django.core.files.base import ContentFile
 import os
 import random
 import string
+from datetime import datetime
+import logging
 
-
+logger = logging.getLogger(__name__)
 
 class UserLayoutProvider(APIView):
     def get(self, request):
@@ -117,8 +119,7 @@ class RegisterView(APIView):
         pass
 
 class ContractView(APIView):
-    authentication_classes = []
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         contracts = Contract.objects.all()
@@ -128,13 +129,20 @@ class ContractView(APIView):
                 contract_data = {
                     "id": contract.id,
                     "user_id": contract.user_id,
-                    "contract_id": contract.contract_id,
                     "contract_type": contract.contract_type,
-                    "amount": contract.amount,
+                    "amount": str(contract.amount),
                     "start_date": contract.start_date,
                     "end_date": contract.end_date,
-                    "status": contract.status
+                    "status": contract.status,
+                    "name": contract.name,
+                    "currency": contract.currency,
+                    "account_number": contract.account_number
                 }
+                upcoming_payments = UpcomingPayment.objects.filter(contract=contract)
+                if upcoming_payments.exists():
+                    contract_data['upcoming_payments'] = [
+                        {"date": payment.date, "amount": str(payment.amount), "name": payment.name} for payment in upcoming_payments
+                    ]
                 contracts_json.append(contract_data)
             return Response(contracts_json, status=status.HTTP_200_OK)
         else:
@@ -144,40 +152,108 @@ class ContractView(APIView):
     def post(self, request):
         data = request.data
 
+        photo = request.FILES.get('photo')
+        if not photo:
+            return Response({'error': 'No photo provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            temp_path = default_storage.save('temp_contract_photo.jpg', ContentFile(photo.read()))
+            temp_full_path = os.path.join(settings.MEDIA_ROOT, temp_path)
+
+            prompt = """
+            Na podstawie danych z umowy, zwróć je w formacie json jak we wzorze. Przestrzegaj następujących zasad:
+            1. Jeśli nie znasz wartości dla danego pola, zostaw je jako pusty string "".
+            2. Nie używaj komentarzy, wielokropków ani placeholderów w JSON.
+            3. Pole upcomingPayments musi być zawsze tablicą, nawet jeśli jest pusta.
+            4. Zwróć tylko i wyłącznie poprawny JSON, bez żadnego dodatkowego tekstu.
+            5. Nie zmyślaj danych - jeśli informacja nie jest dostępna, użyj pustego stringu.
+            6. Daty zwracaj w formacie YYYY-MM-DD.
+
+            Wzór JSON:
+            {
+            "contract_type": "",
+            "account_number": "",
+            "amount": "",
+            "start_date": "",
+            "end_date": "",
+            "name": "",
+            "status": "",
+            "currency": "",
+            "upcomingPayments": [
+                {
+                "date": "",
+                "time": "",
+                "amount": "",
+                "name": ""
+                }
+            ]
+            }
+
+            Upewnij się, że zwrócony JSON jest zawarty w jednej linii.
+            """
+
+            text = ocr_text_from_file(temp_full_path)
+
+            response = analyze_text(text=text, prompt=prompt, model="gpt-4")
+
+            logger.info(f"AI Response: {response}")
+
+            try:
+                response_data = json.loads(response)
+            except json.JSONDecodeError as e:
+                logger.error(f"Failed to parse AI response: {e}")
+                return Response({'error': 'Failed to parse AI response'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            # Convert date strings to the correct format
+            start_date = self.format_date(response_data.get('start_date', ''))
+            end_date = self.format_date(response_data.get('end_date', ''))
+
+            contract = Contract.objects.create(
+                user=request.user,
+                contract_type=response_data.get('contract_type', ''),
+                amount=response_data.get('amount', ''),
+                start_date=start_date,
+                end_date=end_date,
+                file=photo,
+                name=response_data.get('name', ''),
+                currency=response_data.get('currency', ''),
+                status=response_data.get('status', ''),
+                account_number=response_data.get('account_number', '')
+            )
+
+            if response_data.get('upcomingPayments'):
+                for payment in response_data.get('upcomingPayments'):
+                    UpcomingPayment.objects.create(
+                        user=request.user,
+                        contract=contract,
+                        date=payment.get('date', ''),
+                        amount=payment.get('amount', ''),
+                        name=payment.get('name', ''),
+                        account_number=contract.account_number
+                    )
 
 
-        prompt = """
-        Twoim zadaniem jest wyciągnąć z umowy następujące informacje i zwrócić je w formacie json jak we wzorze. Jak czegoś nie wiesz to zostawiasz puste pole. Jak będziesz zmyślał to będę miał kłopoty.
-        {
-        contract_type: "",
-        amount: "",
-        start_date: "",
-        end_date: "",
-        name: "",
-        status: "",
-        upcomingPayments: [
-        {
-        date: "",
-        time: "",
-        amount: "",
-        name: "",
-        },
-        (...)
-        ]
-        }"""
+            return Response({'success': 'Contract created successfully'}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            logger.exception(f"Failed to create contract: {str(e)}")
+            return Response({'error': f'Failed to create contract: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        finally:
+            # Clean up the temporary file
+            if 'temp_full_path' in locals():
+                default_storage.delete(temp_full_path)
 
-        response = analyze_text(prompt, image_path=temp_full_path)
-
-        contract = Contract.objects.create(
-            user_id=data['user_id'],
-            contract_id=data['contract_id'],
-            contract_type=data['contract_type'],
-            amount=data['amount'],
-            start_date=data['start_date'],
-            end_date=data['end_date'],
-            status=data['status']
-        )
-        return Response({'success': 'Contract created successfully'}, status=status.HTTP_201_CREATED)
+    def format_date(self, date_string):
+        if not date_string:
+            return None
+        try:
+            # Try parsing the date in DD-MM-YYYY format
+            date_obj = datetime.strptime(date_string, "%d-%m-%Y")
+            # Convert to YYYY-MM-DD format
+            return date_obj.strftime("%Y-%m-%d")
+        except ValueError:
+            # If parsing fails, return the original string
+            # (it might already be in the correct format or empty)
+            return date_string
 
 class AccountView(APIView):
     def get(self, request):
@@ -336,23 +412,16 @@ class TransactionView(APIView):
         data = request.data
         try:
             transaction = Transaction.objects.create(
-                account_id=data['account_id'],
-                transaction_name=data['transaction_name'],
-                from_account=data['from_account'],
-                to_account=data['to_account'],
+                title=data['title'],
+                receiver=data['receiver'],
+                receiver_address=data['receiver_address'],
+                account_number=data['account_number'],
                 amount=data['amount']
             )
-            
-            # Handle categories
-            category_names = data.get('categories', [])
-            for category_name in category_names:
-                category, created = TransactionCategory.objects.get_or_create(name=category_name)
-                transaction.categories.add(category)
             
             return Response({
                 'success': 'Transaction created successfully',
                 'transaction_id': transaction.id,
-                'categories': [category.name for category in transaction.categories.all()]
             }, status=status.HTTP_201_CREATED)
         except KeyError as e:
             return Response({'error': f'Missing required field: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
@@ -655,9 +724,11 @@ class AINavigatorView(APIView):
         "action": "redirect",
         "path": right_path,
         "additional_info": {
-        "account_id": "",
-        "transaction_name": "",
-        "to_account": ""
+            "title": '',
+            "receiver": '',
+            "receiver_address": '',
+            "account_number": '',
+            "amount": ''
         }
         }
         Jeżeli nie znasz odpowiedź, zwróc json w formacie: {
@@ -702,3 +773,8 @@ class GenerateQRCodeView(APIView):
             'success': 'QR code created successfully',
             'code': qr_code.code
         }, status=status.HTTP_201_CREATED)
+
+
+
+
+
