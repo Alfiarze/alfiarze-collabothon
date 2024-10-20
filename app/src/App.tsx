@@ -54,7 +54,6 @@ function App() {
   const [showSurvey, setShowSurvey] = useState(false);
   const [loading, setLoading] = useState(false);
 
-<<<<<<< HEAD
 //   useEffect(() => {
 //     setShowSurvey(false);
 //     setLoading(true);
@@ -66,11 +65,10 @@ function App() {
 //     });
 //   }, []);
 
-  useEffect(() => {
-    setShowSurvey(false);
+  // useEffect(() => {
+  //   setShowSurvey(false);
    // setLoading(true);
-=======
->>>>>>> 7e226ec971adf0a6f2de28617604e2fea9ce1265
+
   // useEffect(() => {
   //   setShowSurvey(false);
   //   setLoading(true);
@@ -82,10 +80,7 @@ function App() {
   //     setLoading(false);
   //   }
 
-<<<<<<< HEAD
-  }, []);
-=======
->>>>>>> 7e226ec971adf0a6f2de28617604e2fea9ce1265
+  // }, []);
   // }, []);
 
   if (loading) {

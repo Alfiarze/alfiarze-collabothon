@@ -57,7 +57,7 @@ const AddRecipe: React.FC = () => {
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 600, mx: 'auto', mt: 4 }}>
       <Typography variant="h4" gutterBottom align="center">
-        Add New Recipe
+        Add New Receipt
       </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
@@ -85,7 +85,7 @@ const AddRecipe: React.FC = () => {
               disabled={loading}
               startIcon={loading ? <CircularProgress size={20} /> : null}
             >
-              {loading ? 'Processing...' : 'Add Recipe'}
+              {loading ? 'Processing...' : 'Add Receipt'}
             </Button>
           </Grid>
         </Grid>
