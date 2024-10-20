@@ -54,7 +54,6 @@ function App() {
   const [showSurvey, setShowSurvey] = useState(false);
   const [loading, setLoading] = useState(false);
 
-<<<<<<< HEAD
 //   useEffect(() => {
 //     setShowSurvey(false);
 //     setLoading(true);
@@ -65,7 +64,7 @@ function App() {
 //       setShowSurvey(true);
 //     });
 //   }, []);
-=======
+
   useEffect(() => {
     setShowSurvey(false);
     setLoading(true);
@@ -78,7 +77,6 @@ function App() {
     }
 
   }, []);
->>>>>>> 15e256444abc1b28c71866c10431c69439877e6a
 
 //   if (loading) {
 //     return <Loading />;
