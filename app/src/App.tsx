@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Actions from './pages/Actions';
+import Actions from './pages/Stocks';
 import Contracts from './pages/Contracts';
 import Logging from './pages/Logging';
 import Login from './pages/Login';
