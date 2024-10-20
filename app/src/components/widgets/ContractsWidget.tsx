@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import axiosPrivate from '../../ctx/axiosPrivate';
 import { Link } from 'react-router-dom';
-import {  Typography, List, ListItem, ListItemText, IconButton, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, Box } from '@mui/material';
+import {  Typography, List, ListItem, ListItemText, IconButton, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { API_URL } from '../../ctx/conf';
 
 interface ContractResponse {
+    upcoming_payments: any;
+    account_number: string;
     user_id: string;
     contract_id: string;
     contract_type: string;
@@ -128,13 +130,35 @@ const ContractsWidget = () => {
                             <Box sx={{ flexBasis: '50%' }}>
                                 <Typography variant="h6">{selectedContract.contract_type}</Typography>
                                 <Typography>Name: {selectedContract.name}</Typography>
-                                <Typography>Amount: ${selectedContract.amount}</Typography>
+                                <Typography>Amount: {selectedContract.amount}</Typography>
                                 <Typography>Start Date: {selectedContract.start_date}</Typography>
                                 <Typography>End Date: {selectedContract.end_date}</Typography>
-                                <Typography>Status: {selectedContract.status}</Typography>
-                                <Typography>Contract ID: {selectedContract.contract_id}</Typography>
-                                <Typography>User ID: {selectedContract.user_id}</Typography>
+                                <Typography>Status: {selectedContract.status}</Typography><br/>
+                                <Typography>Płatności dotyczące umowy:</Typography>
+                                <TableContainer component={Paper}>
+                                    <Table size="small" aria-label="upcoming payments">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>LP</TableCell>
+                                                <TableCell>Nazwa</TableCell>
+                                                <TableCell>Kwota</TableCell>
+                                                <TableCell>Data</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {selectedContract.upcoming_payments && selectedContract.upcoming_payments.map((payment: any, index: number) => (
+                                                <TableRow key={index}>
+                                                    <TableCell>{index + 1}</TableCell>
+                                                    <TableCell>{payment.name}</TableCell>
+                                                    <TableCell>{payment.amount}</TableCell>
+                                                    <TableCell>{payment.date}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
                             </Box>
+                            
                             <Box sx={{ flexBasis: '50%' }}>
                                 {selectedContract.file ? (
                                     <img 
