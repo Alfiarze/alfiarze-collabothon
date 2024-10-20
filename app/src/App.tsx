@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Actions from './pages/Actions';
+import Actions from './pages/Stocks';
 import Contracts from './pages/Contracts';
 import Logging from './pages/Logging';
 import Login from './pages/Login';
@@ -22,9 +22,8 @@ import Exchange from './pages/Exchange';
 import Chat from './pages/Chat';
 import AddContract from './pages/AddContract';
 import TransferForm from './components/TransferForm';
+import axiosPrivate from './ctx/axiosPrivate';
 import Loading from './components/Loading';
-import Receipt from './pages/Receipt'; // Add this line
-
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
@@ -53,18 +52,18 @@ function App() {
   const [showSurvey, setShowSurvey] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setShowSurvey(false);
-    setLoading(true);
+  // useEffect(() => {
+  //   setShowSurvey(false);
+  //   setLoading(true);
     
-    if (localStorage.getItem('surveyCompleted') !== 'true') {
-      setShowSurvey(true);
-      setLoading(false);
-    } else {
-      setLoading(false);
-    }
+  //   if (localStorage.getItem('surveyCompleted') !== 'true') {
+  //     setShowSurvey(true);
+  //     setLoading(false);
+  //   } else {
+  //     setLoading(false);
+  //   }
 
-  }, []);
+  // }, []);
 
   if (loading) {
     return <Loading />;
@@ -111,7 +110,6 @@ function App() {
               <Route path="/support" component={Support} />
               <Route path="/Survey" component={Survey} />
               <Route path="/transfers" component={Transfers} />
-              <Route path="/Receipt" component={Receipt} />
               <Route path="/chat" component={Chat} />
               <Route 
                 exact 
@@ -119,7 +117,6 @@ function App() {
                 render={(props) => <Dashboard key={Date.now()} {...props} />} 
               />
               <Route component={Dashboard} />
-              
             </Switch>
           </Container>
           <Box component="footer" sx={{ py: 3, px: 2, backgroundColor: 'primary.main' }}>
