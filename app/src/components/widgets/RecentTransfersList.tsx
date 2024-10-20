@@ -27,17 +27,17 @@ const RecentTransfersList: React.FC = () => {
     { id: 4, account_id: 'ACC001', transaction_name: 'Freelance Payment', from_account: 'Client XYZ', to_account: 'My Savings', amount: 750, categories: ['incoming', 'freelance'], date: '2023-04-08' },
   ]);
 
-  useEffect(() => {
-    axiosPrivate.get('api/transactions/').then((res) => {
-      console.log(res.data);
-      if (Array.isArray(res.data)) {
-        setTransfers(res.data.map((transaction: Transfer) => ({
-          ...transaction,
-          date: new Date().toLocaleDateString(), // Add a placeholder date
-        })));
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   axiosPrivate.get('api/transactions/').then((res) => {
+  //     console.log(res.data);
+  //     if (Array.isArray(res.data)) {
+  //       setTransfers(res.data.map((transaction: Transfer) => ({
+  //         ...transaction,
+  //         date: new Date().toLocaleDateString(), // Add a placeholder date
+  //       })));
+  //     }
+  //   });
+  // }, []);
 
   return (
     <div>
