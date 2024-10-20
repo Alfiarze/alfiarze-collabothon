@@ -129,7 +129,7 @@ const StockExchange: React.FC = () => {
     }}>
       <Box sx={{ 
         width: '100%', 
-        maxWidth: 600, 
+        maxWidth: 800, // Increased from 600 to 800
         bgcolor: 'background.paper', 
         p: 4, 
         borderRadius: 2, 
@@ -154,7 +154,7 @@ const StockExchange: React.FC = () => {
         </FormControl>
         {currentStock && (
           <Box>
-            <Box sx={{ height: 300, mb: 3 }}>
+            <Box sx={{ height: 400, mb: 3 }}> {/* Increased height from 300 to 400 */}
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={currentStock.historicalData}
