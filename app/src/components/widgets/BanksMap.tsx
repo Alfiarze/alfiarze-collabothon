@@ -26,7 +26,6 @@ const BanksMap: React.FC = () => {
   ];
 
   return (
-    <Paper elevation={3} sx={{ maxWidth: '400px', margin: 'auto' }}>
       <Box p={2}>
         <Typography variant="h6" gutterBottom>Commerzbank Locations</Typography>
         <div style={{ height: '200px', width: '100%' }}>
@@ -48,7 +47,6 @@ const BanksMap: React.FC = () => {
           </MapContainer>
         </div>
       </Box>
-    </Paper>
   );
 };
 
