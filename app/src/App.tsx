@@ -23,6 +23,8 @@ import Chat from './pages/Chat';
 import AddContract from './pages/AddContract';
 import TransferForm from './components/TransferForm';
 import Loading from './components/Loading';
+import Receipt from './pages/Receipt'; // Add this line
+
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
@@ -109,6 +111,7 @@ function App() {
               <Route path="/support" component={Support} />
               <Route path="/Survey" component={Survey} />
               <Route path="/transfers" component={Transfers} />
+              <Route path="/Receipt" component={Receipt} />
               <Route path="/chat" component={Chat} />
               <Route 
                 exact 
@@ -116,6 +119,7 @@ function App() {
                 render={(props) => <Dashboard key={Date.now()} {...props} />} 
               />
               <Route component={Dashboard} />
+              
             </Switch>
           </Container>
           <Box component="footer" sx={{ py: 3, px: 2, backgroundColor: 'primary.main' }}>
