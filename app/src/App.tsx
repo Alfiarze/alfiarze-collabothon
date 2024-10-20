@@ -52,9 +52,26 @@ function App() {
   const [showSurvey, setShowSurvey] = useState(false);
   const [loading, setLoading] = useState(false);
 
+<<<<<<< HEAD
+//   useEffect(() => {
+//     setShowSurvey(false);
+//     setLoading(true);
+//     axiosPrivate.get('/api/userLayout/').then(() => {
+//       setLoading(false);
+//     }).catch(() => {
+//       setLoading(false);
+//       setShowSurvey(true);
+//     });
+//   }, []);
+
+  useEffect(() => {
+    setShowSurvey(false);
+    setLoading(true);
+=======
   // useEffect(() => {
   //   setShowSurvey(false);
   //   setLoading(true);
+>>>>>>> e5c9152fea38620617b3de6ab7a1f1aa77286ecc
     
   //   if (localStorage.getItem('surveyCompleted') !== 'true') {
   //     setShowSurvey(true);
@@ -63,7 +80,11 @@ function App() {
   //     setLoading(false);
   //   }
 
+<<<<<<< HEAD
+  }, []);
+=======
   // }, []);
+>>>>>>> e5c9152fea38620617b3de6ab7a1f1aa77286ecc
 
   if (loading) {
     return <Loading />;
