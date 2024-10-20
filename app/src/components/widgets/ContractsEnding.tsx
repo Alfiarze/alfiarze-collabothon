@@ -39,8 +39,8 @@ const ContractsEnding = () => {
         end_date: "2024-10-21",
         status: "Active",
         file: "/contracts/rental_agreement.jpg"
-    },
-    {
+      },
+      {
         user_id: "user1",
         contract_id: "contract2",
         contract_type: "Employment Contract",
@@ -50,8 +50,8 @@ const ContractsEnding = () => {
         end_date: "2025-01-14",
         status: "Active",
         file: "/contracts/employment_contract.jpg"
-    },
-    {
+      },
+      {
         user_id: "user1",
         contract_id: "contract3",
         contract_type: "Service Agreement",
@@ -61,10 +61,13 @@ const ContractsEnding = () => {
         end_date: "2025-02-29",
         status: "Active",
         file: "/contracts/service_agreement.jpg"
-    }
+      }
     ];
     const mappedContracts = mapContractsResponse(exampleContracts);
-    setContracts(mappedContracts);
+    const soonExpiringContracts = mappedContracts.filter(contract => 
+      calculateDaysRemaining(contract.end_date) <= 2
+    );
+    setContracts(soonExpiringContracts);
   }, []);
 
   const mapContractsResponse = (data: ContractResponse[]): Contract[] => {
